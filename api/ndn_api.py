@@ -179,6 +179,10 @@ def get_or_create_user(telegram_user: dict, db: Session, referral_token: str = N
 async def root():
     return {"message": "NodeOn NDN API", "status": "running"}
 
+@app.get("/test")
+async def test_endpoint():
+    return {"message": "NDN API is working", "status": "ok"}
+
 @app.get("/api/user/profile")
 async def get_user_profile(
     init_data: str,

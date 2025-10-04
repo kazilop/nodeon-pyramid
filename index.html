@@ -807,7 +807,7 @@
         // Глобальные переменные
         let currentUser = null;
         let userData = null;
-        const API_BASE = 'https://nodeon-pyramid-production.up.railway.app/ndn';
+        const API_BASE = 'https://nodeon-pyramid-production.up.railway.app/api';
 
         // Инициализация приложения
         document.addEventListener('DOMContentLoaded', function() {
@@ -819,8 +819,19 @@
             try {
                 showLoading();
                 
+                // Сначала тестируем подключение к API
+                console.log('Testing API connection...');
+                const testResponse = await fetch(`${API_BASE}/test`);
+                if (!testResponse.ok) {
+                    throw new Error(`API test failed: ${testResponse.status}`);
+                }
+                const testData = await testResponse.json();
+                console.log('API test result:', testData);
+                
                 // Получаем данные от Telegram
                 const initData = tg.initData;
+                console.log('Telegram initData:', initData);
+                
                 if (!initData) {
                     throw new Error('No Telegram init data');
                 }
@@ -828,20 +839,27 @@
                 // Получаем реферальный токен из URL параметров
                 const urlParams = new URLSearchParams(window.location.search);
                 const referralToken = urlParams.get('ref') || urlParams.get('startapp');
+                console.log('Referral token:', referralToken);
 
                 // Загружаем профиль пользователя
                 let apiUrl = `${API_BASE}/user/profile?init_data=${encodeURIComponent(initData)}`;
                 if (referralToken) {
                     apiUrl += `&referral_token=${encodeURIComponent(referralToken)}`;
                 }
+                
+                console.log('API URL:', apiUrl);
 
                 const response = await fetch(apiUrl);
+                console.log('Response status:', response.status);
+                
                 if (!response.ok) {
                     const errorData = await response.json();
+                    console.error('API error:', errorData);
                     throw new Error(errorData.detail || 'Failed to load user data');
                 }
 
                 userData = await response.json();
+                console.log('User data received:', userData);
                 currentUser = userData.user;
                 
                 updateUI();
