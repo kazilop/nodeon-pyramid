@@ -140,6 +140,10 @@ async def root():
 async def test_endpoint():
     return {"message": "Supabase API is working", "status": "ok"}
 
+@app.get("/api/test")
+async def api_test_endpoint():
+    return {"message": "Supabase API is working", "status": "ok"}
+
 @app.get("/api/user/profile")
 async def get_user_profile(init_data: str = None):
     """Получить профиль пользователя"""
