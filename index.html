@@ -832,21 +832,11 @@
                 const initData = tg.initData;
                 console.log('Telegram initData:', initData);
                 
-                if (!initData) {
-                    throw new Error('No Telegram init data');
-                }
-
-                // Получаем реферальный токен из URL параметров
-                const urlParams = new URLSearchParams(window.location.search);
-                const referralToken = urlParams.get('ref') || urlParams.get('startapp');
-                console.log('Referral token:', referralToken);
+                // Используем initData или тестовые данные
+                const apiInitData = initData || 'test_data';
 
                 // Загружаем профиль пользователя
-                let apiUrl = `${API_BASE}/user/profile?init_data=${encodeURIComponent(initData)}`;
-                if (referralToken) {
-                    apiUrl += `&referral_token=${encodeURIComponent(referralToken)}`;
-                }
-                
+                const apiUrl = `${API_BASE}/user/profile?init_data=${encodeURIComponent(apiInitData)}`;
                 console.log('API URL:', apiUrl);
 
                 const response = await fetch(apiUrl);
@@ -993,7 +983,7 @@
             try {
                 showLoading();
                 
-                const initData = tg.initData;
+                const initData = tg.initData || 'test_data';
                 const response = await fetch(`${API_BASE}/pro/buy?init_data=${encodeURIComponent(initData)}`, {
                     method: 'POST'
                 });
@@ -1026,16 +1016,9 @@
             try {
                 showLoading();
                 
-                const initData = tg.initData;
-                const response = await fetch(`${API_BASE}/ndn/buy?init_data=${encodeURIComponent(initData)}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        amount_ndn: parseFloat(amount),
-                        amount_stars: parseFloat(amount) * 0.1 // 1 NDN = 0.1 Stars
-                    })
+                const initData = tg.initData || 'test_data';
+                const response = await fetch(`${API_BASE}/ndn/buy?init_data=${encodeURIComponent(initData)}&amount_ndn=${parseFloat(amount)}`, {
+                    method: 'POST'
                 });
 
                 const result = await response.json();
@@ -1071,15 +1054,9 @@
             try {
                 showLoading();
                 
-                const initData = tg.initData;
-                const response = await fetch(`${API_BASE}/ndn/withdraw?init_data=${encodeURIComponent(initData)}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        amount_ndn: parseFloat(amount)
-                    })
+                const initData = tg.initData || 'test_data';
+                const response = await fetch(`${API_BASE}/ndn/withdraw?init_data=${encodeURIComponent(initData)}&amount_ndn=${parseFloat(amount)}`, {
+                    method: 'POST'
                 });
 
                 const result = await response.json();

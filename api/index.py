@@ -42,9 +42,9 @@ app.include_router(payments.router, prefix="/api/payments", tags=["payments"])
 app.include_router(referrals.router, prefix="/api/referrals", tags=["referrals"])
 app.include_router(stats.router, prefix="/api/stats", tags=["stats"])
 
-# Подключаем упрощенный API для тестирования
-from simple_api import app as simple_app
-app.mount("/api", simple_app)
+# Подключаем Supabase API
+from supabase_api import app as supabase_app
+app.mount("/api", supabase_app)
 
 @app.get("/")
 async def root():
