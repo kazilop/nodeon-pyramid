@@ -42,6 +42,10 @@ app.include_router(payments.router, prefix="/api/payments", tags=["payments"])
 app.include_router(referrals.router, prefix="/api/referrals", tags=["referrals"])
 app.include_router(stats.router, prefix="/api/stats", tags=["stats"])
 
+# Подключаем NDN API
+from ndn_api import app as ndn_app
+app.mount("/ndn", ndn_app)
+
 @app.get("/")
 async def root():
     return {"message": "NodeOn Pyramid API", "version": "1.0.0"}
