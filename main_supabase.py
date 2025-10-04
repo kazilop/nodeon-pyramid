@@ -236,7 +236,7 @@ async def api_test_endpoint():
 async def get_user_profile(init_data: str = None, referral_token: str = None):
     """Получить профиль пользователя - ТОЛЬКО через Telegram"""
     try:
-        if not init_data:
+        if not init_data or init_data == "" or init_data is None:
             raise HTTPException(status_code=401, detail="Требуется авторизация через Telegram. Откройте приложение в Telegram Mini App.")
         
         telegram_user = verify_telegram_auth(init_data)
