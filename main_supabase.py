@@ -44,6 +44,8 @@ def verify_telegram_auth(init_data: str) -> dict:
         import urllib.parse
         decoded_data = urllib.parse.unquote(init_data)
         
+        print(f"Decoded init_data: {decoded_data}")
+        
         # Парсим данные
         data = {}
         for item in decoded_data.split('&'):
@@ -51,14 +53,24 @@ def verify_telegram_auth(init_data: str) -> dict:
                 key, value = item.split('=', 1)
                 data[key] = value
         
+        print(f"Parsed data: {data}")
+        
         # Парсим user данные
         user_data_str = data.get('user', '{}')
-        if user_data_str:
-            user_data = json.loads(user_data_str)
+        print(f"User data string: {user_data_str}")
+        
+        if user_data_str and user_data_str != '{}':
+            try:
+                user_data = json.loads(user_data_str)
+                print(f"Parsed Telegram user data: {user_data}")
+                return user_data
+            except json.JSONDecodeError as e:
+                print(f"JSON decode error: {e}")
+                print(f"Raw user data: {user_data_str}")
         else:
             user_data = {}
         
-        print(f"Parsed Telegram user data: {user_data}")
+        print(f"Final user data: {user_data}")
         return user_data
         
     except Exception as e:
