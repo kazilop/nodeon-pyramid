@@ -40,9 +40,13 @@ def verify_telegram_auth(init_data: str) -> dict:
                 "username": "testuser"
             }
         
+        # URL декодируем данные
+        import urllib.parse
+        decoded_data = urllib.parse.unquote(init_data)
+        
         # Парсим данные
         data = {}
-        for item in init_data.split('&'):
+        for item in decoded_data.split('&'):
             if '=' in item:
                 key, value = item.split('=', 1)
                 data[key] = value
@@ -54,10 +58,12 @@ def verify_telegram_auth(init_data: str) -> dict:
         else:
             user_data = {}
         
+        print(f"Parsed Telegram user data: {user_data}")
         return user_data
         
     except Exception as e:
         print(f"Telegram auth error: {e}")
+        print(f"Raw init_data: {init_data}")
         return {
             "id": 123456789,
             "first_name": "Пользователь",
