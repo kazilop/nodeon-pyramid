@@ -83,7 +83,36 @@ def verify_telegram_auth(init_data: str) -> dict:
             "username": "user"
         }
 
-def get_or_create_user(telegram_user: dict):
+def validate_referral_token(referral_token: str):
+    """Валидация реферального токена"""
+    if not referral_token:
+        return None
+    
+    headers = get_supabase_headers()
+    
+    try:
+        # Вызываем функцию валидации
+        response = requests.post(
+            f"{SUPABASE_URL}/rest/v1/rpc/validate_referral_link",
+            headers=headers,
+            json={"referral_token": referral_token}
+        )
+        
+        if response.status_code == 200:
+            result = response.json()
+            if result and result[0].get('is_valid'):
+                return {
+                    'inviter_id': result[0].get('inviter_id'),
+                    'inviter_telegram_id': result[0].get('inviter_telegram_id'),
+                    'inviter_name': result[0].get('inviter_name'),
+                    'inviter_is_pro': result[0].get('inviter_is_pro')
+                }
+    except Exception as e:
+        print(f"Referral validation error: {e}")
+    
+    return None
+
+def get_or_create_user(telegram_user: dict, referral_token: str = None):
     """Получить или создать пользователя в Supabase"""
     telegram_id = telegram_user.get('id')
     if not telegram_id:
@@ -101,7 +130,18 @@ def get_or_create_user(telegram_user: dict):
         if response.status_code == 200:
             users = response.json()
             if users:
-                return users[0]
+                user = users[0]
+                print(f"✅ Existing user found: {user['first_name']} (ID: {user['id']})")
+                return user
+        
+        # Валидируем реферальный токен
+        inviter_data = None
+        if referral_token:
+            inviter_data = validate_referral_token(referral_token)
+            if inviter_data:
+                print(f"✅ Valid referral token: {inviter_data['inviter_name']} (ID: {inviter_data['inviter_id']})")
+            else:
+                print(f"❌ Invalid referral token: {referral_token}")
         
         # Создаем нового пользователя
         user_data = {
@@ -112,7 +152,8 @@ def get_or_create_user(telegram_user: dict):
             "balance_ndn": 0.0,
             "is_pro": False,
             "referral_link": "",
-            "inviter_id": None,
+            "inviter_id": inviter_data['inviter_id'] if inviter_data else None,
+            "is_active": True,
             "created_at": datetime.utcnow().isoformat(),
             "updated_at": datetime.utcnow().isoformat()
         }
@@ -125,6 +166,7 @@ def get_or_create_user(telegram_user: dict):
         
         if response.status_code == 201:
             created_user = response.json()[0]
+            print(f"✅ New user created: {created_user['first_name']} (ID: {created_user['id']})")
             
             # Создаем статистику рефералов
             for level in range(1, 8):
@@ -142,13 +184,49 @@ def get_or_create_user(telegram_user: dict):
                     json=stats_data
                 )
             
+            # Если есть пригласивший, обновляем его статистику
+            if inviter_data:
+                update_inviter_stats(inviter_data['inviter_id'], created_user['id'])
+            
             return created_user
         else:
+            print(f"❌ Failed to create user: {response.text}")
             raise HTTPException(status_code=500, detail="Failed to create user")
             
     except Exception as e:
         print(f"Database error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+def update_inviter_stats(inviter_id: int, new_referral_id: int):
+    """Обновляем статистику пригласившего"""
+    headers = get_supabase_headers()
+    
+    try:
+        # Получаем уровень нового реферала
+        response = requests.get(
+            f"{SUPABASE_URL}/rest/v1/nodeon_users?id=eq.{new_referral_id}",
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            users = response.json()
+            if users:
+                referral_level = users[0].get('referral_level', 1)
+                
+                # Обновляем статистику пригласившего
+                stats_data = {
+                    "total_referrals": f"total_referrals + 1"
+                }
+                
+                requests.patch(
+                    f"{SUPABASE_URL}/rest/v1/nodeon_referral_stats?user_id=eq.{inviter_id}&level=eq.{referral_level}",
+                    headers=headers,
+                    json=stats_data
+                )
+                
+                print(f"✅ Updated inviter stats for user {inviter_id}, level {referral_level}")
+    except Exception as e:
+        print(f"Error updating inviter stats: {e}")
 
 @app.get("/")
 async def root():
@@ -163,11 +241,11 @@ async def api_test_endpoint():
     return {"message": "Supabase API is working", "status": "ok"}
 
 @app.get("/api/user/profile")
-async def get_user_profile(init_data: str = None):
+async def get_user_profile(init_data: str = None, referral_token: str = None):
     """Получить профиль пользователя"""
     try:
         telegram_user = verify_telegram_auth(init_data)
-        user = get_or_create_user(telegram_user)
+        user = get_or_create_user(telegram_user, referral_token)
         
         # Получаем статистику рефералов
         headers = get_supabase_headers()
@@ -463,6 +541,220 @@ async def get_user_transactions(init_data: str = None, limit: int = 20):
         
     except Exception as e:
         print(f"Error getting transactions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/stats/referrals")
+async def get_user_referrals(init_data: str = None):
+    """Получить рефералов пользователя"""
+    try:
+        telegram_user = verify_telegram_auth(init_data)
+        user = get_or_create_user(telegram_user)
+        
+        headers = get_supabase_headers()
+        
+        # Вызываем функцию для получения рефералов
+        response = requests.post(
+            f"{SUPABASE_URL}/rest/v1/rpc/get_user_referrals",
+            headers=headers,
+            json={"user_telegram_id": user['telegram_id']}
+        )
+        
+        if response.status_code == 200:
+            referrals = response.json()
+            
+            # Группируем по уровням
+            referrals_by_level = {}
+            for ref in referrals:
+                level = ref['level']
+                if level not in referrals_by_level:
+                    referrals_by_level[level] = []
+                
+                referrals_by_level[level].append({
+                    "user_id": ref['user_id'],
+                    "telegram_id": ref['telegram_id'],
+                    "first_name": ref['first_name'],
+                    "username": ref['username'],
+                    "balance_ndn": float(ref['balance_ndn']),
+                    "is_pro": ref['is_pro'],
+                    "created_at": ref['created_at']
+                })
+            
+            return {
+                "referrals_by_level": referrals_by_level,
+                "total_referrals": len(referrals)
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to get referrals")
+        
+    except Exception as e:
+        print(f"Error getting referrals: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/stars/config")
+async def get_stars_config():
+    """Получить конфигурацию Stars"""
+    try:
+        headers = get_supabase_headers()
+        
+        # Вызываем функцию для получения конфигурации
+        response = requests.post(
+            f"{SUPABASE_URL}/rest/v1/rpc/get_stars_config",
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            config = response.json()
+            return {
+                "success": True,
+                "config": config
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to get Stars config")
+        
+    except Exception as e:
+        print(f"Error getting Stars config: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/stars/buy-ndn")
+async def buy_ndn_with_stars(request: Request, init_data: str = None):
+    """Покупка NDN за Telegram Stars"""
+    try:
+        # Получаем данные из запроса
+        if not init_data:
+            try:
+                body = await request.json()
+                init_data = body.get('init_data', 'test_data')
+            except:
+                init_data = 'test_data'
+        
+        telegram_user = verify_telegram_auth(init_data)
+        user = get_or_create_user(telegram_user)
+        
+        # Получаем параметры покупки
+        try:
+            body = await request.json()
+            stars_amount = float(body.get('stars_amount', 100))
+            payment_id = body.get('payment_id', f"stars_{user['id']}_{int(datetime.utcnow().timestamp())}")
+        except:
+            stars_amount = 100.0
+            payment_id = f"stars_{user['id']}_{int(datetime.utcnow().timestamp())}"
+        
+        if stars_amount <= 0:
+            raise HTTPException(status_code=400, detail="Invalid Stars amount")
+        
+        # Получаем конфигурацию Stars
+        headers = get_supabase_headers()
+        config_response = requests.post(
+            f"{SUPABASE_URL}/rest/v1/rpc/get_stars_config",
+            headers=headers
+        )
+        
+        if config_response.status_code != 200:
+            raise HTTPException(status_code=500, detail="Failed to get Stars config")
+        
+        config = config_response.json()
+        stars_to_ndn_rate = float(config.get('stars_to_ndn_rate', 1.0))
+        min_stars = float(config.get('min_stars_purchase', 10))
+        max_stars = float(config.get('max_stars_purchase', 10000))
+        
+        # Проверяем лимиты
+        if stars_amount < min_stars:
+            raise HTTPException(status_code=400, detail=f"Minimum purchase: {min_stars} Stars")
+        
+        if stars_amount > max_stars:
+            raise HTTPException(status_code=400, detail=f"Maximum purchase: {max_stars} Stars")
+        
+        # Рассчитываем количество NDN
+        ndn_amount = stars_amount * stars_to_ndn_rate
+        
+        # Обрабатываем платеж
+        payment_response = requests.post(
+            f"{SUPABASE_URL}/rest/v1/rpc/process_stars_payment",
+            headers=headers,
+            json={
+                "p_user_id": user['id'],
+                "p_payment_id": payment_id,
+                "p_stars_amount": stars_amount,
+                "p_ndn_amount": ndn_amount,
+                "p_telegram_payment_id": None  # Будет заполнено при реальной интеграции
+            }
+        )
+        
+        if payment_response.status_code == 200:
+            result = payment_response.json()
+            if result.get('success'):
+                return {
+                    "success": True,
+                    "message": f"Успешно куплено {ndn_amount} NDN за {stars_amount} Stars",
+                    "ndn_amount": ndn_amount,
+                    "stars_amount": stars_amount,
+                    "new_ndn_balance": result.get('new_ndn_balance'),
+                    "new_stars_balance": result.get('new_stars_balance')
+                }
+            else:
+                raise HTTPException(status_code=400, detail=result.get('error', 'Payment failed'))
+        else:
+            raise HTTPException(status_code=500, detail="Failed to process Stars payment")
+        
+    except Exception as e:
+        print(f"Error buying NDN with Stars: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/stars/withdraw")
+async def withdraw_ndn_to_stars(request: Request, init_data: str = None):
+    """Вывод NDN в Telegram Stars"""
+    try:
+        # Получаем данные из запроса
+        if not init_data:
+            try:
+                body = await request.json()
+                init_data = body.get('init_data', 'test_data')
+            except:
+                init_data = 'test_data'
+        
+        telegram_user = verify_telegram_auth(init_data)
+        user = get_or_create_user(telegram_user)
+        
+        # Получаем параметры вывода
+        try:
+            body = await request.json()
+            ndn_amount = float(body.get('ndn_amount', 50))
+        except:
+            ndn_amount = 50.0
+        
+        if ndn_amount <= 0:
+            raise HTTPException(status_code=400, detail="Invalid NDN amount")
+        
+        # Обрабатываем вывод
+        headers = get_supabase_headers()
+        withdrawal_response = requests.post(
+            f"{SUPABASE_URL}/rest/v1/rpc/withdraw_ndn_to_stars",
+            headers=headers,
+            json={
+                "p_user_id": user['id'],
+                "p_ndn_amount": ndn_amount
+            }
+        )
+        
+        if withdrawal_response.status_code == 200:
+            result = withdrawal_response.json()
+            if result.get('success'):
+                return {
+                    "success": True,
+                    "message": f"Успешно выведено {result.get('stars_amount')} Stars за {ndn_amount} NDN",
+                    "ndn_amount": ndn_amount,
+                    "stars_amount": result.get('stars_amount'),
+                    "withdrawal_fee": result.get('withdrawal_fee'),
+                    "new_ndn_balance": result.get('new_ndn_balance'),
+                    "new_stars_balance": result.get('new_stars_balance')
+                }
+            else:
+                raise HTTPException(status_code=400, detail=result.get('error', 'Withdrawal failed'))
+        else:
+            raise HTTPException(status_code=500, detail="Failed to process withdrawal")
+        
+    except Exception as e:
+        print(f"Error withdrawing NDN to Stars: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
