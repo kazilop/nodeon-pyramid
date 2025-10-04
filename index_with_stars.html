@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeOn Pyramid - Реферальная игра с NDN</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .user-info {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .user-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        .balance-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .balance-card.stars {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .balance-amount {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .pro-status {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #8b4513;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .pro-status.pro {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #2c3e50;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .referral-section {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .referral-link {
+            background: white;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .leaderboard {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .leaderboard h3 {
+            margin-bottom: 15px;
+            text-align: center;
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        .leader-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .leader-item:last-child {
+            border-bottom: none;
+        }
+
+        .leader-rank {
+            font-weight: 700;
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+        .leader-name {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .leader-balance {
+            font-weight: 600;
+            color: #27ae60;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--tg-theme-bg-color, #ffffff);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .conversion-display {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .conversion-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .conversion-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .conversion-label {
+            font-weight: 600;
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        .conversion-value {
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--tg-theme-hint-color, #999);
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .stars-info {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .stars-info p {
+            margin: 5px 0;
+        }
+
+        .input-help {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #999);
+            margin-top: 5px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .balance-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 NodeOn Pyramid</h1>
+            <p>Реферальная игра с монетами NDN</p>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading">
+            <p>Загрузка данных...</p>
+        </div>
+
+        <!-- Error -->
+        <div id="error" class="error" style="display: none;">
+            <p id="errorMessage"></p>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" style="display: none;">
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="user-name" id="userName">Загрузка...</div>
+                
+                <!-- Balance Section -->
+                <div class="balance-section">
+                    <div class="balance-card">
+                        <div class="balance-amount" id="ndnBalance">0</div>
+                        <div class="balance-label">NDN</div>
+                    </div>
+                    <div class="balance-card stars">
+                        <div class="balance-amount" id="starsBalance">0</div>
+                        <div class="balance-label">⭐ Stars</div>
+                    </div>
+                </div>
+
+                <!-- Pro Status -->
+                <div class="pro-status" id="proStatus">
+                    <p>🔒 Требуется Pro статус для доступа к реферальной программе</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="showStarsPurchaseModal()">
+                    💰 Купить NDN за Stars
+                </button>
+                <button class="btn btn-secondary" onclick="showStarsWithdrawModal()">
+                    ⭐ Вывести NDN в Stars
+                </button>
+                <button class="btn btn-success" onclick="buyProStatus()" id="buyProBtn">
+                    👑 Купить Pro статус
+                </button>
+                <button class="btn btn-warning" onclick="loadReferralStats()">
+                    📊 Статистика
+                </button>
+            </div>
+
+            <!-- Referral Section -->
+            <div class="referral-section" id="referralSection" style="display: none;">
+                <h3>🔗 Ваша реферальная ссылка</h3>
+                <div class="referral-link" id="referralLink">Загрузка...</div>
+                <button class="copy-btn" onclick="copyReferralLink()">Копировать ссылку</button>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="leaderboard">
+                <h3>🏆 Топ игроков</h3>
+                <div id="leaderboardList">
+                    <div class="loading">Загрузка лидеров...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stars Purchase Modal -->
+        <div id="starsPurchaseModal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeStarsPurchaseModal()">&times;</button>
+                <h3>💰 Покупка NDN за Stars</h3>
+                
+                <div class="stars-info">
+                    <p>Ваш баланс Stars: <span id="userStarsBalance">0</span></p>
+                    <p>Курс: 1 Star = <span id="starsRate">1</span> NDN</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="starsAmount">Количество Stars:</label>
+                    <input type="number" id="starsAmount" min="10" max="10000" step="0.1" placeholder="Введите количество Stars">
+                    <div class="input-help">Минимум: <span id="minStars">10</span> Stars, Максимум: <span id="maxStars">10000</span> Stars</div>
+                </div>
+
+                <div class="conversion-display">
+                    <div class="conversion-item">
+                        <span class="conversion-label">Stars:</span>
+                        <span class="conversion-value" id="displayStarsAmount">0</span>
+                    </div>
+                    <div class="conversion-item">
+                        <span class="conversion-label">NDN:</span>
+                        <span class="conversion-value" id="displayNdnAmount">0</span>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="confirmStarsPurchase()">Оплатить</button>
+                    <button class="btn btn-secondary" onclick="closeStarsPurchaseModal()">Отмена</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stars Withdraw Modal -->
+        <div id="starsWithdrawModal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeStarsWithdrawModal()">&times;</button>
+                <h3>⭐ Вывод NDN в Stars</h3>
+                
+                <div class="stars-info">
+                    <p>Ваш баланс NDN: <span id="userNdnBalance">0</span></p>
+                    <p>Комиссия за вывод: <span id="withdrawalFeePercent">5</span>%</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="ndnAmount">Количество NDN:</label>
+                    <input type="number" id="ndnAmount" min="1" step="0.1" placeholder="Введите количество NDN">
+                </div>
+
+                <div class="conversion-display">
+                    <div class="conversion-item">
+                        <span class="conversion-label">NDN к выводу:</span>
+                        <span class="conversion-value" id="displayNdnWithdraw">0</span>
+                    </div>
+                    <div class="conversion-item">
+                        <span class="conversion-label">Комиссия:</span>
+                        <span class="conversion-value" id="displayWithdrawalFee">0</span>
+                    </div>
+                    <div class="conversion-item">
+                        <span class="conversion-label">Получите Stars:</span>
+                        <span class="conversion-value" id="displayStarsWithdraw">0</span>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="confirmStarsWithdraw()">Вывести</button>
+                    <button class="btn btn-secondary" onclick="closeStarsWithdrawModal()">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Конфигурация
+        const API_BASE = 'https://nodeon-production.up.railway.app/api';
+        let currentUser = null;
+        let starsConfig = null;
+
+        // Инициализация Telegram WebApp
+        function initTelegramWebApp() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+                return true;
+            }
+            return false;
+        }
+
+        // Проверка авторизации
+        function checkAuth() {
+            if (!window.Telegram || !window.Telegram.WebApp) {
+                showError('Приложение должно быть запущено в Telegram Mini App');
+                return false;
+            }
+
+            const initData = window.Telegram.WebApp.initData;
+            if (!initData || initData.trim() === '') {
+                showError('Требуется авторизация через Telegram. Откройте приложение в Telegram Mini App.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Показать ошибку
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'none';
+        }
+
+        // Загрузка данных пользователя
+        async function loadUserData() {
+            if (!checkAuth()) return;
+
+            try {
+                const initData = window.Telegram.WebApp.initData;
+                const response = await fetch(`${API_BASE}/user/profile?init_data=${encodeURIComponent(initData)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    updateUI(data);
+                } else {
+                    throw new Error(data.message || 'Ошибка загрузки данных пользователя');
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showError('Ошибка загрузки данных: ' + error.message);
+            }
+        }
+
+        // Обновление UI
+        function updateUI(data) {
+            const user = data.user;
+            
+            // Имя пользователя
+            document.getElementById('userName').textContent = `Привет, ${user.first_name}!`;
+            
+            // Балансы
+            document.getElementById('ndnBalance').textContent = user.balance_ndn.toFixed(2);
+            document.getElementById('starsBalance').textContent = user.balance_stars.toFixed(2);
+            
+            // Pro статус
+            const proStatus = document.getElementById('proStatus');
+            if (user.is_pro) {
+                proStatus.className = 'pro-status pro';
+                proStatus.innerHTML = '<p>👑 У вас есть Pro статус!</p>';
+                document.getElementById('referralSection').style.display = 'block';
+                document.getElementById('referralLink').textContent = user.referral_link || 'Генерация ссылки...';
+                document.getElementById('buyProBtn').style.display = 'none';
+            } else {
+                proStatus.className = 'pro-status';
+                proStatus.innerHTML = '<p>🔒 Требуется Pro статус для доступа к реферальной программе</p>';
+                document.getElementById('referralSection').style.display = 'none';
+                document.getElementById('buyProBtn').style.display = 'block';
+            }
+
+            // Скрываем загрузку и показываем контент
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        // Загрузка конфигурации Stars
+        async function loadStarsConfig() {
+            try {
+                const response = await fetch(`${API_BASE}/stars/config`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    starsConfig = data.config;
+                    updateStarsConfigUI();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки конфигурации Stars:', error);
+            }
+        }
+
+        // Обновление UI конфигурации Stars
+        function updateStarsConfigUI() {
+            if (!starsConfig) return;
+
+            document.getElementById('starsRate').textContent = starsConfig.stars_to_ndn_rate;
+            document.getElementById('minStars').textContent = starsConfig.min_stars_purchase;
+            document.getElementById('maxStars').textContent = starsConfig.max_stars_purchase;
+            document.getElementById('withdrawalFeePercent').textContent = starsConfig.stars_withdrawal_fee_percent;
+        }
+
+        // Показать модальное окно покупки Stars
+        function showStarsPurchaseModal() {
+            if (!currentUser) {
+                alert('Ошибка: данные пользователя не загружены');
+                return;
+            }
+
+            document.getElementById('userStarsBalance').textContent = currentUser.balance_stars.toFixed(2);
+            document.getElementById('starsAmount').value = '';
+            document.getElementById('displayStarsAmount').textContent = '0';
+            document.getElementById('displayNdnAmount').textContent = '0';
+            document.getElementById('starsPurchaseModal').style.display = 'block';
+        }
+
+        // Закрыть модальное окно покупки Stars
+        function closeStarsPurchaseModal() {
+            document.getElementById('starsPurchaseModal').style.display = 'none';
+        }
+
+        // Показать модальное окно вывода Stars
+        function showStarsWithdrawModal() {
+            if (!currentUser) {
+                alert('Ошибка: данные пользователя не загружены');
+                return;
+            }
+
+            document.getElementById('userNdnBalance').textContent = currentUser.balance_ndn.toFixed(2);
+            document.getElementById('ndnAmount').value = '';
+            document.getElementById('displayNdnWithdraw').textContent = '0';
+            document.getElementById('displayWithdrawalFee').textContent = '0';
+            document.getElementById('displayStarsWithdraw').textContent = '0';
+            document.getElementById('starsWithdrawModal').style.display = 'block';
+        }
+
+        // Закрыть модальное окно вывода Stars
+        function closeStarsWithdrawModal() {
+            document.getElementById('starsWithdrawModal').style.display = 'none';
+        }
+
+        // Обновление расчета покупки Stars
+        function updateStarsPurchaseCalculation() {
+            const starsAmount = parseFloat(document.getElementById('starsAmount').value) || 0;
+            const rate = starsConfig ? parseFloat(starsConfig.stars_to_ndn_rate) : 1.0;
+            const ndnAmount = starsAmount * rate;
+
+            document.getElementById('displayStarsAmount').textContent = starsAmount.toFixed(2);
+            document.getElementById('displayNdnAmount').textContent = ndnAmount.toFixed(2);
+        }
+
+        // Обновление расчета вывода Stars
+        function updateStarsWithdrawCalculation() {
+            const ndnAmount = parseFloat(document.getElementById('ndnAmount').value) || 0;
+            const feePercent = starsConfig ? parseFloat(starsConfig.stars_withdrawal_fee_percent) : 5.0;
+            const rate = starsConfig ? parseFloat(starsConfig.stars_to_ndn_rate) : 1.0;
+            
+            const fee = ndnAmount * (feePercent / 100);
+            const ndnAfterFee = ndnAmount - fee;
+            const starsAmount = ndnAfterFee * rate;
+
+            document.getElementById('displayNdnWithdraw').textContent = ndnAmount.toFixed(2);
+            document.getElementById('displayWithdrawalFee').textContent = fee.toFixed(2);
+            document.getElementById('displayStarsWithdraw').textContent = starsAmount.toFixed(2);
+        }
+
+        // Подтверждение покупки Stars
+        async function confirmStarsPurchase() {
+            const starsAmount = parseFloat(document.getElementById('starsAmount').value);
+            
+            if (!starsAmount || starsAmount <= 0) {
+                alert('Введите корректное количество Stars');
+                return;
+            }
+
+            if (starsConfig) {
+                const minStars = parseFloat(starsConfig.min_stars_purchase);
+                const maxStars = parseFloat(starsConfig.max_stars_purchase);
+                
+                if (starsAmount < minStars || starsAmount > maxStars) {
+                    alert(`Количество Stars должно быть от ${minStars} до ${maxStars}`);
+                    return;
+                }
+            }
+
+            try {
+                const initData = window.Telegram.WebApp.initData;
+                const response = await fetch(`${API_BASE}/stars/create-payment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        init_data: initData,
+                        stars_amount: starsAmount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Платеж создан! Перейдите по ссылке для оплаты: ${data.payment_url}`);
+                    closeStarsPurchaseModal();
+                    // Обновляем данные пользователя
+                    loadUserData();
+                } else {
+                    alert('Ошибка создания платежа: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Ошибка создания платежа:', error);
+                alert('Ошибка создания платежа');
+            }
+        }
+
+        // Подтверждение вывода Stars
+        async function confirmStarsWithdraw() {
+            const ndnAmount = parseFloat(document.getElementById('ndnAmount').value);
+            
+            if (!ndnAmount || ndnAmount <= 0) {
+                alert('Введите корректное количество NDN');
+                return;
+            }
+
+            if (ndnAmount > currentUser.balance_ndn) {
+                alert('Недостаточно NDN для вывода');
+                return;
+            }
+
+            try {
+                const initData = window.Telegram.WebApp.initData;
+                const response = await fetch(`${API_BASE}/stars/withdraw`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        init_data: initData,
+                        ndn_amount: ndnAmount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Вывод успешно обработан! Получено ${data.stars_amount} Stars`);
+                    closeStarsWithdrawModal();
+                    // Обновляем данные пользователя
+                    loadUserData();
+                } else {
+                    alert('Ошибка вывода: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Ошибка вывода:', error);
+                alert('Ошибка вывода');
+            }
+        }
+
+        // Покупка Pro статуса
+        async function buyProStatus() {
+            if (!currentUser) {
+                alert('Ошибка: данные пользователя не загружены');
+                return;
+            }
+
+            if (currentUser.balance_ndn < 1000) {
+                alert('Недостаточно NDN для покупки Pro статуса. Требуется 1000 NDN');
+                return;
+            }
+
+            if (!confirm('Потратить 1000 NDN на покупку Pro статуса?')) {
+                return;
+            }
+
+            try {
+                const initData = window.Telegram.WebApp.initData;
+                const response = await fetch(`${API_BASE}/pro/buy`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        init_data: initData
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Pro статус успешно приобретен!');
+                    loadUserData();
+                } else {
+                    alert('Ошибка покупки Pro статуса: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Ошибка покупки Pro статуса:', error);
+                alert('Ошибка покупки Pro статуса');
+            }
+        }
+
+        // Копирование реферальной ссылки
+        function copyReferralLink() {
+            const referralLink = document.getElementById('referralLink').textContent;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(referralLink).then(() => {
+                    alert('Ссылка скопирована в буфер обмена!');
+                });
+            } else {
+                // Fallback для старых браузеров
+                const textArea = document.createElement('textarea');
+                textArea.value = referralLink;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Ссылка скопирована в буфер обмена!');
+            }
+        }
+
+        // Загрузка статистики рефералов
+        async function loadReferralStats() {
+            try {
+                const initData = window.Telegram.WebApp.initData;
+                const response = await fetch(`${API_BASE}/stats/referrals?init_data=${encodeURIComponent(initData)}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Ваша статистика рефералов:\nВсего рефералов: ${data.total_referrals}`);
+                } else {
+                    alert('Ошибка загрузки статистики: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки статистики:', error);
+                alert('Ошибка загрузки статистики');
+            }
+        }
+
+        // Загрузка лидерборда
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch(`${API_BASE}/stats/leaderboard`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const leaderboardList = document.getElementById('leaderboardList');
+                    leaderboardList.innerHTML = '';
+
+                    data.leaders.forEach(leader => {
+                        const leaderItem = document.createElement('div');
+                        leaderItem.className = 'leader-item';
+                        leaderItem.innerHTML = `
+                            <span class="leader-rank">#${leader.rank}</span>
+                            <span class="leader-name">${leader.first_name} ${leader.is_pro ? '👑' : ''}</span>
+                            <span class="leader-balance">${leader.balance_ndn.toFixed(2)} NDN</span>
+                        `;
+                        leaderboardList.appendChild(leaderItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки лидерборда:', error);
+                document.getElementById('leaderboardList').innerHTML = '<div class="error">Ошибка загрузки лидерборда</div>';
+            }
+        }
+
+        // Обработчики событий
+        document.getElementById('starsAmount').addEventListener('input', updateStarsPurchaseCalculation);
+        document.getElementById('ndnAmount').addEventListener('input', updateStarsWithdrawCalculation);
+
+        // Инициализация приложения
+        document.addEventListener('DOMContentLoaded', function() {
+            if (initTelegramWebApp()) {
+                loadUserData();
+                loadStarsConfig();
+                loadLeaderboard();
+            } else {
+                showError('Приложение должно быть запущено в Telegram Mini App');
+            }
+        });
+    </script>
+</body>
+</html>
