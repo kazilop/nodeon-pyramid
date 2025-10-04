@@ -1,5 +1,5 @@
-# Импортируем основное приложение из api/index.py
-from api.index import app
+# Импортируем упрощенное приложение для Supabase
+from main_supabase import app
 
 if __name__ == "__main__":
     import uvicorn
