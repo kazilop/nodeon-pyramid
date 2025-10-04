@@ -29,16 +29,11 @@ def get_supabase_headers():
     }
 
 def verify_telegram_auth(init_data: str) -> dict:
-    """Упрощенная верификация Telegram данных"""
+    """Строгая верификация Telegram данных - ТОЛЬКО Telegram авторизация"""
     try:
-        if not init_data or init_data == "test_data":
-            # Для тестирования возвращаем тестовые данные
-            return {
-                "id": 123456789,
-                "first_name": "Тестовый",
-                "last_name": "Пользователь",
-                "username": "testuser"
-            }
+        # Проверяем, что init_data не пустой и не тестовый
+        if not init_data or init_data == "test_data" or init_data == "":
+            raise ValueError("Требуется авторизация через Telegram. Приложение должно быть запущено в Telegram Mini App.")
         
         # URL декодируем данные
         import urllib.parse
@@ -51,37 +46,34 @@ def verify_telegram_auth(init_data: str) -> dict:
                 key, value = item.split('=', 1)
                 data[key] = value
         
+        # Проверяем обязательные поля Telegram
+        required_fields = ['user', 'auth_date', 'hash']
+        for field in required_fields:
+            if field not in data:
+                raise ValueError(f"Отсутствует обязательное поле Telegram: {field}")
+        
         # Парсим user данные
         user_data_str = data.get('user', '{}')
         
-        if user_data_str and user_data_str != '{}':
-            try:
-                user_data = json.loads(user_data_str)
-                print(f"✅ Successfully parsed Telegram user: {user_data.get('first_name')} (@{user_data.get('username')})")
-                return user_data
-            except json.JSONDecodeError as e:
-                print(f"❌ JSON decode error: {e}")
-                print(f"Raw user data: {user_data_str[:100]}...")
-        else:
-            print(f"❌ No user data found in init_data")
+        if not user_data_str or user_data_str == '{}':
+            raise ValueError("Отсутствуют данные пользователя Telegram")
         
-        # Fallback - возвращаем тестовые данные
-        print(f"⚠️ Using fallback user data")
-        return {
-            "id": 123456789,
-            "first_name": "Пользователь",
-            "last_name": "",
-            "username": "user"
-        }
+        try:
+            user_data = json.loads(user_data_str)
+            
+            # Проверяем обязательные поля пользователя
+            if 'id' not in user_data:
+                raise ValueError("Отсутствует ID пользователя Telegram")
+            
+            print(f"✅ Successfully verified Telegram user: {user_data.get('first_name')} (@{user_data.get('username')}) ID: {user_data.get('id')}")
+            return user_data
+            
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Ошибка парсинга данных пользователя Telegram: {e}")
         
     except Exception as e:
         print(f"❌ Telegram auth error: {e}")
-        return {
-            "id": 123456789,
-            "first_name": "Пользователь",
-            "last_name": "",
-            "username": "user"
-        }
+        raise ValueError(f"Ошибка авторизации Telegram: {str(e)}")
 
 def validate_referral_token(referral_token: str):
     """Валидация реферального токена"""
@@ -242,8 +234,11 @@ async def api_test_endpoint():
 
 @app.get("/api/user/profile")
 async def get_user_profile(init_data: str = None, referral_token: str = None):
-    """Получить профиль пользователя"""
+    """Получить профиль пользователя - ТОЛЬКО через Telegram"""
     try:
+        if not init_data:
+            raise HTTPException(status_code=401, detail="Требуется авторизация через Telegram. Откройте приложение в Telegram Mini App.")
+        
         telegram_user = verify_telegram_auth(init_data)
         user = get_or_create_user(telegram_user, referral_token)
         
@@ -283,21 +278,27 @@ async def get_user_profile(init_data: str = None, referral_token: str = None):
             "referral_stats": stats_dict
         }
         
+    except ValueError as e:
+        print(f"Telegram auth error: {e}")
+        raise HTTPException(status_code=401, detail=str(e))
     except Exception as e:
         print(f"Error getting user profile: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/pro/buy")
 async def buy_pro_status(request: Request, init_data: str = None):
-    """Покупка Pro статуса за 1000 NDN"""
+    """Покупка Pro статуса за 1000 NDN - ТОЛЬКО через Telegram"""
     try:
         # Если init_data не передан в query, попробуем получить из body
         if not init_data:
             try:
                 body = await request.json()
-                init_data = body.get('init_data', 'test_data')
+                init_data = body.get('init_data')
             except:
-                init_data = 'test_data'
+                pass
+        
+        if not init_data:
+            raise HTTPException(status_code=401, detail="Требуется авторизация через Telegram. Откройте приложение в Telegram Mini App.")
         
         telegram_user = verify_telegram_auth(init_data)
         user = get_or_create_user(telegram_user)
@@ -351,6 +352,9 @@ async def buy_pro_status(request: Request, init_data: str = None):
             "referral_link": update_data["referral_link"]
         }
         
+    except ValueError as e:
+        print(f"Telegram auth error: {e}")
+        raise HTTPException(status_code=401, detail=str(e))
     except HTTPException:
         raise
     except Exception as e:
@@ -359,16 +363,19 @@ async def buy_pro_status(request: Request, init_data: str = None):
 
 @app.post("/api/ndn/buy")
 async def buy_ndn(request: Request, init_data: str = None, amount_ndn: float = 100.0):
-    """Покупка NDN"""
+    """Покупка NDN (тестовая функция) - ТОЛЬКО через Telegram"""
     try:
         # Если init_data не передан в query, попробуем получить из body
         if not init_data:
             try:
                 body = await request.json()
-                init_data = body.get('init_data', 'test_data')
+                init_data = body.get('init_data')
                 amount_ndn = body.get('amount_ndn', amount_ndn)
             except:
-                init_data = 'test_data'
+                pass
+        
+        if not init_data:
+            raise HTTPException(status_code=401, detail="Требуется авторизация через Telegram. Откройте приложение в Telegram Mini App.")
         
         telegram_user = verify_telegram_auth(init_data)
         user = get_or_create_user(telegram_user)
@@ -405,6 +412,9 @@ async def buy_ndn(request: Request, init_data: str = None, amount_ndn: float = 1
         else:
             raise HTTPException(status_code=500, detail="Failed to create payment request")
         
+    except ValueError as e:
+        print(f"Telegram auth error: {e}")
+        raise HTTPException(status_code=401, detail=str(e))
     except HTTPException:
         raise
     except Exception as e:
@@ -462,6 +472,9 @@ async def withdraw_ndn(request: Request, init_data: str = None, amount_ndn: floa
         else:
             raise HTTPException(status_code=500, detail="Failed to create withdrawal request")
         
+    except ValueError as e:
+        print(f"Telegram auth error: {e}")
+        raise HTTPException(status_code=401, detail=str(e))
     except HTTPException:
         raise
     except Exception as e:
@@ -545,8 +558,11 @@ async def get_user_transactions(init_data: str = None, limit: int = 20):
 
 @app.get("/api/stats/referrals")
 async def get_user_referrals(init_data: str = None):
-    """Получить рефералов пользователя"""
+    """Получить рефералов пользователя - ТОЛЬКО через Telegram"""
     try:
+        if not init_data:
+            raise HTTPException(status_code=401, detail="Требуется авторизация через Telegram. Откройте приложение в Telegram Mini App.")
+        
         telegram_user = verify_telegram_auth(init_data)
         user = get_or_create_user(telegram_user)
         
@@ -586,6 +602,9 @@ async def get_user_referrals(init_data: str = None):
         else:
             raise HTTPException(status_code=500, detail="Failed to get referrals")
         
+    except ValueError as e:
+        print(f"Telegram auth error: {e}")
+        raise HTTPException(status_code=401, detail=str(e))
     except Exception as e:
         print(f"Error getting referrals: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -617,15 +636,18 @@ async def get_stars_config():
 
 @app.post("/api/stars/buy-ndn")
 async def buy_ndn_with_stars(request: Request, init_data: str = None):
-    """Покупка NDN за Telegram Stars"""
+    """Покупка NDN за Telegram Stars - ТОЛЬКО через Telegram"""
     try:
         # Получаем данные из запроса
         if not init_data:
             try:
                 body = await request.json()
-                init_data = body.get('init_data', 'test_data')
+                init_data = body.get('init_data')
             except:
-                init_data = 'test_data'
+                pass
+        
+        if not init_data:
+            raise HTTPException(status_code=401, detail="Требуется авторизация через Telegram. Откройте приложение в Telegram Mini App.")
         
         telegram_user = verify_telegram_auth(init_data)
         user = get_or_create_user(telegram_user)
@@ -696,21 +718,27 @@ async def buy_ndn_with_stars(request: Request, init_data: str = None):
         else:
             raise HTTPException(status_code=500, detail="Failed to process Stars payment")
         
+    except ValueError as e:
+        print(f"Telegram auth error: {e}")
+        raise HTTPException(status_code=401, detail=str(e))
     except Exception as e:
         print(f"Error buying NDN with Stars: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/stars/withdraw")
 async def withdraw_ndn_to_stars(request: Request, init_data: str = None):
-    """Вывод NDN в Telegram Stars"""
+    """Вывод NDN в Telegram Stars - ТОЛЬКО через Telegram"""
     try:
         # Получаем данные из запроса
         if not init_data:
             try:
                 body = await request.json()
-                init_data = body.get('init_data', 'test_data')
+                init_data = body.get('init_data')
             except:
-                init_data = 'test_data'
+                pass
+        
+        if not init_data:
+            raise HTTPException(status_code=401, detail="Требуется авторизация через Telegram. Откройте приложение в Telegram Mini App.")
         
         telegram_user = verify_telegram_auth(init_data)
         user = get_or_create_user(telegram_user)
@@ -753,6 +781,9 @@ async def withdraw_ndn_to_stars(request: Request, init_data: str = None):
         else:
             raise HTTPException(status_code=500, detail="Failed to process withdrawal")
         
+    except ValueError as e:
+        print(f"Telegram auth error: {e}")
+        raise HTTPException(status_code=401, detail=str(e))
     except Exception as e:
         print(f"Error withdrawing NDN to Stars: {e}")
         raise HTTPException(status_code=500, detail=str(e))
