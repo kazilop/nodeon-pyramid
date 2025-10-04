@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 import json
@@ -198,9 +198,17 @@ async def get_user_profile(init_data: str = None):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/pro/buy")
-async def buy_pro_status(init_data: str = None):
+async def buy_pro_status(request: Request, init_data: str = None):
     """Покупка Pro статуса за 1000 NDN"""
     try:
+        # Если init_data не передан в query, попробуем получить из body
+        if not init_data:
+            try:
+                body = await request.json()
+                init_data = body.get('init_data', 'test_data')
+            except:
+                init_data = 'test_data'
+        
         telegram_user = verify_telegram_auth(init_data)
         user = get_or_create_user(telegram_user)
         
@@ -260,9 +268,18 @@ async def buy_pro_status(init_data: str = None):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/ndn/buy")
-async def buy_ndn(init_data: str = None, amount_ndn: float = 100.0):
+async def buy_ndn(request: Request, init_data: str = None, amount_ndn: float = 100.0):
     """Покупка NDN"""
     try:
+        # Если init_data не передан в query, попробуем получить из body
+        if not init_data:
+            try:
+                body = await request.json()
+                init_data = body.get('init_data', 'test_data')
+                amount_ndn = body.get('amount_ndn', amount_ndn)
+            except:
+                init_data = 'test_data'
+        
         telegram_user = verify_telegram_auth(init_data)
         user = get_or_create_user(telegram_user)
         
@@ -305,9 +322,18 @@ async def buy_ndn(init_data: str = None, amount_ndn: float = 100.0):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/ndn/withdraw")
-async def withdraw_ndn(init_data: str = None, amount_ndn: float = 50.0):
+async def withdraw_ndn(request: Request, init_data: str = None, amount_ndn: float = 50.0):
     """Вывод NDN"""
     try:
+        # Если init_data не передан в query, попробуем получить из body
+        if not init_data:
+            try:
+                body = await request.json()
+                init_data = body.get('init_data', 'test_data')
+                amount_ndn = body.get('amount_ndn', amount_ndn)
+            except:
+                init_data = 'test_data'
+        
         telegram_user = verify_telegram_auth(init_data)
         user = get_or_create_user(telegram_user)
         
