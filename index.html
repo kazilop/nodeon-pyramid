@@ -122,9 +122,25 @@
             animation: fadeIn 0.5s ease-in-out;
         }
 
-        .page.active {
-            display: block;
-        }
+            .page.active {
+                display: block;
+            }
+            .error-message {
+                background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+                padding: 30px;
+                border-radius: 16px;
+                text-align: center;
+                border: 2px solid #ff6b6b;
+            }
+            .error-message h3 {
+                color: #ff6b6b;
+                margin: 0 0 15px 0;
+            }
+            .error-message p {
+                color: var(--tg-theme-text-color, #000000);
+                margin: 10px 0;
+                line-height: 1.5;
+            }
 
         .dashboard-card {
             background: rgba(255, 255, 255, 0.1);
@@ -819,24 +835,24 @@
             try {
                 showLoading();
                 
-                // Сначала тестируем подключение к API
-                console.log('Testing API connection...');
-                const testResponse = await fetch(`${API_BASE}/test`);
-                if (!testResponse.ok) {
-                    throw new Error(`API test failed: ${testResponse.status}`);
+                // Проверяем, что мы в Telegram WebApp
+                if (!window.Telegram || !window.Telegram.WebApp) {
+                    throw new Error('Приложение должно быть запущено в Telegram');
                 }
-                const testData = await testResponse.json();
-                console.log('API test result:', testData);
                 
-                // Получаем данные от Telegram
+                // Получаем данные от Telegram WebApp
                 const initData = tg.initData;
-                console.log('Telegram initData:', initData);
+                const user = tg.initDataUnsafe?.user;
                 
-                // Используем initData или тестовые данные
-                const apiInitData = initData || 'test_data';
+                console.log('Telegram WebApp initData:', initData);
+                console.log('Telegram WebApp user:', user);
+                
+                if (!initData || !user) {
+                    throw new Error('Не удалось получить данные от Telegram. Убедитесь, что приложение запущено в Telegram.');
+                }
 
-                // Загружаем профиль пользователя
-                const apiUrl = `${API_BASE}/user/profile?init_data=${encodeURIComponent(apiInitData)}`;
+                // Загружаем профиль пользователя через API
+                const apiUrl = `${API_BASE}/user/profile?init_data=${encodeURIComponent(initData)}`;
                 console.log('API URL:', apiUrl);
 
                 const response = await fetch(apiUrl);
@@ -858,16 +874,16 @@
                 
             } catch (error) {
                 console.error('Error loading user data:', error);
-                showNotification('Ошибка загрузки данных: ' + error.message, 'error');
+                showNotification('Ошибка: ' + error.message, 'error');
                 
-                // Fallback данные для демонстрации
-                currentUser = {
-                    first_name: tg.initDataUnsafe?.user?.first_name || 'Пользователь',
-                    balance_ndn: 0,
-                    is_pro: false,
-                    referral_link: ''
-                };
-                updateUI();
+                // Показываем сообщение об ошибке
+                document.getElementById('dashboard').innerHTML = `
+                    <div class="error-message">
+                        <h3>❌ Ошибка загрузки</h3>
+                        <p>${error.message}</p>
+                        <p>Убедитесь, что приложение запущено в Telegram через бота.</p>
+                    </div>
+                `;
             } finally {
                 hideLoading();
             }
@@ -983,8 +999,12 @@
             try {
                 showLoading();
                 
-                const initData = tg.initData || 'test_data';
-                const response = await fetch(`${API_BASE}/pro/buy?init_data=${encodeURIComponent(initData)}`, {
+                // Проверяем Telegram данные
+                if (!tg.initData) {
+                    throw new Error('Не удалось получить данные от Telegram');
+                }
+                
+                const response = await fetch(`${API_BASE}/pro/buy?init_data=${encodeURIComponent(tg.initData)}`, {
                     method: 'POST'
                 });
 
@@ -999,7 +1019,7 @@
 
             } catch (error) {
                 console.error('Error buying Pro status:', error);
-                showNotification('Ошибка покупки Pro статуса', 'error');
+                showNotification('Ошибка: ' + error.message, 'error');
             } finally {
                 hideLoading();
             }
@@ -1016,8 +1036,12 @@
             try {
                 showLoading();
                 
-                const initData = tg.initData || 'test_data';
-                const response = await fetch(`${API_BASE}/ndn/buy?init_data=${encodeURIComponent(initData)}&amount_ndn=${parseFloat(amount)}`, {
+                // Проверяем Telegram данные
+                if (!tg.initData) {
+                    throw new Error('Не удалось получить данные от Telegram');
+                }
+                
+                const response = await fetch(`${API_BASE}/ndn/buy?init_data=${encodeURIComponent(tg.initData)}&amount_ndn=${parseFloat(amount)}`, {
                     method: 'POST'
                 });
 
@@ -1032,7 +1056,7 @@
 
             } catch (error) {
                 console.error('Error buying NDN:', error);
-                showNotification('Ошибка покупки NDN', 'error');
+                showNotification('Ошибка: ' + error.message, 'error');
             } finally {
                 hideLoading();
             }
@@ -1054,8 +1078,12 @@
             try {
                 showLoading();
                 
-                const initData = tg.initData || 'test_data';
-                const response = await fetch(`${API_BASE}/ndn/withdraw?init_data=${encodeURIComponent(initData)}&amount_ndn=${parseFloat(amount)}`, {
+                // Проверяем Telegram данные
+                if (!tg.initData) {
+                    throw new Error('Не удалось получить данные от Telegram');
+                }
+                
+                const response = await fetch(`${API_BASE}/ndn/withdraw?init_data=${encodeURIComponent(tg.initData)}&amount_ndn=${parseFloat(amount)}`, {
                     method: 'POST'
                 });
 
@@ -1070,7 +1098,7 @@
 
             } catch (error) {
                 console.error('Error withdrawing NDN:', error);
-                showNotification('Ошибка вывода NDN', 'error');
+                showNotification('Ошибка: ' + error.message, 'error');
             } finally {
                 hideLoading();
             }
