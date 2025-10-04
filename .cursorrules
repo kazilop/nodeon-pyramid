@@ -1,0 +1,278 @@
+# NodeOn Pyramid - Правила для Cursor.com
+
+## Описание проекта
+Telegram Mini App - реферальная игра с монетами NDN. Пользователи покупают Pro статус за 1000 NDN и зарабатывают с рефералов до 7 уровней в глубину.
+
+## Архитектура
+- **Backend**: FastAPI + PostgreSQL + Redis
+- **Frontend**: React + Telegram WebApp SDK
+- **Bot**: python-telegram-bot
+- **Deploy**: Docker Compose
+
+## Структура проекта
+```
+├── backend/           # FastAPI бэкенд
+│   ├── main.py       # Основное приложение
+│   ├── database.py   # Модели БД
+│   ├── config.py     # Конфигурация
+│   ├── routers/      # API роутеры
+│   └── telegram_bot.py # Telegram бот
+├── frontend/         # React фронтенд
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   └── contexts/
+├── docker-compose.yml
+└── README.md
+```
+
+## Основные сущности
+
+### User (Пользователь)
+- telegram_id: int (уникальный)
+- username, first_name, last_name: str
+- balance_ndn: Decimal (баланс NDN)
+- is_pro: bool (Pro статус)
+- referral_link: str (реферальная ссылка)
+- inviter_id: int (ID пригласившего)
+
+### Transaction (Транзакция)
+- user_id: int
+- type: str (buy_ndn, withdraw_ndn, referral_reward, developer_fee, pro_purchase)
+- amount_ndn: Decimal
+- amount_stars: Decimal (для Stars)
+- description: str
+- referral_level: int (уровень реферала)
+
+### ReferralStats (Статистика рефералов)
+- user_id: int
+- level: int (1-7)
+- total_referrals: int
+- total_earnings: Decimal
+
+## Бизнес-логика
+
+### Реферальная система
+- 7 уровней в глубину
+- Награды: 200, 150, 150, 150, 150, 150, 150 NDN
+- Комиссия разработчика: 200 NDN с каждой покупки Pro
+
+### Покупка Pro статуса
+1. Проверка баланса (1000 NDN)
+2. Списывание NDN
+3. Активация Pro статуса
+4. Генерация реферальной ссылки
+5. Распределение наград по цепочке
+
+### Распределение наград
+```python
+# При покупке Pro статуса за 1000 NDN:
+developer_fee = 200  # Разработчику
+level_1 = 200        # 1-й уровень
+level_2_7 = 150      # 2-7 уровни (по 150)
+```
+
+## API Endpoints
+
+### Аутентификация
+- `POST /api/auth/login` - Авторизация через Telegram
+- `GET /api/auth/me` - Данные пользователя
+
+### Пользователи
+- `POST /api/users/buy-pro` - Покупка Pro статуса
+- `POST /api/users/withdraw` - Вывод NDN
+- `GET /api/users/balance/{user_id}` - Баланс
+
+### Платежи
+- `POST /api/payments/buy-ndn` - Покупка NDN
+- `POST /api/payments/telegram-stars-webhook` - Webhook Stars
+
+### Рефералы
+- `POST /api/referrals/join-by-referral` - Присоединение
+- `GET /api/referrals/referral-stats/{user_id}` - Статистика
+
+### Статистика
+- `GET /api/stats/dashboard/{user_id}` - Дашборд
+- `GET /api/stats/transactions/{user_id}` - Транзакции
+- `GET /api/stats/leaderboard` - Лидерборд
+
+## Стиль кода
+
+### Python (Backend)
+- Используй type hints
+- Pydantic для валидации
+- SQLAlchemy ORM
+- Async/await для I/O операций
+- Логирование через logging
+
+### JavaScript (Frontend)
+- React hooks
+- Styled-components для стилей
+- Axios для API
+- Context API для состояния
+- Telegram WebApp SDK
+
+### CSS
+- CSS переменные для тем Telegram
+- Mobile-first подход
+- Анимации через CSS
+- Responsive дизайн
+
+## Telegram WebApp
+
+### Инициализация
+```javascript
+window.Telegram.WebApp.ready();
+window.Telegram.WebApp.expand();
+```
+
+### Получение данных
+```javascript
+const user = window.Telegram.WebApp.initDataUnsafe.user;
+const initData = window.Telegram.WebApp.initData;
+```
+
+### Стили
+```css
+/* Используй переменные Telegram */
+background: var(--tg-theme-bg-color, #ffffff);
+color: var(--tg-theme-text-color, #000000);
+```
+
+## Безопасность
+
+### Валидация Telegram
+- Проверка подписи initData
+- Валидация auth_date
+- Проверка hash
+
+### API
+- Rate limiting
+- Валидация входных данных
+- Защита от SQL-инъекций
+- CORS настройки
+
+## База данных
+
+### Индексы
+- telegram_id (уникальный)
+- referral_link (уникальный)
+- user_id в транзакциях
+- created_at для сортировки
+
+### Связи
+- User -> Transaction (one-to-many)
+- User -> User (self-referential, inviter)
+- User -> ReferralStats (one-to-many)
+
+## Docker
+
+### Сервисы
+- postgres: PostgreSQL 15
+- redis: Redis 7
+- backend: FastAPI
+- frontend: React
+
+### Переменные окружения
+- DATABASE_URL
+- REDIS_URL
+- TELEGRAM_BOT_TOKEN
+- SECRET_KEY
+- DEVELOPER_TELEGRAM_ID
+
+## Тестирование
+
+### Unit тесты
+- Тесты моделей БД
+- Тесты API endpoints
+- Тесты бизнес-логики
+
+### Integration тесты
+- Тесты с реальной БД
+- Тесты Telegram WebApp
+- Тесты платежей
+
+## Мониторинг
+
+### Логирование
+- Все API запросы
+- Ошибки и исключения
+- Платежные операции
+- Реферальные действия
+
+### Метрики
+- Количество пользователей
+- Конверсия в Pro
+- Средний чек
+- Активность рефералов
+
+## Деплой
+
+### Production
+- HTTPS обязательно
+- Webhook для Telegram
+- Мониторинг ошибок
+- Резервные копии БД
+
+### Масштабирование
+- Горизонтальное масштабирование
+- Кэширование через Redis
+- CDN для статики
+- Load balancer
+
+## Частые задачи
+
+### Добавление нового API endpoint
+1. Создай роутер в `backend/routers/`
+2. Добавь в `main.py`
+3. Создай Pydantic модели
+4. Добавь тесты
+
+### Изменение UI компонента
+1. Обнови компонент в `frontend/src/components/`
+2. Используй styled-components
+3. Добавь анимации
+4. Тестируй на мобильных
+
+### Изменение бизнес-логики
+1. Обнови модели в `database.py`
+2. Измени логику в роутерах
+3. Обнови фронтенд
+4. Добавь миграции БД
+
+## Полезные команды
+
+### Docker
+```bash
+docker-compose up -d
+docker-compose logs -f backend
+docker-compose exec backend python -c "from database import engine; engine.execute('SELECT 1')"
+```
+
+### Backend
+```bash
+cd backend
+uvicorn main:app --reload
+python telegram_bot.py
+```
+
+### Frontend
+```bash
+cd frontend
+npm start
+npm run build
+```
+
+### База данных
+```bash
+# Создание миграции
+alembic revision --autogenerate -m "description"
+
+# Применение миграций
+alembic upgrade head
+```
+
+## Контакты
+- Telegram: @your_support_bot
+- GitHub: your-repo
+- Email: support@yourdomain.com
