@@ -29,11 +29,15 @@ app.add_middleware(
 def verify_telegram_auth(init_data: str) -> dict:
     """Верификация данных от Telegram"""
     try:
+        if not init_data:
+            raise HTTPException(status_code=401, detail="No init data provided")
+        
         # Парсим данные
         data = {}
         for item in init_data.split('&'):
-            key, value = item.split('=')
-            data[key] = value
+            if '=' in item:
+                key, value = item.split('=', 1)
+                data[key] = value
         
         # Проверяем hash
         bot_token = settings.telegram_bot_token
@@ -54,14 +58,77 @@ def verify_telegram_auth(init_data: str) -> dict:
             raise HTTPException(status_code=401, detail="Invalid Telegram auth")
         
         # Парсим user данные
-        user_data = json.loads(data.get('user', '{}'))
+        user_data_str = data.get('user', '{}')
+        if user_data_str:
+            user_data = json.loads(user_data_str)
+        else:
+            user_data = {}
+        
         return user_data
         
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON decode error: {e}")
+        raise HTTPException(status_code=401, detail="Invalid user data format")
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Telegram auth verification failed: {e}")
-        raise HTTPException(status_code=401, detail="Invalid auth data")
+        raise HTTPException(status_code=401, detail=f"Auth verification failed: {str(e)}")
 
-def get_or_create_user(telegram_user: dict, db: Session) -> User:
+def generate_referral_token(user_id: int) -> str:
+    """Генерация защищенного реферального токена"""
+    import time
+    import base64
+    
+    # Создаем токен: user_id + timestamp + secret
+    timestamp = int(time.time())
+    data = f"{user_id}:{timestamp}"
+    
+    # Подписываем токен
+    signature = hmac.new(
+        settings.secret_key.encode(),
+        data.encode(),
+        hashlib.sha256
+    ).hexdigest()[:16]  # Берем первые 16 символов
+    
+    token = f"{data}:{signature}"
+    return base64.b64encode(token.encode()).decode()
+
+def verify_referral_token(token: str) -> int:
+    """Проверка и декодирование реферального токена"""
+    try:
+        import time
+        
+        # Декодируем токен
+        decoded = base64.b64decode(token.encode()).decode()
+        parts = decoded.split(':')
+        
+        if len(parts) != 3:
+            return None
+            
+        user_id, timestamp, signature = parts
+        
+        # Проверяем подпись
+        data = f"{user_id}:{timestamp}"
+        expected_signature = hmac.new(
+            settings.secret_key.encode(),
+            data.encode(),
+            hashlib.sha256
+        ).hexdigest()[:16]
+        
+        if signature != expected_signature:
+            return None
+            
+        # Проверяем время (токен действителен 30 дней)
+        if int(time.time()) - int(timestamp) > 30 * 24 * 3600:
+            return None
+            
+        return int(user_id)
+        
+    except Exception:
+        return None
+
+def get_or_create_user(telegram_user: dict, db: Session, referral_token: str = None) -> User:
     """Получить или создать пользователя"""
     telegram_id = telegram_user.get('id')
     if not telegram_id:
@@ -70,6 +137,16 @@ def get_or_create_user(telegram_user: dict, db: Session) -> User:
     user = db.query(User).filter(User.telegram_id == telegram_id).first()
     
     if not user:
+        # Проверяем реферальный токен
+        inviter_id = None
+        if referral_token:
+            inviter_id = verify_referral_token(referral_token)
+            if inviter_id:
+                # Проверяем, что приглашающий существует и имеет Pro статус
+                inviter = db.query(User).filter(User.id == inviter_id, User.is_pro == True).first()
+                if not inviter:
+                    inviter_id = None
+        
         # Создаем нового пользователя
         user = User(
             telegram_id=telegram_id,
@@ -78,7 +155,8 @@ def get_or_create_user(telegram_user: dict, db: Session) -> User:
             last_name=telegram_user.get('last_name'),
             balance_ndn=Decimal('0'),
             is_pro=False,
-            referral_link=f"https://t.me/{settings.telegram_bot_username}?start=ref_{telegram_id}"
+            referral_link="",  # Будет создана только после покупки Pro
+            inviter_id=inviter_id
         )
         db.add(user)
         db.commit()
@@ -104,12 +182,13 @@ async def root():
 @app.get("/api/user/profile")
 async def get_user_profile(
     init_data: str,
+    referral_token: str = None,
     db: Session = Depends(get_db)
 ):
     """Получить профиль пользователя"""
     try:
         telegram_user = verify_telegram_auth(init_data)
-        user = get_or_create_user(telegram_user, db)
+        user = get_or_create_user(telegram_user, db, referral_token)
         
         # Получаем статистику рефералов
         referral_stats = db.query(ReferralStats).filter(
@@ -121,6 +200,12 @@ async def get_user_profile(
             'earnings': float(stat.total_earnings)
         } for stat in referral_stats}
         
+        # Генерируем реферальную ссылку только для Pro пользователей
+        referral_link = ""
+        if user.is_pro:
+            referral_token = generate_referral_token(user.id)
+            referral_link = f"https://t.me/{settings.telegram_bot_username}?startapp={referral_token}"
+        
         return {
             "user": {
                 "id": user.id,
@@ -130,7 +215,7 @@ async def get_user_profile(
                 "last_name": user.last_name,
                 "balance_ndn": float(user.balance_ndn),
                 "is_pro": user.is_pro,
-                "referral_link": user.referral_link,
+                "referral_link": referral_link,
                 "created_at": user.created_at.isoformat()
             },
             "referral_stats": stats_dict
@@ -242,6 +327,10 @@ async def buy_pro_status(
         # Списываем NDN
         user.balance_ndn -= pro_cost
         user.is_pro = True
+        
+        # Генерируем реферальную ссылку
+        referral_token = generate_referral_token(user.id)
+        user.referral_link = f"https://t.me/{settings.telegram_bot_username}?startapp={referral_token}"
         
         # Создаем транзакцию
         transaction = Transaction(

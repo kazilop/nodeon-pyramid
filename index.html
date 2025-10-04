@@ -636,12 +636,12 @@
                     <button class="btn btn-warning" onclick="withdrawNDN()">
                         <i class="fas fa-arrow-up"></i> Вывести NDN
                     </button>
-                    <button class="btn btn-primary btn-full" onclick="copyReferralLink()">
+                    <button class="btn btn-primary btn-full" onclick="copyReferralLink()" id="copyReferralBtn" style="display: none;">
                         <i class="fas fa-share"></i> Скопировать реферальную ссылку
                     </button>
                 </div>
 
-                <div class="referral-section">
+                <div class="referral-section" id="referralSection" style="display: none;">
                     <h3 style="margin-bottom: 15px; color: #ffd700;">
                         <i class="fas fa-link"></i> Ваша реферальная ссылка
                     </h3>
@@ -654,6 +654,18 @@
                     <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 10px;">
                         Поделитесь этой ссылкой с друзьями и зарабатывайте NDN!
                     </p>
+                </div>
+
+                <div class="referral-section" id="proRequiredSection" style="display: none;">
+                    <h3 style="margin-bottom: 15px; color: #ff6b6b;">
+                        <i class="fas fa-lock"></i> Требуется Pro статус
+                    </h3>
+                    <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px;">
+                        Для получения реферальной ссылки необходимо купить Pro статус за 1000 NDN
+                    </p>
+                    <button class="btn btn-primary" onclick="buyProStatus()">
+                        <i class="fas fa-crown"></i> Купить Pro статус
+                    </button>
                 </div>
             </div>
         </div>
@@ -813,10 +825,20 @@
                     throw new Error('No Telegram init data');
                 }
 
+                // Получаем реферальный токен из URL параметров
+                const urlParams = new URLSearchParams(window.location.search);
+                const referralToken = urlParams.get('ref') || urlParams.get('startapp');
+
                 // Загружаем профиль пользователя
-                const response = await fetch(`${API_BASE}/user/profile?init_data=${encodeURIComponent(initData)}`);
+                let apiUrl = `${API_BASE}/user/profile?init_data=${encodeURIComponent(initData)}`;
+                if (referralToken) {
+                    apiUrl += `&referral_token=${encodeURIComponent(referralToken)}`;
+                }
+
+                const response = await fetch(apiUrl);
                 if (!response.ok) {
-                    throw new Error('Failed to load user data');
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Failed to load user data');
                 }
 
                 userData = await response.json();
@@ -828,14 +850,14 @@
                 
             } catch (error) {
                 console.error('Error loading user data:', error);
-                showNotification('Ошибка загрузки данных', 'error');
+                showNotification('Ошибка загрузки данных: ' + error.message, 'error');
                 
                 // Fallback данные для демонстрации
                 currentUser = {
-                    first_name: 'Пользователь',
+                    first_name: tg.initDataUnsafe?.user?.first_name || 'Пользователь',
                     balance_ndn: 0,
                     is_pro: false,
-                    referral_link: 'https://t.me/pro_stars_bot?start=ref_123456'
+                    referral_link: ''
                 };
                 updateUI();
             } finally {
@@ -853,10 +875,26 @@
             // Обновляем баланс
             animateNumber('balanceAmount', currentUser.balance_ndn);
             
-            // Обновляем реферальную ссылку
-            document.getElementById('referralLink').innerHTML = 
-                currentUser.referral_link + 
-                '<button class="copy-btn" onclick="copyReferralLink()"><i class="fas fa-copy"></i></button>';
+            // Показываем/скрываем реферальную секцию в зависимости от Pro статуса
+            const referralSection = document.getElementById('referralSection');
+            const proRequiredSection = document.getElementById('proRequiredSection');
+            const copyReferralBtn = document.getElementById('copyReferralBtn');
+            
+            if (currentUser.is_pro && currentUser.referral_link) {
+                // Показываем реферальную ссылку для Pro пользователей
+                referralSection.style.display = 'block';
+                proRequiredSection.style.display = 'none';
+                copyReferralBtn.style.display = 'block';
+                
+                document.getElementById('referralLink').innerHTML = 
+                    currentUser.referral_link + 
+                    '<button class="copy-btn" onclick="copyReferralLink()"><i class="fas fa-copy"></i></button>';
+            } else {
+                // Показываем сообщение о необходимости Pro статуса
+                referralSection.style.display = 'none';
+                proRequiredSection.style.display = 'block';
+                copyReferralBtn.style.display = 'none';
+            }
         }
 
         // Загрузка статистики
@@ -1045,8 +1083,8 @@
 
         // Копирование реферальной ссылки
         function copyReferralLink() {
-            if (!currentUser || !currentUser.referral_link) {
-                showNotification('Реферальная ссылка недоступна', 'error');
+            if (!currentUser || !currentUser.is_pro || !currentUser.referral_link) {
+                showNotification('Для получения реферальной ссылки необходим Pro статус', 'error');
                 return;
             }
 
