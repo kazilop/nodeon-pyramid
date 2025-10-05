@@ -1,0 +1,116 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "Juego cripto con monedas NDN",
+    "tagline": "¡Gana, invita amigos, conviértete en líder!"
+  },
+  "welcome": {
+    "title": "¡Bienvenido a NodeOn Crypto!",
+    "subtitle": "Juego cripto con monedas NDN",
+    "description": "¡Gana monedas NDN, compra estado Pro, invita amigos y obtén recompensas!"
+  },
+  "user": {
+    "balance_ndn": "Saldo NDN",
+    "balance_stars": "Saldo Stars",
+    "pro_status": "Estado Pro",
+    "referral_link": "Enlace de Referido",
+    "total_earned": "Total Ganado",
+    "total_spent": "Total Gastado"
+  },
+  "buttons": {
+    "buy_pro": "Comprar Estado Pro",
+    "buy_ndn": "Comprar NDN",
+    "withdraw_ndn": "Retirar NDN",
+    "referrals": "Mis Referidos",
+    "leaderboard": "Tabla de Líderes",
+    "rules": "Reglas del Juego",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
+  },
+  "pro": {
+    "title": "Estado Pro",
+    "price": "1000 NDN",
+    "benefits": [
+      "Acceso al programa de referidos",
+      "Gana recompensas de referidos",
+      "Soporte prioritario",
+      "Características exclusivas"
+    ],
+    "buy_success": "¡Estado Pro activado exitosamente!",
+    "buy_error": "NDN insuficiente para comprar estado Pro"
+  },
+  "referrals": {
+    "title": "Sistema de Referidos",
+    "description": "Invita amigos y gana recompensas hasta 7 niveles de profundidad",
+    "levels": {
+      "1": "Nivel 1: 200 NDN",
+      "2": "Nivel 2: 150 NDN",
+      "3": "Nivel 3: 150 NDN",
+      "4": "Nivel 4: 150 NDN",
+      "5": "Nivel 5: 150 NDN",
+      "6": "Nivel 6: 150 NDN",
+      "7": "Nivel 7: 150 NDN"
+    },
+    "total_referrals": "Total Referidos",
+    "total_earnings": "Ganancias Totales",
+    "copy_link": "Copiar Enlace"
+  },
+  "leaderboard": {
+    "title": "Tabla de Líderes",
+    "rank": "Posición",
+    "name": "Nombre",
+    "balance": "Saldo NDN",
+    "stars": "Stars",
+    "pro": "Pro"
+  },
+  "rules": {
+    "title": "Reglas del Juego",
+    "sections": {
+      "gameplay": {
+        "title": "Cómo Jugar",
+        "content": "NodeOn Crypto es un juego cripto donde puedes ganar monedas NDN, comprar estado Pro e invitar amigos para obtener recompensas."
+      },
+      "pro_status": {
+        "title": "Estado Pro",
+        "content": "El estado Pro cuesta 1000 NDN y da acceso al programa de referidos. Con estado Pro puedes invitar amigos y ganar recompensas."
+      },
+      "referrals": {
+        "title": "Sistema de Referidos",
+        "content": "Invita amigos y gana recompensas hasta 7 niveles de profundidad. Por cada referido que compre estado Pro, recibirás una recompensa."
+      },
+      "ndn": {
+        "title": "Monedas NDN",
+        "content": "NDN es una moneda de juego que se puede comprar con Telegram Stars y retirar de vuelta a Stars. ¡NDN pronto estará listada en exchanges!"
+      }
+    }
+  },
+  "errors": {
+    "auth_required": "Se requiere autorización de Telegram. Abre la aplicación en Telegram Mini App.",
+    "insufficient_balance": "Fondos insuficientes",
+    "user_not_found": "Usuario no encontrado",
+    "payment_failed": "Error de pago",
+    "network_error": "Error de red",
+    "unknown_error": "Error desconocido"
+  },
+  "success": {
+    "payment_completed": "Pago completado exitosamente",
+    "pro_activated": "Estado Pro activado",
+    "ndn_purchased": "NDN compradas exitosamente",
+    "ndn_withdrawn": "NDN retiradas exitosamente",
+    "link_copied": "Enlace copiado"
+  },
+  "bot": {
+    "start": "🚀 Lanzar NodeOn Crypto",
+    "help": "❓ Ayuda e instrucciones",
+    "balance": "💰 Verificar saldo NDN",
+    "referrals": "👥 Mis referidos",
+    "leaderboard": "🏆 Tabla de líderes",
+    "buy_pro": "⭐ Comprar estado Pro",
+    "buy_ndn": "💎 Comprar NDN con Stars",
+    "withdraw": "💸 Retirar NDN a Stars",
+    "terms": "📋 Términos de uso",
+    "support": "🆘 Soporte",
+    "paysupport": "💳 Soporte de pagos"
+  }
+}

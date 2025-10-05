@@ -1,0 +1,116 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "Crypto game with NDN coins",
+    "tagline": "Earn, invite friends, become a leader!"
+  },
+  "welcome": {
+    "title": "Welcome to NodeOn Crypto!",
+    "subtitle": "Crypto game with NDN coins",
+    "description": "Earn NDN coins, buy Pro status, invite friends and get rewards!"
+  },
+  "user": {
+    "balance_ndn": "NDN Balance",
+    "balance_stars": "Stars Balance",
+    "pro_status": "Pro Status",
+    "referral_link": "Referral Link",
+    "total_earned": "Total Earned",
+    "total_spent": "Total Spent"
+  },
+  "buttons": {
+    "buy_pro": "Buy Pro Status",
+    "buy_ndn": "Buy NDN",
+    "withdraw_ndn": "Withdraw NDN",
+    "referrals": "My Referrals",
+    "leaderboard": "Leaderboard",
+    "rules": "Game Rules",
+    "close": "Close",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "pro": {
+    "title": "Pro Status",
+    "price": "1000 NDN",
+    "benefits": [
+      "Access to referral program",
+      "Earn rewards from referrals",
+      "Priority support",
+      "Exclusive features"
+    ],
+    "buy_success": "Pro status successfully activated!",
+    "buy_error": "Insufficient NDN to buy Pro status"
+  },
+  "referrals": {
+    "title": "Referral System",
+    "description": "Invite friends and earn rewards up to 7 levels deep",
+    "levels": {
+      "1": "Level 1: 200 NDN",
+      "2": "Level 2: 150 NDN",
+      "3": "Level 3: 150 NDN",
+      "4": "Level 4: 150 NDN",
+      "5": "Level 5: 150 NDN",
+      "6": "Level 6: 150 NDN",
+      "7": "Level 7: 150 NDN"
+    },
+    "total_referrals": "Total Referrals",
+    "total_earnings": "Total Earnings",
+    "copy_link": "Copy Link"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "rank": "Rank",
+    "name": "Name",
+    "balance": "NDN Balance",
+    "stars": "Stars",
+    "pro": "Pro"
+  },
+  "rules": {
+    "title": "Game Rules",
+    "sections": {
+      "gameplay": {
+        "title": "How to Play",
+        "content": "NodeOn Crypto is a crypto game where you can earn NDN coins, buy Pro status and invite friends to get rewards."
+      },
+      "pro_status": {
+        "title": "Pro Status",
+        "content": "Pro status costs 1000 NDN and gives access to the referral program. With Pro status you can invite friends and earn rewards."
+      },
+      "referrals": {
+        "title": "Referral System",
+        "content": "Invite friends and earn rewards up to 7 levels deep. For each referral who buys Pro status, you will receive a reward."
+      },
+      "ndn": {
+        "title": "NDN Coins",
+        "content": "NDN is a game currency that can be bought with Telegram Stars and withdrawn back to Stars. NDN will soon be listed on exchanges!"
+      }
+    }
+  },
+  "errors": {
+    "auth_required": "Telegram authorization required. Open the app in Telegram Mini App.",
+    "insufficient_balance": "Insufficient funds",
+    "user_not_found": "User not found",
+    "payment_failed": "Payment error",
+    "network_error": "Network error",
+    "unknown_error": "Unknown error"
+  },
+  "success": {
+    "payment_completed": "Payment completed successfully",
+    "pro_activated": "Pro status activated",
+    "ndn_purchased": "NDN successfully purchased",
+    "ndn_withdrawn": "NDN successfully withdrawn",
+    "link_copied": "Link copied"
+  },
+  "bot": {
+    "start": "🚀 Launch NodeOn Crypto",
+    "help": "❓ Help and instructions",
+    "balance": "💰 Check NDN balance",
+    "referrals": "👥 My referrals",
+    "leaderboard": "🏆 Leaderboard",
+    "buy_pro": "⭐ Buy Pro status",
+    "buy_ndn": "💎 Buy NDN with Stars",
+    "withdraw": "💸 Withdraw NDN to Stars",
+    "terms": "📋 Terms of use",
+    "support": "🆘 Support",
+    "paysupport": "💳 Payment support"
+  }
+}
