@@ -2820,6 +2820,8 @@
                 const isAvailable = reward.day <= today && !isClaimed;
                 const isLocked = reward.day > today;
 
+                console.log(`Награда день ${reward.day}: claimed=${isClaimed}, available=${isAvailable}, locked=${isLocked}`);
+
                 return `
                     <div class="reward-day ${isClaimed ? 'claimed' : isAvailable ? 'available' : isLocked ? 'locked' : ''}" 
                          onclick="${isAvailable ? `claimDailyReward(${reward.day})` : ''}"
@@ -2827,6 +2829,7 @@
                         <div class="reward-icon">${reward.icon}</div>
                         <div class="reward-amount">${reward.amount}</div>
                         <div style="font-size: 10px; margin-top: 2px;">День ${reward.day}</div>
+                        ${isClaimed ? '<div style="font-size: 8px; color: #4CAF50;">✓</div>' : ''}
                     </div>
                 `;
             }).join('');
@@ -2864,6 +2867,9 @@
                         userData.balance_ndn = (userData.balance_ndn || 0) + result.reward_amount;
                     }
 
+                    // Сохраняем награды в localStorage
+                    saveDailyRewardsToStorage();
+
                     // Обновляем UI
                     loadDailyRewards();
                     loadPlayerLevel();
@@ -2888,6 +2894,9 @@
                 if (userData) {
                     userData.balance_ndn = (userData.balance_ndn || 0) + rewardAmount;
                 }
+
+                // Сохраняем награды в localStorage
+                saveDailyRewardsToStorage();
 
                 loadDailyRewards();
                 loadPlayerLevel();
@@ -3120,6 +3129,9 @@
                 // Проверяем сброс ежедневных наград (новая неделя)
                 checkWeeklyReset();
                 
+                // Загружаем сохраненные ежедневные награды
+                loadDailyRewardsFromStorage();
+                
                 // Обновляем достижения
                 loadAchievements();
                 loadPlayerLevel();
@@ -3143,8 +3155,46 @@
                 // Новая неделя - сбрасываем ежедневные награды
                 gameData.dailyRewards = [];
                 localStorage.setItem('lastWeeklyReset', weekStartString);
+                localStorage.setItem('nodeon_daily_rewards', JSON.stringify([]));
                 console.log('🔄 Ежедневные награды сброшены - новая неделя');
             }
+        }
+
+        function loadDailyRewardsFromStorage() {
+            try {
+                const savedRewards = localStorage.getItem('nodeon_daily_rewards');
+                if (savedRewards) {
+                    const parsed = JSON.parse(savedRewards);
+                    if (Array.isArray(parsed)) {
+                        gameData.dailyRewards = parsed;
+                        console.log('📦 Загружены сохраненные награды:', parsed);
+                    }
+                }
+            } catch (e) {
+                console.warn('Ошибка загрузки сохраненных наград:', e);
+                gameData.dailyRewards = [];
+            }
+        }
+
+        function saveDailyRewardsToStorage() {
+            try {
+                localStorage.setItem('nodeon_daily_rewards', JSON.stringify(gameData.dailyRewards));
+                console.log('💾 Награды сохранены:', gameData.dailyRewards);
+            } catch (e) {
+                console.warn('Ошибка сохранения наград:', e);
+            }
+        }
+
+        function initializeGameData() {
+            console.log('🎮 Инициализируем игровые данные...');
+            
+            // Загружаем сохраненные награды
+            loadDailyRewardsFromStorage();
+            
+            // Проверяем сброс недели
+            checkWeeklyReset();
+            
+            console.log('📊 Текущие награды:', gameData.dailyRewards);
         }
 
         // Система уведомлений
@@ -5275,6 +5325,9 @@
             };
             
             console.log('🔍 Проверка элементов DOM:', keyElements);
+            
+            // Инициализируем игровые данные
+            initializeGameData();
             
             createParticles();
             
