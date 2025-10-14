@@ -2839,7 +2839,7 @@
                     <div class="miner-stat-icon">⛏️</div>
                     <div class="miner-stat-info">
                         <div class="miner-stat-label" data-i18n="miner.stats.ndn_gas">NDN Gas</div>
-                        <div class="miner-stat-value" id="ndnGasBalance">20</div>
+                        <div class="miner-stat-value" id="ndnGasBalance">100</div>
                     </div>
                 </div>
                 <div class="miner-stat-item">
@@ -3286,7 +3286,7 @@
 
         // NDN Miner данные
         let minerData = {
-            ndnGas: 20, // Начальные 20 Gas
+            ndnGas: 100, // Начальные 100 Gas (достаточно для CPU Miner за 50)
             energy: 100,
             maxEnergy: 100,
             gasPerSecond: 0,
@@ -3296,7 +3296,7 @@
                 efficiency: 0,
                 automation: 0
             },
-            totalGasEarned: 20, // Учитываем начальные 20 Gas
+            totalGasEarned: 100, // Учитываем начальные 100 Gas
             lastUpdate: Date.now(),
             lastEnergyRefill: Date.now(), // Время последнего пополнения энергии
             energyRefillCooldown: 3 * 60 * 60 * 1000 // 3 часа в миллисекундах
@@ -3310,7 +3310,7 @@
                 icon: '💻',
                 description: 'Базовая ферма на процессоре',
                 baseGasPerSecond: 1,
-                baseCost: 20, // Увеличено с 10 до 20
+                baseCost: 50, // Увеличено в 5 раз: 10 * 5 = 50
                 energyCost: 1,
                 unlockLevel: 1
             },
@@ -3320,7 +3320,7 @@
                 icon: '🎮',
                 description: 'Мощная ферма на видеокартах',
                 baseGasPerSecond: 5,
-                baseCost: 60, // Увеличено с 50 до 60
+                baseCost: 250, // Увеличено в 5 раз: 50 * 5 = 250
                 energyCost: 3,
                 unlockLevel: 3
             },
@@ -3330,7 +3330,7 @@
                 icon: '⚡',
                 description: 'Профессиональная ферма ASIC',
                 baseGasPerSecond: 20,
-                baseCost: 210, // Увеличено с 200 до 210
+                baseCost: 1000, // Увеличено в 5 раз: 200 * 5 = 1000
                 energyCost: 8,
                 unlockLevel: 5
             },
@@ -3340,7 +3340,7 @@
                 icon: '🏢',
                 description: 'Мега-ферма в дата-центре',
                 baseGasPerSecond: 100,
-                baseCost: 1010, // Увеличено с 1000 до 1010
+                baseCost: 5000, // Увеличено в 5 раз: 1000 * 5 = 5000
                 energyCost: 25,
                 unlockLevel: 10
             }
