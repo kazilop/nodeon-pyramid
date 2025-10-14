@@ -524,6 +524,54 @@
             color: #000000;
         }
 
+        /* Кнопка пополнения энергии */
+        .energy-refill-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #000000;
+        }
+
+        .energy-refill-button {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .energy-refill-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .energy-refill-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .energy-refill-info {
+            font-size: 14px;
+            color: #333333;
+            margin-top: 10px;
+        }
+
+        .energy-refill-info span {
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+
         .miner-farms, .miner-upgrades, .miner-shop {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -2791,7 +2839,7 @@
                     <div class="miner-stat-icon">⛏️</div>
                     <div class="miner-stat-info">
                         <div class="miner-stat-label" data-i18n="miner.stats.ndn_gas">NDN Gas</div>
-                        <div class="miner-stat-value" id="ndnGasBalance">10</div>
+                        <div class="miner-stat-value" id="ndnGasBalance">20</div>
                     </div>
                 </div>
                 <div class="miner-stat-item">
@@ -2807,6 +2855,16 @@
                         <div class="miner-stat-label" data-i18n="miner.stats.gas_per_second">Gas/сек</div>
                         <div class="miner-stat-value" id="gasPerSecond">0</div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Кнопка пополнения энергии -->
+            <div class="energy-refill-section">
+                <button class="energy-refill-button" id="energyRefillButton" onclick="refillEnergy()">
+                    ⚡ Пополнить энергию
+                </button>
+                <div class="energy-refill-info" id="energyRefillInfo">
+                    Следующее пополнение через: <span id="nextRefillTime">3:00:00</span>
                 </div>
             </div>
 
@@ -3228,7 +3286,7 @@
 
         // NDN Miner данные
         let minerData = {
-            ndnGas: 10, // Начальные 10 Gas
+            ndnGas: 20, // Начальные 20 Gas
             energy: 100,
             maxEnergy: 100,
             gasPerSecond: 0,
@@ -3238,8 +3296,10 @@
                 efficiency: 0,
                 automation: 0
             },
-            totalGasEarned: 10, // Учитываем начальные 10 Gas
-            lastUpdate: Date.now()
+            totalGasEarned: 20, // Учитываем начальные 20 Gas
+            lastUpdate: Date.now(),
+            lastEnergyRefill: Date.now(), // Время последнего пополнения энергии
+            energyRefillCooldown: 3 * 60 * 60 * 1000 // 3 часа в миллисекундах
         };
 
         // Фермы майнинга
@@ -3250,7 +3310,7 @@
                 icon: '💻',
                 description: 'Базовая ферма на процессоре',
                 baseGasPerSecond: 1,
-                baseCost: 10,
+                baseCost: 20, // Увеличено с 10 до 20
                 energyCost: 1,
                 unlockLevel: 1
             },
@@ -3260,7 +3320,7 @@
                 icon: '🎮',
                 description: 'Мощная ферма на видеокартах',
                 baseGasPerSecond: 5,
-                baseCost: 50,
+                baseCost: 60, // Увеличено с 50 до 60
                 energyCost: 3,
                 unlockLevel: 3
             },
@@ -3270,7 +3330,7 @@
                 icon: '⚡',
                 description: 'Профессиональная ферма ASIC',
                 baseGasPerSecond: 20,
-                baseCost: 200,
+                baseCost: 210, // Увеличено с 200 до 210
                 energyCost: 8,
                 unlockLevel: 5
             },
@@ -3280,7 +3340,7 @@
                 icon: '🏢',
                 description: 'Мега-ферма в дата-центре',
                 baseGasPerSecond: 100,
-                baseCost: 1000,
+                baseCost: 1010, // Увеличено с 1000 до 1010
                 energyCost: 25,
                 unlockLevel: 10
             }
@@ -3769,6 +3829,12 @@
             // Запускаем основной цикл майнинга
             startMiningLoop();
             
+            // Запускаем таймер пополнения энергии
+            startEnergyRefillTimer();
+            
+            // Обновляем кнопку пополнения энергии
+            updateEnergyRefillButton();
+            
             console.log('📊 Данные майнера загружены:', minerData);
         }
 
@@ -3883,11 +3949,12 @@
                 }
             });
             
-            minerData.gasPerSecond = totalGas;
-            
-            // Проверяем энергию
+            // Проверяем энергию - если её недостаточно, майнеры не работают
             if (totalEnergy > minerData.energy) {
-                minerData.gasPerSecond *= 0.5; // Снижаем генерацию при нехватке энергии
+                minerData.gasPerSecond = 0; // Полностью останавливаем майнинг
+                console.log('⚠️ Недостаточно энергии! Майнеры остановлены.');
+            } else {
+                minerData.gasPerSecond = totalGas;
             }
         }
 
@@ -3906,10 +3973,8 @@
                     
                     minerData.energy = Math.max(0, minerData.energy - energyConsumption);
                     
-                    // Восстанавливаем энергию
-                    if (minerData.energy < minerData.maxEnergy) {
-                        minerData.energy = Math.min(minerData.maxEnergy, minerData.energy + 0.1);
-                    }
+                    // Пересчитываем генерацию после потребления энергии
+                    calculateGasPerSecond();
                     
                     updateMinerUI();
                 }
@@ -4107,6 +4172,68 @@
                     </tbody>
                 </table>
             `;
+        }
+
+        // Система пополнения энергии
+        function refillEnergy() {
+            const now = Date.now();
+            const timeSinceLastRefill = now - minerData.lastEnergyRefill;
+            
+            if (timeSinceLastRefill >= minerData.energyRefillCooldown) {
+                // Можно пополнить энергию
+                minerData.energy = minerData.maxEnergy;
+                minerData.lastEnergyRefill = now;
+                
+                // Пересчитываем генерацию
+                calculateGasPerSecond();
+                updateMinerUI();
+                updateEnergyRefillButton();
+                saveMinerData();
+                
+                showNotification('⚡ Энергия полностью восстановлена!', 'success');
+            } else {
+                const remainingTime = minerData.energyRefillCooldown - timeSinceLastRefill;
+                const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+                const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                
+                showNotification(`⏰ Следующее пополнение через: ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`, 'warning');
+            }
+        }
+
+        function updateEnergyRefillButton() {
+            const button = document.getElementById('energyRefillButton');
+            const info = document.getElementById('energyRefillInfo');
+            const nextRefillTime = document.getElementById('nextRefillTime');
+            
+            if (!button || !info || !nextRefillTime) return;
+            
+            const now = Date.now();
+            const timeSinceLastRefill = now - minerData.lastEnergyRefill;
+            const remainingTime = minerData.energyRefillCooldown - timeSinceLastRefill;
+            
+            if (remainingTime <= 0) {
+                button.disabled = false;
+                button.textContent = '⚡ Пополнить энергию';
+                info.style.display = 'none';
+            } else {
+                button.disabled = true;
+                button.textContent = '⏰ Ожидание...';
+                info.style.display = 'block';
+                
+                const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+                const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                
+                nextRefillTime.textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        // Обновляем кнопку пополнения энергии каждую секунду
+        function startEnergyRefillTimer() {
+            setInterval(() => {
+                updateEnergyRefillButton();
+            }, 1000);
         }
 
         // Система уведомлений
