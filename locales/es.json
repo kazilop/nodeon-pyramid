@@ -112,5 +112,85 @@
     "terms": "📋 Términos de uso",
     "support": "🆘 Soporte",
     "paysupport": "💳 Soporte de pagos"
+  },
+  "miner": {
+    "title": "NDN Miner",
+    "stats": {
+      "ndn_gas": "NDN Gas",
+      "energy": "Energía",
+      "gas_per_second": "Gas/seg"
+    },
+    "farms": {
+      "title": "Granjas de minería",
+      "cpu_miner": "CPU Miner",
+      "cpu_miner_desc": "Granja básica de procesador",
+      "gpu_farm": "GPU Farm",
+      "gpu_farm_desc": "Granja potente de tarjetas gráficas",
+      "asic_rig": "ASIC Rig",
+      "asic_rig_desc": "Granja profesional ASIC",
+      "data_center": "Data Center",
+      "data_center_desc": "Mega-granja en centro de datos",
+      "gas_per_sec": "Gas/seg",
+      "energy_cost": "Energía",
+      "quantity": "Cantidad",
+      "cost": "Costo",
+      "buy": "Comprar",
+      "locked": "Bloqueado",
+      "not_enough_gas": "Gas insuficiente"
+    },
+    "upgrades": {
+      "title": "Mejoras",
+      "speed": "Velocidad",
+      "efficiency": "Eficiencia",
+      "automation": "Automatización",
+      "premium": "Premium",
+      "speed_upgrades": {
+        "fast_processor": "Procesador rápido",
+        "fast_processor_desc": "+10% velocidad",
+        "code_optimization": "Optimización de código",
+        "code_optimization_desc": "+25% velocidad",
+        "parallel_computing": "Computación paralela",
+        "parallel_computing_desc": "+50% velocidad"
+      },
+      "efficiency_upgrades": {
+        "energy_saving": "Ahorro de energía",
+        "energy_saving_desc": "-20% energía",
+        "smart_cooling": "Enfriamiento inteligente",
+        "smart_cooling_desc": "-40% energía",
+        "quantum_optimization": "Optimización cuántica",
+        "quantum_optimization_desc": "-60% energía"
+      },
+      "automation_upgrades": {
+        "auto_collect": "Auto-recogida",
+        "auto_collect_desc": "Recolección automática de Gas",
+        "smart_algorithms": "Algoritmos inteligentes",
+        "smart_algorithms_desc": "Optimización de minería",
+        "ai_management": "Gestión IA",
+        "ai_management_desc": "Automatización completa"
+      },
+      "cost": "Costo",
+      "bought": "Comprado",
+      "max_level": "Nivel máx.",
+      "not_enough_gas": "Gas insuficiente"
+    },
+    "shop": {
+      "title": "Tienda",
+      "energy_drink": "Bebida energética",
+      "energy_drink_desc": "Restaura 50 energía",
+      "premium_booster": "Booster premium",
+      "premium_booster_desc": "2x velocidad por 1 hora",
+      "golden_farm": "Granja dorada",
+      "golden_farm_desc": "Granja exclusiva",
+      "buy": "Comprar"
+    },
+    "leaderboard": {
+      "title": "Ranking de mineros",
+      "rank": "Posición",
+      "player": "Jugador",
+      "gas_earned": "Gas ganado",
+      "farms_count": "Granjas",
+      "level": "Nivel",
+      "you": "Tú"
+    }
   }
 }

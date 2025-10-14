@@ -177,5 +177,85 @@
     "portuguese": "Português",
     "italian": "Italiano",
     "hindi": "हिन्दी"
+  },
+  "miner": {
+    "title": "NDN Miner",
+    "stats": {
+      "ndn_gas": "NDN Gas",
+      "energy": "Energy",
+      "gas_per_second": "Gas/sec"
+    },
+    "farms": {
+      "title": "Mining Farms",
+      "cpu_miner": "CPU Miner",
+      "cpu_miner_desc": "Basic processor farm",
+      "gpu_farm": "GPU Farm",
+      "gpu_farm_desc": "Powerful graphics card farm",
+      "asic_rig": "ASIC Rig",
+      "asic_rig_desc": "Professional ASIC farm",
+      "data_center": "Data Center",
+      "data_center_desc": "Mega-farm in data center",
+      "gas_per_sec": "Gas/sec",
+      "energy_cost": "Energy",
+      "quantity": "Quantity",
+      "cost": "Cost",
+      "buy": "Buy",
+      "locked": "Locked",
+      "not_enough_gas": "Not enough Gas"
+    },
+    "upgrades": {
+      "title": "Upgrades",
+      "speed": "Speed",
+      "efficiency": "Efficiency",
+      "automation": "Automation",
+      "premium": "Premium",
+      "speed_upgrades": {
+        "fast_processor": "Fast Processor",
+        "fast_processor_desc": "+10% speed",
+        "code_optimization": "Code Optimization",
+        "code_optimization_desc": "+25% speed",
+        "parallel_computing": "Parallel Computing",
+        "parallel_computing_desc": "+50% speed"
+      },
+      "efficiency_upgrades": {
+        "energy_saving": "Energy Saving",
+        "energy_saving_desc": "-20% energy",
+        "smart_cooling": "Smart Cooling",
+        "smart_cooling_desc": "-40% energy",
+        "quantum_optimization": "Quantum Optimization",
+        "quantum_optimization_desc": "-60% energy"
+      },
+      "automation_upgrades": {
+        "auto_collect": "Auto-Collect",
+        "auto_collect_desc": "Automatic Gas collection",
+        "smart_algorithms": "Smart Algorithms",
+        "smart_algorithms_desc": "Mining optimization",
+        "ai_management": "AI Management",
+        "ai_management_desc": "Full automation"
+      },
+      "cost": "Cost",
+      "bought": "Bought",
+      "max_level": "Max Level",
+      "not_enough_gas": "Not enough Gas"
+    },
+    "shop": {
+      "title": "Shop",
+      "energy_drink": "Energy Drink",
+      "energy_drink_desc": "Restores 50 energy",
+      "premium_booster": "Premium Booster",
+      "premium_booster_desc": "2x speed for 1 hour",
+      "golden_farm": "Golden Farm",
+      "golden_farm_desc": "Exclusive farm",
+      "buy": "Buy"
+    },
+    "leaderboard": {
+      "title": "Miner Leaderboard",
+      "rank": "Rank",
+      "player": "Player",
+      "gas_earned": "Gas Earned",
+      "farms_count": "Farms",
+      "level": "Level",
+      "you": "You"
+    }
   }
 }

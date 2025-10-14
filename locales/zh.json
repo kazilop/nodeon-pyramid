@@ -148,6 +148,86 @@
     "portuguese": "Português",
     "italian": "Italiano",
     "hindi": "हिन्दी"
+  },
+  "miner": {
+    "title": "NDN矿工",
+    "stats": {
+      "ndn_gas": "NDN Gas",
+      "energy": "能量",
+      "gas_per_second": "Gas/秒"
+    },
+    "farms": {
+      "title": "挖矿农场",
+      "cpu_miner": "CPU矿工",
+      "cpu_miner_desc": "基础处理器农场",
+      "gpu_farm": "GPU农场",
+      "gpu_farm_desc": "强大的显卡农场",
+      "asic_rig": "ASIC设备",
+      "asic_rig_desc": "专业ASIC农场",
+      "data_center": "数据中心",
+      "data_center_desc": "数据中心巨型农场",
+      "gas_per_sec": "Gas/秒",
+      "energy_cost": "能量",
+      "quantity": "数量",
+      "cost": "成本",
+      "buy": "购买",
+      "locked": "已锁定",
+      "not_enough_gas": "Gas不足"
+    },
+    "upgrades": {
+      "title": "升级",
+      "speed": "速度",
+      "efficiency": "效率",
+      "automation": "自动化",
+      "premium": "高级",
+      "speed_upgrades": {
+        "fast_processor": "快速处理器",
+        "fast_processor_desc": "+10%速度",
+        "code_optimization": "代码优化",
+        "code_optimization_desc": "+25%速度",
+        "parallel_computing": "并行计算",
+        "parallel_computing_desc": "+50%速度"
+      },
+      "efficiency_upgrades": {
+        "energy_saving": "节能",
+        "energy_saving_desc": "-20%能量",
+        "smart_cooling": "智能冷却",
+        "smart_cooling_desc": "-40%能量",
+        "quantum_optimization": "量子优化",
+        "quantum_optimization_desc": "-60%能量"
+      },
+      "automation_upgrades": {
+        "auto_collect": "自动收集",
+        "auto_collect_desc": "自动收集Gas",
+        "smart_algorithms": "智能算法",
+        "smart_algorithms_desc": "挖矿优化",
+        "ai_management": "AI管理",
+        "ai_management_desc": "完全自动化"
+      },
+      "cost": "成本",
+      "bought": "已购买",
+      "max_level": "最高等级",
+      "not_enough_gas": "Gas不足"
+    },
+    "shop": {
+      "title": "商店",
+      "energy_drink": "能量饮料",
+      "energy_drink_desc": "恢复50能量",
+      "premium_booster": "高级加速器",
+      "premium_booster_desc": "1小时2倍速度",
+      "golden_farm": "黄金农场",
+      "golden_farm_desc": "专属农场",
+      "buy": "购买"
+    },
+    "leaderboard": {
+      "title": "矿工排行榜",
+      "rank": "排名",
+      "player": "玩家",
+      "gas_earned": "Gas赚取",
+      "farms_count": "农场",
+      "level": "等级",
+      "you": "你"
+    }
   }
 }
 

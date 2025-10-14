@@ -148,8 +148,85 @@
     "portuguese": "Português",
     "italian": "Italiano",
     "hindi": "हिन्दी"
+  },
+  "miner": {
+    "title": "NDN Miner",
+    "stats": {
+      "ndn_gas": "NDN Gas",
+      "energy": "Énergie",
+      "gas_per_second": "Gas/sec"
+    },
+    "farms": {
+      "title": "Fermes de minage",
+      "cpu_miner": "CPU Miner",
+      "cpu_miner_desc": "Ferme de base sur processeur",
+      "gpu_farm": "GPU Farm",
+      "gpu_farm_desc": "Ferme puissante sur cartes graphiques",
+      "asic_rig": "ASIC Rig",
+      "asic_rig_desc": "Ferme professionnelle ASIC",
+      "data_center": "Data Center",
+      "data_center_desc": "Méga-ferme en centre de données",
+      "gas_per_sec": "Gas/sec",
+      "energy_cost": "Énergie",
+      "quantity": "Quantité",
+      "cost": "Coût",
+      "buy": "Acheter",
+      "locked": "Verrouillé",
+      "not_enough_gas": "Pas assez de Gas"
+    },
+    "upgrades": {
+      "title": "Améliorations",
+      "speed": "Vitesse",
+      "efficiency": "Efficacité",
+      "automation": "Automatisation",
+      "premium": "Premium",
+      "speed_upgrades": {
+        "fast_processor": "Processeur rapide",
+        "fast_processor_desc": "+10% vitesse",
+        "code_optimization": "Optimisation du code",
+        "code_optimization_desc": "+25% vitesse",
+        "parallel_computing": "Calcul parallèle",
+        "parallel_computing_desc": "+50% vitesse"
+      },
+      "efficiency_upgrades": {
+        "energy_saving": "Économie d'énergie",
+        "energy_saving_desc": "-20% énergie",
+        "smart_cooling": "Refroidissement intelligent",
+        "smart_cooling_desc": "-40% énergie",
+        "quantum_optimization": "Optimisation quantique",
+        "quantum_optimization_desc": "-60% énergie"
+      },
+      "automation_upgrades": {
+        "auto_collect": "Auto-collecte",
+        "auto_collect_desc": "Collecte automatique de Gas",
+        "smart_algorithms": "Algorithmes intelligents",
+        "smart_algorithms_desc": "Optimisation du minage",
+        "ai_management": "Gestion IA",
+        "ai_management_desc": "Automatisation complète"
+      },
+      "cost": "Coût",
+      "bought": "Acheté",
+      "max_level": "Niveau max",
+      "not_enough_gas": "Pas assez de Gas"
+    },
+    "shop": {
+      "title": "Boutique",
+      "energy_drink": "Boisson énergétique",
+      "energy_drink_desc": "Restaure 50 énergie",
+      "premium_booster": "Booster premium",
+      "premium_booster_desc": "2x vitesse pendant 1 heure",
+      "golden_farm": "Ferme dorée",
+      "golden_farm_desc": "Ferme exclusive",
+      "buy": "Acheter"
+    },
+    "leaderboard": {
+      "title": "Classement des mineurs",
+      "rank": "Rang",
+      "player": "Joueur",
+      "gas_earned": "Gas gagné",
+      "farms_count": "Fermes",
+      "level": "Niveau",
+      "you": "Vous"
+    }
   }
 }
-
-
-

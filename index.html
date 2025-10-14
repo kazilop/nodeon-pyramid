@@ -774,6 +774,100 @@
             box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
         }
 
+        /* Рейтинг майнеров */
+        .miner-leaderboard {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #000000;
+        }
+
+        .miner-leaderboard h3 {
+            color: #000000;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .leaderboard-table {
+            overflow-x: auto;
+        }
+
+        .leaderboard-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #000000;
+        }
+
+        .leaderboard-table th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .leaderboard-table td {
+            font-size: 14px;
+        }
+
+        .leaderboard-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .leaderboard-table .rank {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .leaderboard-table .player-name {
+            font-weight: 500;
+        }
+
+        .leaderboard-table .you {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            font-weight: bold;
+        }
+
+        /* Улучшения разметки для мобильных */
+        @media (max-width: 768px) {
+            .miner-stats {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .farms-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .shop-items {
+                grid-template-columns: 1fr;
+            }
+
+            .upgrades-tabs {
+                flex-direction: column;
+            }
+
+            .upgrade-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .upgrade-button {
+                margin-top: 10px;
+            }
+        }
+
         /* Заголовок */
         .header {
             text-align: center;
@@ -2696,21 +2790,21 @@
                 <div class="miner-stat-item">
                     <div class="miner-stat-icon">⛏️</div>
                     <div class="miner-stat-info">
-                        <div class="miner-stat-label">NDN Gas</div>
-                        <div class="miner-stat-value" id="ndnGasBalance">0</div>
+                        <div class="miner-stat-label" data-i18n="miner.stats.ndn_gas">NDN Gas</div>
+                        <div class="miner-stat-value" id="ndnGasBalance">10</div>
                     </div>
                 </div>
                 <div class="miner-stat-item">
                     <div class="miner-stat-icon">⚡</div>
                     <div class="miner-stat-info">
-                        <div class="miner-stat-label">Энергия</div>
+                        <div class="miner-stat-label" data-i18n="miner.stats.energy">Энергия</div>
                         <div class="miner-stat-value" id="energyLevel">100/100</div>
                     </div>
                 </div>
                 <div class="miner-stat-item">
                     <div class="miner-stat-icon">📊</div>
                     <div class="miner-stat-info">
-                        <div class="miner-stat-label">Gas/сек</div>
+                        <div class="miner-stat-label" data-i18n="miner.stats.gas_per_second">Gas/сек</div>
                         <div class="miner-stat-value" id="gasPerSecond">0</div>
                     </div>
                 </div>
@@ -2740,8 +2834,16 @@
 
             <!-- Магазин -->
             <div class="miner-shop">
-                <h3>🛒 Магазин</h3>
+                <h3 data-i18n="miner.shop.title">🛒 Магазин</h3>
                 <div class="shop-items" id="shopItems">
+                    <!-- Будет заполнено JavaScript -->
+                </div>
+            </div>
+
+            <!-- Рейтинг майнеров -->
+            <div class="miner-leaderboard">
+                <h3 data-i18n="miner.leaderboard.title">🏆 Рейтинг майнеров</h3>
+                <div class="leaderboard-table" id="leaderboardTable">
                     <!-- Будет заполнено JavaScript -->
                 </div>
             </div>
@@ -3126,7 +3228,7 @@
 
         // NDN Miner данные
         let minerData = {
-            ndnGas: 0,
+            ndnGas: 10, // Начальные 10 Gas
             energy: 100,
             maxEnergy: 100,
             gasPerSecond: 0,
@@ -3136,7 +3238,7 @@
                 efficiency: 0,
                 automation: 0
             },
-            totalGasEarned: 0,
+            totalGasEarned: 10, // Учитываем начальные 10 Gas
             lastUpdate: Date.now()
         };
 
@@ -3662,6 +3764,7 @@
             loadFarms();
             loadUpgrades('speed');
             loadShop();
+            loadLeaderboard();
             
             // Запускаем основной цикл майнинга
             startMiningLoop();
@@ -3717,15 +3820,15 @@
                 return `
                     <div class="farm-item ${!canUnlock ? 'locked' : ''}">
                         <div class="farm-icon">${farm.icon}</div>
-                        <div class="farm-name">${farm.name}</div>
-                        <div class="farm-description">${farm.description}</div>
+                        <div class="farm-name" data-i18n="miner.farms.${farm.id}">${farm.name}</div>
+                        <div class="farm-description" data-i18n="miner.farms.${farm.id}_desc">${farm.description}</div>
                         <div class="farm-stats">
-                            <span>Gas/сек: ${farm.baseGasPerSecond}</span>
-                            <span>Энергия: ${farm.energyCost}</span>
+                            <span data-i18n="miner.farms.gas_per_sec">Gas/сек</span>: ${farm.baseGasPerSecond}
+                            <span data-i18n="miner.farms.energy_cost">Энергия</span>: ${farm.energyCost}
                         </div>
                         <div class="farm-stats">
-                            <span>Количество: ${farmCount}</span>
-                            <span>Стоимость: ${farm.baseCost} Gas</span>
+                            <span data-i18n="miner.farms.quantity">Количество</span>: ${farmCount}
+                            <span data-i18n="miner.farms.cost">Стоимость</span>: ${farm.baseCost} Gas
                         </div>
                         <button class="farm-button" 
                                 onclick="buyFarm('${farm.id}')" 
@@ -3964,6 +4067,46 @@
             } catch (e) {
                 console.warn('Ошибка сохранения данных майнера:', e);
             }
+        }
+
+        function loadLeaderboard() {
+            const container = document.getElementById('leaderboardTable');
+            if (!container) return;
+            
+            // Моковые данные для рейтинга
+            const leaderboardData = [
+                { rank: 1, player: "CryptoKing", gasEarned: 15420, farms: 8, level: 12 },
+                { rank: 2, player: "MiningMaster", gasEarned: 12850, farms: 6, level: 10 },
+                { rank: 3, player: "NDNHunter", gasEarned: 9870, farms: 5, level: 8 },
+                { rank: 4, player: "GasCollector", gasEarned: 7650, farms: 4, level: 7 },
+                { rank: 5, player: "BlockMiner", gasEarned: 5430, farms: 3, level: 6 },
+                { rank: 6, player: userData?.first_name || "Вы", gasEarned: Math.floor(minerData.totalGasEarned), farms: minerData.farms.length, level: gameData.level, isYou: true }
+            ];
+            
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-i18n="miner.leaderboard.rank">Место</th>
+                            <th data-i18n="miner.leaderboard.player">Игрок</th>
+                            <th data-i18n="miner.leaderboard.gas_earned">Gas заработано</th>
+                            <th data-i18n="miner.leaderboard.farms_count">Ферм</th>
+                            <th data-i18n="miner.leaderboard.level">Уровень</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${leaderboardData.map(player => `
+                            <tr class="${player.isYou ? 'you' : ''}">
+                                <td class="rank">${player.rank}</td>
+                                <td class="player-name">${player.isYou ? (player.player + ' (Вы)') : player.player}</td>
+                                <td>${player.gasEarned.toLocaleString()}</td>
+                                <td>${player.farms}</td>
+                                <td>${player.level}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
         }
 
         // Система уведомлений

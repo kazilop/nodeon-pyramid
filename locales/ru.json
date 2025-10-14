@@ -265,5 +265,85 @@
     "portuguese": "Português",
     "italian": "Italiano",
     "hindi": "हिन्दी"
+  },
+  "miner": {
+    "title": "NDN Miner",
+    "stats": {
+      "ndn_gas": "NDN Gas",
+      "energy": "Энергия",
+      "gas_per_second": "Gas/сек"
+    },
+    "farms": {
+      "title": "Фермы майнинга",
+      "cpu_miner": "CPU Miner",
+      "cpu_miner_desc": "Базовая ферма на процессоре",
+      "gpu_farm": "GPU Farm",
+      "gpu_farm_desc": "Мощная ферма на видеокартах",
+      "asic_rig": "ASIC Rig",
+      "asic_rig_desc": "Профессиональная ферма ASIC",
+      "data_center": "Data Center",
+      "data_center_desc": "Мега-ферма в дата-центре",
+      "gas_per_sec": "Gas/сек",
+      "energy_cost": "Энергия",
+      "quantity": "Количество",
+      "cost": "Стоимость",
+      "buy": "Купить",
+      "locked": "Заблокировано",
+      "not_enough_gas": "Недостаточно Gas"
+    },
+    "upgrades": {
+      "title": "Улучшения",
+      "speed": "Скорость",
+      "efficiency": "Эффективность",
+      "automation": "Автоматизация",
+      "premium": "Премиум",
+      "speed_upgrades": {
+        "fast_processor": "Быстрый процессор",
+        "fast_processor_desc": "+10% скорости",
+        "code_optimization": "Оптимизация кода",
+        "code_optimization_desc": "+25% скорости",
+        "parallel_computing": "Параллельные вычисления",
+        "parallel_computing_desc": "+50% скорости"
+      },
+      "efficiency_upgrades": {
+        "energy_saving": "Энергосбережение",
+        "energy_saving_desc": "-20% энергии",
+        "smart_cooling": "Умное охлаждение",
+        "smart_cooling_desc": "-40% энергии",
+        "quantum_optimization": "Квантовая оптимизация",
+        "quantum_optimization_desc": "-60% энергии"
+      },
+      "automation_upgrades": {
+        "auto_collect": "Авто-сбор",
+        "auto_collect_desc": "Автоматический сбор Gas",
+        "smart_algorithms": "Умные алгоритмы",
+        "smart_algorithms_desc": "Оптимизация майнинга",
+        "ai_management": "ИИ управление",
+        "ai_management_desc": "Полная автоматизация"
+      },
+      "cost": "Стоимость",
+      "bought": "Куплено",
+      "max_level": "Макс. уровень",
+      "not_enough_gas": "Недостаточно Gas"
+    },
+    "shop": {
+      "title": "Магазин",
+      "energy_drink": "Энергетический напиток",
+      "energy_drink_desc": "Восстанавливает 50 энергии",
+      "premium_booster": "Премиум ускоритель",
+      "premium_booster_desc": "2x скорость на 1 час",
+      "golden_farm": "Золотая ферма",
+      "golden_farm_desc": "Эксклюзивная ферма",
+      "buy": "Купить"
+    },
+    "leaderboard": {
+      "title": "Рейтинг майнеров",
+      "rank": "Место",
+      "player": "Игрок",
+      "gas_earned": "Gas заработано",
+      "farms_count": "Ферм",
+      "level": "Уровень",
+      "you": "Вы"
+    }
   }
 }
