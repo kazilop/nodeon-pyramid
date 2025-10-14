@@ -3220,7 +3220,10 @@
             
             // Инициализируем майнер при переключении на вкладку майнера
             if (tabName === 'miner') {
-                initializeMinerData();
+                console.log('🔄 Переключаемся на вкладку майнера...');
+                setTimeout(() => {
+                    initializeMinerData();
+                }, 100);
             }
         }
 
@@ -3636,6 +3639,13 @@
         function initializeMinerData() {
             console.log('⛏️ Инициализируем данные майнера...');
             
+            // Проверяем, что вкладка майнера существует
+            const minerTab = document.getElementById('minerTab');
+            if (!minerTab) {
+                console.error('❌ Вкладка майнера не найдена!');
+                return;
+            }
+            
             // Загружаем сохраненные данные майнера
             const savedMinerData = localStorage.getItem('nodeon_miner_data');
             if (savedMinerData) {
@@ -3660,14 +3670,39 @@
         }
 
         function updateMinerUI() {
+            console.log('🔄 Обновляем UI майнера...');
+            
             // Обновляем статистику
             const gasBalance = document.getElementById('ndnGasBalance');
             const energyLevel = document.getElementById('energyLevel');
             const gasPerSecond = document.getElementById('gasPerSecond');
             
-            if (gasBalance) gasBalance.textContent = Math.floor(minerData.ndnGas).toLocaleString();
-            if (energyLevel) energyLevel.textContent = `${Math.floor(minerData.energy)}/${minerData.maxEnergy}`;
-            if (gasPerSecond) gasPerSecond.textContent = minerData.gasPerSecond.toFixed(1);
+            console.log('Элементы майнера:', {
+                gasBalance: !!gasBalance,
+                energyLevel: !!energyLevel,
+                gasPerSecond: !!gasPerSecond
+            });
+            
+            if (gasBalance) {
+                gasBalance.textContent = Math.floor(minerData.ndnGas).toLocaleString();
+                console.log('✅ Gas баланс обновлен:', gasBalance.textContent);
+            } else {
+                console.error('❌ Элемент ndnGasBalance не найден!');
+            }
+            
+            if (energyLevel) {
+                energyLevel.textContent = `${Math.floor(minerData.energy)}/${minerData.maxEnergy}`;
+                console.log('✅ Энергия обновлена:', energyLevel.textContent);
+            } else {
+                console.error('❌ Элемент energyLevel не найден!');
+            }
+            
+            if (gasPerSecond) {
+                gasPerSecond.textContent = minerData.gasPerSecond.toFixed(1);
+                console.log('✅ Gas/сек обновлен:', gasPerSecond.textContent);
+            } else {
+                console.error('❌ Элемент gasPerSecond не найден!');
+            }
         }
 
         function loadFarms() {
