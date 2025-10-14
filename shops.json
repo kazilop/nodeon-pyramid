@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "owner_id": 5,
+    "owner_name": "Fish",
+    "name": "Магазин Fish",
+    "description": "Добро пожаловать в мой магазин! Здесь вы можете купить различные товары и услуги.",
+    "category": "general",
+    "is_active": true,
+    "items": [
+      {
+        "id": 1,
+        "name": "Поздравление с Днем Рождения",
+        "description": "Персональное поздравление в видео формате с вашим именем",
+        "price_ndn": 50.0,
+        "category": "congratulations",
+        "item_type": "service"
+      },
+      {
+        "id": 2,
+        "name": "Футболка с логотипом",
+        "description": "Качественная футболка с вашим дизайном или логотипом",
+        "price_ndn": 200.0,
+        "category": "merchandise",
+        "item_type": "physical"
+      },
+      {
+        "id": 3,
+        "name": "Консультация по бизнесу",
+        "description": "30-минутная консультация по развитию вашего бизнеса",
+        "price_ndn": 150.0,
+        "category": "consulting",
+        "item_type": "service"
+      }
+    ]
+  }
+]

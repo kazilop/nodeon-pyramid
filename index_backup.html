@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeOn Crypto</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .language-btn {
+            background: var(--tg-theme-button-color, #007aff);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .user-info {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .user-info h2 {
+            color: var(--tg-theme-text-color, #000000);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .balance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .balance-card {
+            background: var(--tg-theme-bg-color, #ffffff);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .balance-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--tg-theme-button-color, #007aff);
+        }
+
+        .balance-card h3 {
+            font-size: 0.9rem;
+            color: var(--tg-theme-hint-color, #999999);
+            margin-bottom: 5px;
+        }
+
+        .balance-card .amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        .pro-status {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #000000;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .pro-status.inactive {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            color: var(--tg-theme-hint-color, #999999);
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: var(--tg-theme-button-color, #007aff);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.secondary {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        .btn.success {
+            background: #28a745;
+        }
+
+        .btn.warning {
+            background: #ffc107;
+            color: #000000;
+        }
+
+        .btn.danger {
+            background: #dc3545;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .section {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section h3 {
+            color: var(--tg-theme-text-color, #000000);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--tg-theme-hint-color, #e0e0e0);
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--tg-theme-button-color, #007aff);
+            min-width: 30px;
+        }
+
+        .user-name {
+            flex: 1;
+            margin-left: 15px;
+            font-weight: 500;
+        }
+
+        .user-balance {
+            font-weight: 600;
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #c3e6cb;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--tg-theme-bg-color, #ffffff);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 90%;
+            width: 400px;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--tg-theme-hint-color, #e0e0e0);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--tg-theme-button-color, #007aff);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .referral-link {
+            background: var(--tg-theme-bg-color, #ffffff);
+            border: 2px solid var(--tg-theme-button-color, #007aff);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            background: var(--tg-theme-button-color, #007aff);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .buttons-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .balance-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <select class="language-btn" id="languageSelector" onchange="changeLanguage()">
+                <option value="ru">🇷🇺 RU</option>
+                <option value="en">🇺🇸 EN</option>
+                <option value="es">🇪🇸 ES</option>
+                <option value="de">🇩🇪 DE</option>
+            </select>
+        </div>
+
+        <!-- Header -->
+        <div class="header fade-in">
+            <h1 id="appTitle">NodeOn Crypto</h1>
+            <p id="appTagline">Крипто игра с монетами NDN</p>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading">
+            <p>Загрузка данных...</p>
+        </div>
+
+        <!-- Error -->
+        <div id="error" class="error" style="display: none;">
+            <p id="errorMessage"></p>
+        </div>
+
+        <!-- User Info -->
+        <div id="userInfo" class="user-info fade-in" style="display: none;">
+            <h2 id="welcomeTitle">Добро пожаловать!</h2>
+            
+            <div class="balance-grid">
+                <div class="balance-card">
+                    <h3 id="balanceNdnLabel">Баланс NDN</h3>
+                    <div class="amount" id="balanceNdn">0</div>
+                </div>
+                <div class="balance-card">
+                    <h3 id="balanceStarsLabel">Баланс Stars</h3>
+                    <div class="amount" id="balanceStars">0</div>
+                </div>
+            </div>
+
+            <div id="proStatus" class="pro-status inactive">
+                <span id="proStatusText">Обычный пользователь</span>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div id="buttons" class="buttons-grid fade-in" style="display: none;">
+            <button class="btn" id="buyProBtn" onclick="buyPro()">
+                ⭐ <span id="buyProText">Купить Pro статус</span>
+            </button>
+            <button class="btn secondary" id="buyNdnBtn" onclick="showBuyNdnModal()">
+                💎 <span id="buyNdnText">Купить NDN</span>
+            </button>
+            <button class="btn secondary" id="withdrawBtn" onclick="showWithdrawModal()">
+                💸 <span id="withdrawText">Вывести NDN</span>
+            </button>
+            <button class="btn secondary" id="referralsBtn" onclick="showReferrals()">
+                👥 <span id="referralsText">Мои рефералы</span>
+            </button>
+            <button class="btn secondary" id="leaderboardBtn" onclick="showLeaderboard()">
+                🏆 <span id="leaderboardText">Таблица лидеров</span>
+            </button>
+            <button class="btn secondary" id="rulesBtn" onclick="showRules()">
+                📋 <span id="rulesText">Правила игры</span>
+            </button>
+        </div>
+
+        <!-- Leaderboard -->
+        <div id="leaderboard" class="section fade-in" style="display: none;">
+            <h3 id="leaderboardTitle">Таблица лидеров</h3>
+            <div id="leaderboardList"></div>
+        </div>
+
+        <!-- Referrals -->
+        <div id="referrals" class="section fade-in" style="display: none;">
+            <h3 id="referralsTitle">Реферальная система</h3>
+            <p id="referralsDescription">Приглашайте друзей и получайте награды до 7 уровней в глубину</p>
+            <div id="referralLink" style="display: none;">
+                <p><strong>Ваша реферальная ссылка:</strong></p>
+                <div class="referral-link" id="referralLinkText"></div>
+                <button class="copy-btn" onclick="copyReferralLink()" id="copyLinkText">Скопировать ссылку</button>
+            </div>
+        </div>
+
+        <!-- Rules -->
+        <div id="rules" class="section fade-in" style="display: none;">
+            <h3 id="rulesTitle">Правила игры</h3>
+            <div id="rulesContent"></div>
+        </div>
+    </div>
+
+    <!-- Buy NDN Modal -->
+    <div id="buyNdnModal" class="modal">
+        <div class="modal-content">
+            <h3 id="buyNdnModalTitle">Купить NDN за Stars</h3>
+            <div class="form-group">
+                <label for="starsAmount" id="starsAmountLabel">Количество Stars:</label>
+                <input type="number" id="starsAmount" min="10" max="100000" value="100">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn secondary" onclick="closeModal('buyNdnModal')" id="cancelText">Отмена</button>
+                <button class="btn" onclick="buyNdn()" id="confirmBuyText">Купить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <h3 id="withdrawModalTitle">Вывести NDN в Stars</h3>
+            <div class="form-group">
+                <label for="ndnAmount" id="ndnAmountLabel">Количество NDN:</label>
+                <input type="number" id="ndnAmount" min="10" max="100000" value="100">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn secondary" onclick="closeModal('withdrawModal')" id="cancelWithdrawText">Отмена</button>
+                <button class="btn" onclick="withdrawNdn()" id="confirmWithdrawText">Вывести</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentLanguage = 'ru';
+        let translations = {};
+
+        // Initialize Telegram WebApp
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+
+        // Initialize app
+        async function init() {
+            try {
+                // Get user language from Telegram
+                const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+                if (tgUser && tgUser.language_code) {
+                    const langCode = tgUser.language_code.substring(0, 2);
+                    if (['ru', 'en', 'es', 'de'].includes(langCode)) {
+                        currentLanguage = langCode;
+                    }
+                }
+
+                // Set language selector
+                document.getElementById('languageSelector').value = currentLanguage;
+
+                // Load translations
+                await loadTranslations();
+
+                // Load user data
+                await loadUserData();
+
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showError('Ошибка инициализации приложения');
+            }
+        }
+
+        // Load translations
+        async function loadTranslations() {
+            try {
+                const response = await fetch(`/api/translations/${currentLanguage}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    translations = data.translations;
+                    updateUI();
+                }
+            } catch (error) {
+                console.error('Translation loading error:', error);
+            }
+        }
+
+        // Change language
+        async function changeLanguage() {
+            currentLanguage = document.getElementById('languageSelector').value;
+            await loadTranslations();
+        }
+
+        // Update UI with translations
+        function updateUI() {
+            if (!translations.app) return;
+
+            // App info
+            document.getElementById('appTitle').textContent = translations.app.name || 'NodeOn Crypto';
+            document.getElementById('appTagline').textContent = translations.app.description || 'Крипто игра с монетами NDN';
+
+            // User info
+            document.getElementById('balanceNdnLabel').textContent = translations.user?.balance_ndn || 'Баланс NDN';
+            document.getElementById('balanceStarsLabel').textContent = translations.user?.balance_stars || 'Баланс Stars';
+
+            // Buttons
+            document.getElementById('buyProText').textContent = translations.buttons?.buy_pro || 'Купить Pro статус';
+            document.getElementById('buyNdnText').textContent = translations.buttons?.buy_ndn || 'Купить NDN';
+            document.getElementById('withdrawText').textContent = translations.buttons?.withdraw_ndn || 'Вывести NDN';
+            document.getElementById('referralsText').textContent = translations.buttons?.referrals || 'Мои рефералы';
+            document.getElementById('leaderboardText').textContent = translations.buttons?.leaderboard || 'Таблица лидеров';
+            document.getElementById('rulesText').textContent = translations.buttons?.rules || 'Правила игры';
+
+            // Modal texts
+            document.getElementById('buyNdnModalTitle').textContent = translations.buttons?.buy_ndn || 'Купить NDN';
+            document.getElementById('starsAmountLabel').textContent = 'Количество Stars:';
+            document.getElementById('cancelText').textContent = translations.buttons?.cancel || 'Отмена';
+            document.getElementById('confirmBuyText').textContent = translations.buttons?.buy_ndn || 'Купить';
+
+            document.getElementById('withdrawModalTitle').textContent = translations.buttons?.withdraw_ndn || 'Вывести NDN';
+            document.getElementById('ndnAmountLabel').textContent = 'Количество NDN:';
+            document.getElementById('cancelWithdrawText').textContent = translations.buttons?.cancel || 'Отмена';
+            document.getElementById('confirmWithdrawText').textContent = translations.buttons?.withdraw_ndn || 'Вывести';
+        }
+
+        // Load user data
+        async function loadUserData() {
+            try {
+                const initData = window.Telegram.WebApp.initData;
+                const response = await fetch(`/api/user/profile?init_data=${encodeURIComponent(initData)}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        currentUser = data.user;
+                        displayUserInfo(data);
+                    } else {
+                        showError(data.message || 'Ошибка загрузки данных пользователя');
+                    }
+                } else {
+                    showError('Ошибка сервера');
+                }
+            } catch (error) {
+                console.error('User data loading error:', error);
+                showError('Ошибка загрузки данных');
+            }
+        }
+
+        // Display user info
+        function displayUserInfo(data) {
+            const user = data.user;
+            
+            // Welcome message
+            const welcomeTitle = translations.welcome?.title || 'Добро пожаловать!';
+            document.getElementById('welcomeTitle').textContent = `${welcomeTitle} ${user.first_name || 'Пользователь'}!`;
+
+            // Balances
+            document.getElementById('balanceNdn').textContent = user.balance_ndn.toLocaleString();
+            document.getElementById('balanceStars').textContent = user.balance_stars.toLocaleString();
+
+            // Pro status
+            const proStatus = document.getElementById('proStatus');
+            const proStatusText = document.getElementById('proStatusText');
+            
+            if (user.is_pro) {
+                proStatus.classList.remove('inactive');
+                proStatusText.textContent = translations.user?.pro_status || 'Pro пользователь';
+            } else {
+                proStatus.classList.add('inactive');
+                proStatusText.textContent = 'Обычный пользователь';
+            }
+
+            // Show user info and buttons
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('buttons').style.display = 'grid';
+
+            // Show referral link if Pro
+            if (user.is_pro && user.referral_link) {
+                document.getElementById('referralLink').style.display = 'block';
+                document.getElementById('referralLinkText').textContent = user.referral_link;
+            }
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Buy Pro status
+        async function buyPro() {
+            if (!currentUser) return;
+
+            if (currentUser.is_pro) {
+                alert('У вас уже есть Pro статус!');
+                return;
+            }
+
+            if (currentUser.balance_ndn < 1000) {
+                alert('Недостаточно NDN для покупки Pro статуса. Нужно 1000 NDN.');
+                return;
+            }
+
+            if (confirm('Купить Pro статус за 1000 NDN?')) {
+                try {
+                    const initData = window.Telegram.WebApp.initData;
+                    const response = await fetch('/api/pro/buy', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ init_data: initData })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            alert('Pro статус успешно активирован!');
+                            await loadUserData();
+                        } else {
+                            alert(data.message || 'Ошибка покупки Pro статуса');
+                        }
+                    } else {
+                        alert('Ошибка сервера');
+                    }
+                } catch (error) {
+                    console.error('Buy Pro error:', error);
+                    alert('Ошибка покупки Pro статуса');
+                }
+            }
+        }
+
+        // Show buy NDN modal
+        function showBuyNdnModal() {
+            document.getElementById('buyNdnModal').style.display = 'block';
+        }
+
+        // Show withdraw modal
+        function showWithdrawModal() {
+            document.getElementById('withdrawModal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Buy NDN
+        async function buyNdn() {
+            const starsAmount = parseInt(document.getElementById('starsAmount').value);
+            
+            if (starsAmount < 10 || starsAmount > 100000) {
+                alert('Количество Stars должно быть от 10 до 100,000');
+                return;
+            }
+
+            // Here you would implement the actual Stars payment
+            alert(`Покупка ${starsAmount} Stars за NDN будет реализована после активации Telegram Stars`);
+            closeModal('buyNdnModal');
+        }
+
+        // Withdraw NDN
+        async function withdrawNdn() {
+            const ndnAmount = parseInt(document.getElementById('ndnAmount').value);
+            
+            if (ndnAmount < 10 || ndnAmount > currentUser.balance_ndn) {
+                alert('Недостаточно NDN для вывода');
+                return;
+            }
+
+            // Here you would implement the actual withdrawal
+            alert(`Вывод ${ndnAmount} NDN в Stars будет реализован после активации Telegram Stars`);
+            closeModal('withdrawModal');
+        }
+
+        // Show referrals
+        function showReferrals() {
+            document.getElementById('referrals').style.display = 'block';
+            document.getElementById('leaderboard').style.display = 'none';
+            document.getElementById('rules').style.display = 'none';
+        }
+
+        // Show leaderboard
+        async function showLeaderboard() {
+            try {
+                const response = await fetch('/api/stats/leaderboard');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        displayLeaderboard(data.leaders);
+                    }
+                }
+            } catch (error) {
+                console.error('Leaderboard loading error:', error);
+            }
+
+            document.getElementById('leaderboard').style.display = 'block';
+            document.getElementById('referrals').style.display = 'none';
+            document.getElementById('rules').style.display = 'none';
+        }
+
+        // Display leaderboard
+        function displayLeaderboard(leaders) {
+            const leaderboardList = document.getElementById('leaderboardList');
+            leaderboardList.innerHTML = '';
+
+            leaders.forEach(leader => {
+                const item = document.createElement('div');
+                item.className = 'leaderboard-item';
+                item.innerHTML = `
+                    <div class="rank">#${leader.rank}</div>
+                    <div class="user-name">${leader.first_name || 'Пользователь'}</div>
+                    <div class="user-balance">${leader.balance_ndn.toLocaleString()} NDN</div>
+                `;
+                leaderboardList.appendChild(item);
+            });
+        }
+
+        // Show rules
+        function showRules() {
+            const rulesContent = document.getElementById('rulesContent');
+            rulesContent.innerHTML = `
+                <h4>Как играть</h4>
+                <p>NodeOn Crypto - это крипто игра, где вы можете зарабатывать NDN монеты, покупать Pro статус и приглашать друзей для получения наград.</p>
+                
+                <h4>Pro статус</h4>
+                <p>Pro статус стоит 1000 NDN и дает доступ к реферальной программе. С Pro статусом вы можете приглашать друзей и получать награды.</p>
+                
+                <h4>Реферальная система</h4>
+                <p>Приглашайте друзей и получайте награды до 7 уровней в глубину. За каждого реферала, который купит Pro статус, вы получите награду.</p>
+                
+                <h4>NDN монеты</h4>
+                <p>NDN - это игровая валюта, которую можно покупать за Telegram Stars и выводить обратно в Stars. NDN скоро будет листиться на биржах!</p>
+            `;
+
+            document.getElementById('rules').style.display = 'block';
+            document.getElementById('referrals').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'none';
+        }
+
+        // Copy referral link
+        function copyReferralLink() {
+            const linkText = document.getElementById('referralLinkText').textContent;
+            navigator.clipboard.writeText(linkText).then(() => {
+                alert('Ссылка скопирована!');
+            });
+        }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

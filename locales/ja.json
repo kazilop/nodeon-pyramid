@@ -1,0 +1,155 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "NDNコインの暗号ゲーム",
+    "tagline": "稼ぐ、遊ぶ、友達を招待！"
+  },
+  "welcome": {
+    "title": "NodeOn Cryptoへようこそ！",
+    "subtitle": "リアルな報酬のある暗号通貨ゲーム",
+    "description": "Telegram StarsでNDNを購入し、友達を招待して最大7レベルまで稼ごう！"
+  },
+  "user": {
+    "balance_ndn": "NDN残高",
+    "balance_stars": "Stars残高",
+    "pro_status": "Proステータス",
+    "user_id": "あなたのゲームID",
+    "user_id_hint": "他のプレイヤーからの送金にこのIDを使用"
+  },
+  "buttons": {
+    "buy_pro": "Proステータスを購入",
+    "buy_ndn": "NDNを購入",
+    "withdraw_ndn": "NDNを引き出し",
+    "transfer_ndn": "NDNを送金",
+    "referrals": "私の紹介",
+    "leaderboard": "リーダーボード",
+    "rules": "ゲームルール",
+    "achievements": "実績",
+    "shops": "ショップ",
+    "invite_friends": "友達を招待",
+    "close": "閉じる",
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "copy": "コピー",
+    "share": "共有",
+    "back": "戻る",
+    "search": "検索",
+    "find_player": "プレイヤーを検索",
+    "send": "送信",
+    "buy": "購入",
+    "sell": "売却",
+    "exchange": "交換"
+  },
+  "pro": {
+    "buy_success": "Proステータスが正常にアクティベートされました！",
+    "buy_error": "Proステータス購入にNDNが不足しています",
+    "status": "Proステータス",
+    "benefits": "Pro特典",
+    "referral_link": "紹介リンク",
+    "total_referrals": "総紹介数",
+    "total_earned": "総獲得NDN",
+    "regular_referrals": "通常紹介",
+    "pro_referrals": "Pro紹介"
+  },
+  "referrals": {
+    "title": "私の紹介",
+    "total": "総紹介数",
+    "regular": "通常",
+    "pro": "Pro",
+    "earnings": "獲得NDN",
+    "level": "レベル",
+    "rewards": "報酬",
+    "description": "Pro紹介からの収益のみ"
+  },
+  "transfer": {
+    "title": "NDN送金",
+    "recipient": "受取人",
+    "amount": "金額",
+    "balance": "あなたの残高",
+    "confirm": "送金を確認",
+    "success": "送金が正常に完了しました！",
+    "error": "送金エラー",
+    "insufficient_balance": "NDN不足",
+    "user_not_found": "ユーザーが見つかりません"
+  },
+  "achievements": {
+    "title": "実績",
+    "unlocked": "アンロック済み",
+    "locked": "ロック済み",
+    "claim_reward": "報酬を受け取る",
+    "claimed": "受け取り済み"
+  },
+  "shops": {
+    "title": "ショップ",
+    "open_shop": "ショップを開く",
+    "cost": "費用：10,000 NDN",
+    "my_shop": "私のショップ",
+    "add_item": "アイテムを追加",
+    "shop_name": "ショップ名",
+    "shop_description": "ショップの説明"
+  },
+  "admin": {
+    "panel": "管理パネル",
+    "status": "ステータス",
+    "wallet_stats": "ウォレット統計",
+    "system_stats": "システム統計",
+    "exchange_requests": "交換リクエスト",
+    "user_management": "ユーザー管理",
+    "analytics": "分析"
+  },
+  "errors": {
+    "auth_required": "Telegram認証が必要です。Telegram Mini Appでアプリを開いてください。",
+    "user_not_found": "ユーザーが見つかりません",
+    "insufficient_balance": "資金不足",
+    "invalid_amount": "無効な金額",
+    "server_error": "サーバーエラー",
+    "network_error": "ネットワークエラー"
+  },
+  "notifications": {
+    "success": "成功！",
+    "error": "エラー！",
+    "info": "情報",
+    "warning": "警告！",
+    "copied": "コピーしました！",
+    "saved": "保存しました！",
+    "sent": "送信しました！"
+  },
+  "game_rules": {
+    "title": "ゲームルール",
+    "how_to_play": "遊び方",
+    "step1": "1. Telegram StarsでNDNを購入",
+    "step2": "2. 紹介リンクで友達を招待",
+    "step3": "3. Pro紹介で報酬を獲得",
+    "step4": "4. 実績とショップをアンロック",
+    "rewards": "報酬",
+    "level1": "レベル1：200 NDN",
+    "level2_7": "レベル2-7：各150 NDN",
+    "developer_fee": "開発者手数料：200 NDN"
+  },
+  "leaderboard": {
+    "title": "リーダーボード",
+    "rank": "順位",
+    "player": "プレイヤー",
+    "balance": "NDN残高",
+    "referrals": "紹介",
+    "pro_status": "Proステータス"
+  },
+  "language": {
+    "select": "言語を選択",
+    "russian": "Русский",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "french": "Français",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "portuguese": "Português",
+    "italian": "Italiano",
+    "hindi": "हिन्दी"
+  }
+}
+
+
+

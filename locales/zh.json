@@ -1,0 +1,155 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "NDN币加密游戏",
+    "tagline": "赚钱、游戏、邀请朋友！"
+  },
+  "welcome": {
+    "title": "欢迎来到NodeOn Crypto！",
+    "subtitle": "具有真实奖励的加密货币游戏",
+    "description": "用Telegram Stars购买NDN，邀请朋友，赚取最多7层深度！"
+  },
+  "user": {
+    "balance_ndn": "NDN余额",
+    "balance_stars": "Stars余额",
+    "pro_status": "Pro状态",
+    "user_id": "您的游戏ID",
+    "user_id_hint": "使用此ID接收其他玩家的转账"
+  },
+  "buttons": {
+    "buy_pro": "购买Pro状态",
+    "buy_ndn": "购买NDN",
+    "withdraw_ndn": "提取NDN",
+    "transfer_ndn": "转账NDN",
+    "referrals": "我的推荐",
+    "leaderboard": "排行榜",
+    "rules": "游戏规则",
+    "achievements": "成就",
+    "shops": "商店",
+    "invite_friends": "邀请朋友",
+    "close": "关闭",
+    "confirm": "确认",
+    "cancel": "取消",
+    "copy": "复制",
+    "share": "分享",
+    "back": "返回",
+    "search": "搜索",
+    "find_player": "查找玩家",
+    "send": "发送",
+    "buy": "购买",
+    "sell": "出售",
+    "exchange": "兑换"
+  },
+  "pro": {
+    "buy_success": "Pro状态成功激活！",
+    "buy_error": "NDN不足，无法购买Pro状态",
+    "status": "Pro状态",
+    "benefits": "Pro优势",
+    "referral_link": "推荐链接",
+    "total_referrals": "总推荐数",
+    "total_earned": "总赚取NDN",
+    "regular_referrals": "普通推荐",
+    "pro_referrals": "Pro推荐"
+  },
+  "referrals": {
+    "title": "我的推荐",
+    "total": "总推荐数",
+    "regular": "普通",
+    "pro": "Pro",
+    "earnings": "赚取NDN",
+    "level": "级别",
+    "rewards": "奖励",
+    "description": "仅从Pro推荐中赚取"
+  },
+  "transfer": {
+    "title": "转账NDN",
+    "recipient": "收款人",
+    "amount": "金额",
+    "balance": "您的余额",
+    "confirm": "确认转账",
+    "success": "转账成功完成！",
+    "error": "转账错误",
+    "insufficient_balance": "NDN不足",
+    "user_not_found": "未找到用户"
+  },
+  "achievements": {
+    "title": "成就",
+    "unlocked": "已解锁",
+    "locked": "已锁定",
+    "claim_reward": "领取奖励",
+    "claimed": "已领取"
+  },
+  "shops": {
+    "title": "商店",
+    "open_shop": "开设商店",
+    "cost": "费用：10,000 NDN",
+    "my_shop": "我的商店",
+    "add_item": "添加商品",
+    "shop_name": "商店名称",
+    "shop_description": "商店描述"
+  },
+  "admin": {
+    "panel": "管理面板",
+    "status": "状态",
+    "wallet_stats": "钱包统计",
+    "system_stats": "系统统计",
+    "exchange_requests": "兑换请求",
+    "user_management": "用户管理",
+    "analytics": "分析"
+  },
+  "errors": {
+    "auth_required": "需要Telegram授权。请在Telegram Mini App中打开应用。",
+    "user_not_found": "未找到用户",
+    "insufficient_balance": "资金不足",
+    "invalid_amount": "金额无效",
+    "server_error": "服务器错误",
+    "network_error": "网络错误"
+  },
+  "notifications": {
+    "success": "成功！",
+    "error": "错误！",
+    "info": "信息",
+    "warning": "警告！",
+    "copied": "已复制！",
+    "saved": "已保存！",
+    "sent": "已发送！"
+  },
+  "game_rules": {
+    "title": "游戏规则",
+    "how_to_play": "如何游戏",
+    "step1": "1. 用Telegram Stars购买NDN",
+    "step2": "2. 通过推荐链接邀请朋友",
+    "step3": "3. 从Pro推荐中获得奖励",
+    "step4": "4. 解锁成就和商店",
+    "rewards": "奖励",
+    "level1": "第1级：200 NDN",
+    "level2_7": "第2-7级：各150 NDN",
+    "developer_fee": "开发者费用：200 NDN"
+  },
+  "leaderboard": {
+    "title": "排行榜",
+    "rank": "排名",
+    "player": "玩家",
+    "balance": "NDN余额",
+    "referrals": "推荐",
+    "pro_status": "Pro状态"
+  },
+  "language": {
+    "select": "选择语言",
+    "russian": "Русский",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "french": "Français",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "portuguese": "Português",
+    "italian": "Italiano",
+    "hindi": "हिन्दी"
+  }
+}
+
+
+

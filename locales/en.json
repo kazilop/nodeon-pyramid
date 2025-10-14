@@ -2,115 +2,180 @@
   "app": {
     "name": "NodeOn Crypto",
     "description": "Crypto game with NDN coins",
-    "tagline": "Earn, invite friends, become a leader!"
+    "tagline": "Earn, play, invite friends!"
   },
   "welcome": {
     "title": "Welcome to NodeOn Crypto!",
-    "subtitle": "Crypto game with NDN coins",
-    "description": "Earn NDN coins, buy Pro status, invite friends and get rewards!"
+    "subtitle": "Cryptocurrency game with real rewards",
+    "description": "Buy NDN with Telegram Stars, invite friends and earn up to 7 levels deep!"
   },
   "user": {
     "balance_ndn": "NDN Balance",
     "balance_stars": "Stars Balance",
     "pro_status": "Pro Status",
-    "referral_link": "Referral Link",
-    "total_earned": "Total Earned",
-    "total_spent": "Total Spent"
+    "user_id": "Your Game ID",
+    "user_id_hint": "Use this ID for transfers from other players"
   },
   "buttons": {
     "buy_pro": "Buy Pro Status",
     "buy_ndn": "Buy NDN",
     "withdraw_ndn": "Withdraw NDN",
+    "transfer_ndn": "Transfer NDN",
     "referrals": "My Referrals",
     "leaderboard": "Leaderboard",
     "rules": "Game Rules",
+    "achievements": "Achievements",
+    "shops": "Shops",
+    "invite_friends": "Invite Friends",
     "close": "Close",
     "confirm": "Confirm",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "copy": "Copy",
+    "share": "Share",
+    "back": "Back",
+    "search": "Search",
+    "find_player": "Find Player",
+    "send": "Send",
+    "buy": "Buy",
+    "sell": "Sell",
+    "exchange": "Exchange",
+    "change": "Change"
   },
   "pro": {
-    "title": "Pro Status",
-    "price": "1000 NDN",
-    "benefits": [
-      "Access to referral program",
-      "Earn rewards from referrals",
-      "Priority support",
-      "Exclusive features"
-    ],
     "buy_success": "Pro status successfully activated!",
-    "buy_error": "Insufficient NDN to buy Pro status"
+    "buy_error": "Insufficient NDN to buy Pro status",
+    "status": "Pro Status",
+    "benefits": "Pro Benefits",
+    "referral_link": "Referral Link",
+    "total_referrals": "Total Referrals",
+    "total_earned": "Total Earned NDN",
+    "regular_referrals": "Regular Referrals",
+    "pro_referrals": "Pro Referrals"
   },
   "referrals": {
-    "title": "Referral System",
-    "description": "Invite friends and earn rewards up to 7 levels deep",
-    "levels": {
-      "1": "Level 1: 200 NDN",
-      "2": "Level 2: 150 NDN",
-      "3": "Level 3: 150 NDN",
-      "4": "Level 4: 150 NDN",
-      "5": "Level 5: 150 NDN",
-      "6": "Level 6: 150 NDN",
-      "7": "Level 7: 150 NDN"
-    },
-    "total_referrals": "Total Referrals",
-    "total_earnings": "Total Earnings",
-    "copy_link": "Copy Link"
+    "title": "My Referrals",
+    "total": "Total Referrals",
+    "regular": "Regular",
+    "pro": "Pro",
+    "earnings": "Earned NDN",
+    "level": "Level",
+    "rewards": "Rewards",
+    "description": "Earnings only from Pro referrals",
+    "level_stats": "📊 Statistics by levels:",
+    "level": "Level {level}",
+    "referrals_count": "{count} referrals",
+    "earnings": "+{earnings} NDN",
+    "no_level_stats": "Level statistics not available yet",
+    "referrals_list": "👥 Referrals list by levels:",
+    "level_with_count": "📊 Level {level} ({count} referrals):"
+  },
+  "transfer": {
+    "title": "Transfer NDN",
+    "instructions": "Select recipient and enter amount",
+    "recipient": "Recipient",
+    "amount": "Amount",
+    "balance": "Your Balance",
+    "confirm": "Confirm Transfer",
+    "success": "Transfer completed successfully!",
+    "error": "Transfer error",
+    "insufficient_balance": "Insufficient NDN",
+    "user_not_found": "User not found"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "description": "Complete tasks and earn rewards!",
+    "unlocked": "Unlocked",
+    "locked": "Locked",
+    "claim_reward": "Claim Reward",
+    "claimed": "Claimed"
+  },
+  "payment": {
+    "rate": "Rate: 1 NDN = 1 Telegram Star",
+    "stars_info": "💡 Stars go to bot balance and can be withdrawn to TON",
+    "stars_cost": "Cost in Stars:"
+  },
+  "exchange": {
+    "stars_info": "💡 NDN debited from your account, Stars go to Telegram",
+    "username": "Your Telegram username:",
+    "receive_stars": "Receive Stars:"
+  },
+  "shops": {
+    "title": "Shops",
+    "description": "Open your own shop for 10,000 NDN!",
+    "open_shop": "Open Shop",
+    "cost": "Cost: 10,000 NDN",
+    "my_shop": "My Shop",
+    "add_item": "Add Item",
+    "shop_name": "Shop Name",
+    "shop_description": "Shop Description"
+  },
+  "leaderboard": {
+    "description": "Top players by NDN balance",
+    "rank": "Rank",
+    "player": "Player",
+    "balance": "Balance",
+    "referrals": "Referrals",
+    "pro_status": "Pro Status"
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "status": "Status",
+    "wallet_stats": "Wallet Statistics",
+    "system_stats": "System Statistics",
+    "exchange_requests": "Exchange Requests",
+    "user_management": "User Management",
+    "analytics": "Analytics"
+  },
+  "errors": {
+    "auth_required": "Telegram authorization required. Open the app in Telegram Mini App.",
+    "user_not_found": "User not found",
+    "insufficient_balance": "Insufficient funds",
+    "invalid_amount": "Invalid amount",
+    "server_error": "Server error",
+    "network_error": "Network error"
+  },
+  "notifications": {
+    "success": "Success!",
+    "error": "Error!",
+    "info": "Info",
+    "warning": "Warning!",
+    "copied": "Copied!",
+    "saved": "Saved!",
+    "sent": "Sent!"
+  },
+  "game_rules": {
+    "title": "Game Rules",
+    "how_to_play": "How to Play",
+    "step1": "1. Buy NDN with Telegram Stars",
+    "step2": "2. Invite friends via referral link",
+    "step3": "3. Get rewards for Pro referrals",
+    "step4": "4. Unlock achievements and shops",
+    "rewards": "Rewards",
+    "level1": "Level 1: 200 NDN",
+    "level2_7": "Levels 2-7: 150 NDN each",
+    "developer_fee": "Developer fee: 200 NDN"
   },
   "leaderboard": {
     "title": "Leaderboard",
     "rank": "Rank",
-    "name": "Name",
+    "player": "Player",
     "balance": "NDN Balance",
-    "stars": "Stars",
-    "pro": "Pro"
+    "referrals": "Referrals",
+    "pro_status": "Pro Status"
   },
-  "rules": {
-    "title": "Game Rules",
-    "sections": {
-      "gameplay": {
-        "title": "How to Play",
-        "content": "NodeOn Crypto is a crypto game where you can earn NDN coins, buy Pro status and invite friends to get rewards."
-      },
-      "pro_status": {
-        "title": "Pro Status",
-        "content": "Pro status costs 1000 NDN and gives access to the referral program. With Pro status you can invite friends and earn rewards."
-      },
-      "referrals": {
-        "title": "Referral System",
-        "content": "Invite friends and earn rewards up to 7 levels deep. For each referral who buys Pro status, you will receive a reward."
-      },
-      "ndn": {
-        "title": "NDN Coins",
-        "content": "NDN is a game currency that can be bought with Telegram Stars and withdrawn back to Stars. NDN will soon be listed on exchanges!"
-      }
-    }
-  },
-  "errors": {
-    "auth_required": "Telegram authorization required. Open the app in Telegram Mini App.",
-    "insufficient_balance": "Insufficient funds",
-    "user_not_found": "User not found",
-    "payment_failed": "Payment error",
-    "network_error": "Network error",
-    "unknown_error": "Unknown error"
-  },
-  "success": {
-    "payment_completed": "Payment completed successfully",
-    "pro_activated": "Pro status activated",
-    "ndn_purchased": "NDN successfully purchased",
-    "ndn_withdrawn": "NDN successfully withdrawn",
-    "link_copied": "Link copied"
-  },
-  "bot": {
-    "start": "🚀 Launch NodeOn Crypto",
-    "help": "❓ Help and instructions",
-    "balance": "💰 Check NDN balance",
-    "referrals": "👥 My referrals",
-    "leaderboard": "🏆 Leaderboard",
-    "buy_pro": "⭐ Buy Pro status",
-    "buy_ndn": "💎 Buy NDN with Stars",
-    "withdraw": "💸 Withdraw NDN to Stars",
-    "terms": "📋 Terms of use",
-    "support": "🆘 Support",
-    "paysupport": "💳 Payment support"
+  "language": {
+    "select": "Select Language",
+    "russian": "Русский",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "french": "Français",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "portuguese": "Português",
+    "italian": "Italiano",
+    "hindi": "हिन्दी"
   }
 }

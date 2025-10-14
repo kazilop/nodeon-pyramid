@@ -2,115 +2,151 @@
   "app": {
     "name": "NodeOn Crypto",
     "description": "Krypto-Spiel mit NDN-Münzen",
-    "tagline": "Verdiene, lade Freunde ein, werde ein Leader!"
+    "tagline": "Verdiene, spiele, lade Freunde ein!"
   },
   "welcome": {
     "title": "Willkommen bei NodeOn Crypto!",
-    "subtitle": "Krypto-Spiel mit NDN-Münzen",
-    "description": "Verdiene NDN-Münzen, kaufe Pro-Status, lade Freunde ein und erhalte Belohnungen!"
+    "subtitle": "Kryptowährungs-Spiel mit echten Belohnungen",
+    "description": "Kaufe NDN mit Telegram Stars, lade Freunde ein und verdiene bis zu 7 Ebenen tief!"
   },
   "user": {
     "balance_ndn": "NDN Guthaben",
     "balance_stars": "Stars Guthaben",
     "pro_status": "Pro Status",
-    "referral_link": "Empfehlungslink",
-    "total_earned": "Gesamt Verdient",
-    "total_spent": "Gesamt Ausgegeben"
+    "user_id": "Deine Spiel-ID",
+    "user_id_hint": "Verwende diese ID für Überweisungen von anderen Spielern"
   },
   "buttons": {
     "buy_pro": "Pro Status kaufen",
     "buy_ndn": "NDN kaufen",
     "withdraw_ndn": "NDN abheben",
+    "transfer_ndn": "NDN übertragen",
     "referrals": "Meine Empfehlungen",
     "leaderboard": "Bestenliste",
     "rules": "Spielregeln",
+    "achievements": "Erfolge",
+    "shops": "Shops",
+    "invite_friends": "Freunde einladen",
     "close": "Schließen",
     "confirm": "Bestätigen",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "copy": "Kopieren",
+    "share": "Teilen",
+    "back": "Zurück",
+    "search": "Suchen",
+    "find_player": "Spieler finden",
+    "send": "Senden",
+    "buy": "Kaufen",
+    "sell": "Verkaufen",
+    "exchange": "Tauschen"
   },
   "pro": {
-    "title": "Pro Status",
-    "price": "1000 NDN",
-    "benefits": [
-      "Zugang zum Empfehlungsprogramm",
-      "Verdiene Belohnungen von Empfehlungen",
-      "Prioritäts-Support",
-      "Exklusive Funktionen"
-    ],
     "buy_success": "Pro Status erfolgreich aktiviert!",
-    "buy_error": "Unzureichende NDN zum Kauf des Pro Status"
+    "buy_error": "Unzureichende NDN zum Kauf des Pro Status",
+    "status": "Pro Status",
+    "benefits": "Pro Vorteile",
+    "referral_link": "Empfehlungslink",
+    "total_referrals": "Gesamte Empfehlungen",
+    "total_earned": "Gesamt verdiente NDN",
+    "regular_referrals": "Reguläre Empfehlungen",
+    "pro_referrals": "Pro Empfehlungen"
   },
   "referrals": {
-    "title": "Empfehlungssystem",
-    "description": "Lade Freunde ein und verdiene Belohnungen bis zu 7 Ebenen tief",
-    "levels": {
-      "1": "Ebene 1: 200 NDN",
-      "2": "Ebene 2: 150 NDN",
-      "3": "Ebene 3: 150 NDN",
-      "4": "Ebene 4: 150 NDN",
-      "5": "Ebene 5: 150 NDN",
-      "6": "Ebene 6: 150 NDN",
-      "7": "Ebene 7: 150 NDN"
-    },
-    "total_referrals": "Gesamt Empfehlungen",
-    "total_earnings": "Gesamt Verdienste",
-    "copy_link": "Link kopieren"
+    "title": "Meine Empfehlungen",
+    "total": "Gesamte Empfehlungen",
+    "regular": "Regulär",
+    "pro": "Pro",
+    "earnings": "Verdiente NDN",
+    "level": "Ebene",
+    "rewards": "Belohnungen",
+    "description": "Einnahmen nur von Pro Empfehlungen"
+  },
+  "transfer": {
+    "title": "NDN übertragen",
+    "recipient": "Empfänger",
+    "amount": "Betrag",
+    "balance": "Dein Guthaben",
+    "confirm": "Übertragung bestätigen",
+    "success": "Übertragung erfolgreich abgeschlossen!",
+    "error": "Übertragungsfehler",
+    "insufficient_balance": "Unzureichende NDN",
+    "user_not_found": "Benutzer nicht gefunden"
+  },
+  "achievements": {
+    "title": "Erfolge",
+    "unlocked": "Freigeschaltet",
+    "locked": "Gesperrt",
+    "claim_reward": "Belohnung einfordern",
+    "claimed": "Eingefordert"
+  },
+  "shops": {
+    "title": "Shops",
+    "open_shop": "Shop eröffnen",
+    "cost": "Kosten: 10.000 NDN",
+    "my_shop": "Mein Shop",
+    "add_item": "Artikel hinzufügen",
+    "shop_name": "Shop Name",
+    "shop_description": "Shop Beschreibung"
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "status": "Status",
+    "wallet_stats": "Wallet Statistiken",
+    "system_stats": "System Statistiken",
+    "exchange_requests": "Tausch Anfragen",
+    "user_management": "Benutzerverwaltung",
+    "analytics": "Analytik"
+  },
+  "errors": {
+    "auth_required": "Telegram-Autorisierung erforderlich. Öffne die App in Telegram Mini App.",
+    "user_not_found": "Benutzer nicht gefunden",
+    "insufficient_balance": "Unzureichende Mittel",
+    "invalid_amount": "Ungültiger Betrag",
+    "server_error": "Serverfehler",
+    "network_error": "Netzwerkfehler"
+  },
+  "notifications": {
+    "success": "Erfolgreich!",
+    "error": "Fehler!",
+    "info": "Info",
+    "warning": "Warnung!",
+    "copied": "Kopiert!",
+    "saved": "Gespeichert!",
+    "sent": "Gesendet!"
+  },
+  "game_rules": {
+    "title": "Spielregeln",
+    "how_to_play": "Wie man spielt",
+    "step1": "1. Kaufe NDN mit Telegram Stars",
+    "step2": "2. Lade Freunde über Empfehlungslink ein",
+    "step3": "3. Erhalte Belohnungen für Pro Empfehlungen",
+    "step4": "4. Schalte Erfolge und Shops frei",
+    "rewards": "Belohnungen",
+    "level1": "Ebene 1: 200 NDN",
+    "level2_7": "Ebenen 2-7: je 150 NDN",
+    "developer_fee": "Entwicklergebühr: 200 NDN"
   },
   "leaderboard": {
     "title": "Bestenliste",
     "rank": "Rang",
-    "name": "Name",
+    "player": "Spieler",
     "balance": "NDN Guthaben",
-    "stars": "Stars",
-    "pro": "Pro"
+    "referrals": "Empfehlungen",
+    "pro_status": "Pro Status"
   },
-  "rules": {
-    "title": "Spielregeln",
-    "sections": {
-      "gameplay": {
-        "title": "Wie man spielt",
-        "content": "NodeOn Crypto ist ein Krypto-Spiel, bei dem du NDN-Münzen verdienen, Pro-Status kaufen und Freunde einladen kannst, um Belohnungen zu erhalten."
-      },
-      "pro_status": {
-        "title": "Pro Status",
-        "content": "Pro Status kostet 1000 NDN und gibt Zugang zum Empfehlungsprogramm. Mit Pro Status kannst du Freunde einladen und Belohnungen verdienen."
-      },
-      "referrals": {
-        "title": "Empfehlungssystem",
-        "content": "Lade Freunde ein und verdiene Belohnungen bis zu 7 Ebenen tief. Für jede Empfehlung, die Pro Status kauft, erhältst du eine Belohnung."
-      },
-      "ndn": {
-        "title": "NDN Münzen",
-        "content": "NDN ist eine Spielwährung, die mit Telegram Stars gekauft und zurück zu Stars abgehoben werden kann. NDN wird bald an Börsen gelistet!"
-      }
-    }
-  },
-  "errors": {
-    "auth_required": "Telegram-Autorisierung erforderlich. Öffne die App in Telegram Mini App.",
-    "insufficient_balance": "Unzureichende Mittel",
-    "user_not_found": "Benutzer nicht gefunden",
-    "payment_failed": "Zahlungsfehler",
-    "network_error": "Netzwerkfehler",
-    "unknown_error": "Unbekannter Fehler"
-  },
-  "success": {
-    "payment_completed": "Zahlung erfolgreich abgeschlossen",
-    "pro_activated": "Pro Status aktiviert",
-    "ndn_purchased": "NDN erfolgreich gekauft",
-    "ndn_withdrawn": "NDN erfolgreich abgehoben",
-    "link_copied": "Link kopiert"
-  },
-  "bot": {
-    "start": "🚀 NodeOn Crypto starten",
-    "help": "❓ Hilfe und Anweisungen",
-    "balance": "💰 NDN Guthaben prüfen",
-    "referrals": "👥 Meine Empfehlungen",
-    "leaderboard": "🏆 Bestenliste",
-    "buy_pro": "⭐ Pro Status kaufen",
-    "buy_ndn": "💎 NDN mit Stars kaufen",
-    "withdraw": "💸 NDN zu Stars abheben",
-    "terms": "📋 Nutzungsbedingungen",
-    "support": "🆘 Support",
-    "paysupport": "💳 Zahlungssupport"
+  "language": {
+    "select": "Sprache wählen",
+    "russian": "Русский",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "french": "Français",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "portuguese": "Português",
+    "italian": "Italiano",
+    "hindi": "हिन्दी"
   }
 }

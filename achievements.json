@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Первый шаг",
+    "description": "Зарегистрируйтесь в приложении",
+    "icon": "👋",
+    "reward_ndn": 10.0,
+    "category": "registration"
+  },
+  {
+    "id": 2,
+    "name": "Покупатель",
+    "description": "Купите NDN за Telegram Stars",
+    "icon": "💰",
+    "reward_ndn": 50.0,
+    "category": "purchase"
+  },
+  {
+    "id": 3,
+    "name": "Pro пользователь",
+    "description": "Купите Pro статус",
+    "icon": "💎",
+    "reward_ndn": 100.0,
+    "category": "pro"
+  },
+  {
+    "id": 4,
+    "name": "Реферал",
+    "description": "Пригласите первого друга",
+    "icon": "👥",
+    "reward_ndn": 25.0,
+    "category": "referral"
+  },
+  {
+    "id": 5,
+    "name": "Магазинщик",
+    "description": "Откройте свой магазин",
+    "icon": "🏪",
+    "reward_ndn": 200.0,
+    "category": "shop"
+  }
+]

@@ -1,0 +1,155 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "Jogo de cripto com moedas NDN",
+    "tagline": "Ganhe, jogue, convide amigos!"
+  },
+  "welcome": {
+    "title": "Bem-vindo ao NodeOn Crypto!",
+    "subtitle": "Jogo de criptomoeda com recompensas reais",
+    "description": "Compre NDN com Telegram Stars, convide amigos e ganhe até 7 níveis de profundidade!"
+  },
+  "user": {
+    "balance_ndn": "Saldo NDN",
+    "balance_stars": "Saldo Stars",
+    "pro_status": "Status Pro",
+    "user_id": "Seu ID do Jogo",
+    "user_id_hint": "Use este ID para transferências de outros jogadores"
+  },
+  "buttons": {
+    "buy_pro": "Comprar Status Pro",
+    "buy_ndn": "Comprar NDN",
+    "withdraw_ndn": "Sacar NDN",
+    "transfer_ndn": "Transferir NDN",
+    "referrals": "Meus Indicados",
+    "leaderboard": "Ranking",
+    "rules": "Regras do Jogo",
+    "achievements": "Conquistas",
+    "shops": "Lojas",
+    "invite_friends": "Convidar Amigos",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "copy": "Copiar",
+    "share": "Compartilhar",
+    "back": "Voltar",
+    "search": "Pesquisar",
+    "find_player": "Encontrar Jogador",
+    "send": "Enviar",
+    "buy": "Comprar",
+    "sell": "Vender",
+    "exchange": "Trocar"
+  },
+  "pro": {
+    "buy_success": "Status Pro ativado com sucesso!",
+    "buy_error": "NDN insuficiente para comprar status Pro",
+    "status": "Status Pro",
+    "benefits": "Benefícios Pro",
+    "referral_link": "Link de Indicação",
+    "total_referrals": "Total de Indicados",
+    "total_earned": "NDN Total Ganho",
+    "regular_referrals": "Indicados Regulares",
+    "pro_referrals": "Indicados Pro"
+  },
+  "referrals": {
+    "title": "Meus Indicados",
+    "total": "Total de Indicados",
+    "regular": "Regulares",
+    "pro": "Pro",
+    "earnings": "NDN Ganho",
+    "level": "Nível",
+    "rewards": "Recompensas",
+    "description": "Ganhos apenas de indicados Pro"
+  },
+  "transfer": {
+    "title": "Transferir NDN",
+    "recipient": "Destinatário",
+    "amount": "Valor",
+    "balance": "Seu Saldo",
+    "confirm": "Confirmar Transferência",
+    "success": "Transferência concluída com sucesso!",
+    "error": "Erro na transferência",
+    "insufficient_balance": "NDN insuficiente",
+    "user_not_found": "Usuário não encontrado"
+  },
+  "achievements": {
+    "title": "Conquistas",
+    "unlocked": "Desbloqueado",
+    "locked": "Bloqueado",
+    "claim_reward": "Reivindicar Recompensa",
+    "claimed": "Reivindicado"
+  },
+  "shops": {
+    "title": "Lojas",
+    "open_shop": "Abrir Loja",
+    "cost": "Custo: 10.000 NDN",
+    "my_shop": "Minha Loja",
+    "add_item": "Adicionar Item",
+    "shop_name": "Nome da Loja",
+    "shop_description": "Descrição da Loja"
+  },
+  "admin": {
+    "panel": "Painel Admin",
+    "status": "Status",
+    "wallet_stats": "Estatísticas da Carteira",
+    "system_stats": "Estatísticas do Sistema",
+    "exchange_requests": "Solicitações de Troca",
+    "user_management": "Gerenciamento de Usuários",
+    "analytics": "Analytics"
+  },
+  "errors": {
+    "auth_required": "Autorização do Telegram necessária. Abra o app no Telegram Mini App.",
+    "user_not_found": "Usuário não encontrado",
+    "insufficient_balance": "Saldo insuficiente",
+    "invalid_amount": "Valor inválido",
+    "server_error": "Erro do servidor",
+    "network_error": "Erro de rede"
+  },
+  "notifications": {
+    "success": "Sucesso!",
+    "error": "Erro!",
+    "info": "Info",
+    "warning": "Aviso!",
+    "copied": "Copiado!",
+    "saved": "Salvo!",
+    "sent": "Enviado!"
+  },
+  "game_rules": {
+    "title": "Regras do Jogo",
+    "how_to_play": "Como Jogar",
+    "step1": "1. Compre NDN com Telegram Stars",
+    "step2": "2. Convide amigos via link de indicação",
+    "step3": "3. Ganhe recompensas por indicados Pro",
+    "step4": "4. Desbloqueie conquistas e lojas",
+    "rewards": "Recompensas",
+    "level1": "Nível 1: 200 NDN",
+    "level2_7": "Níveis 2-7: 150 NDN cada",
+    "developer_fee": "Taxa do desenvolvedor: 200 NDN"
+  },
+  "leaderboard": {
+    "title": "Ranking",
+    "rank": "Posição",
+    "player": "Jogador",
+    "balance": "Saldo NDN",
+    "referrals": "Indicados",
+    "pro_status": "Status Pro"
+  },
+  "language": {
+    "select": "Selecionar Idioma",
+    "russian": "Русский",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "french": "Français",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "portuguese": "Português",
+    "italian": "Italiano",
+    "hindi": "हिन्दी"
+  }
+}
+
+
+
