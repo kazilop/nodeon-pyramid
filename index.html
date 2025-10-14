@@ -156,14 +156,55 @@
         }
 
         .daily-rewards {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            display: flex;
             gap: 8px;
             margin-top: 15px;
+            overflow-x: auto;
+            padding: 5px 0;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .daily-rewards::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .daily-rewards::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .daily-rewards::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .daily-rewards::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Индикатор прокрутки */
+        .daily-rewards::after {
+            content: "← Прокрутите →";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .daily-rewards-container {
+            position: relative;
         }
 
         .reward-day {
-            aspect-ratio: 1;
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
@@ -175,6 +216,7 @@
             transition: all 0.3s ease;
             position: relative;
             color: #ffffff;
+            flex-shrink: 0;
         }
 
         .reward-day div {
@@ -2287,9 +2329,11 @@
             <!-- Ежедневные награды -->
             <div class="game-card">
                 <h3 data-i18n="game.daily_rewards">🎁 Ежедневные награды</h3>
-                <p data-i18n="game.daily_rewards_desc">Заходите каждый день и получайте бонусы!</p>
-                <div class="daily-rewards" id="dailyRewards">
-                    <!-- Будет заполнено JavaScript -->
+                <p data-i18n="game.daily_rewards_desc">Заходите каждый день и получайте бонусы! (прокрутите для просмотра всех дней)</p>
+                <div class="daily-rewards-container">
+                    <div class="daily-rewards" id="dailyRewards">
+                        <!-- Будет заполнено JavaScript -->
+                    </div>
                 </div>
             </div>
 
