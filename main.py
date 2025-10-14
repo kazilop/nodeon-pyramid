@@ -455,7 +455,7 @@ def get_or_create_user(telegram_user: Dict[str, Any], referral_token: str = None
             "username": username,
             "first_name": first_name,
             "last_name": last_name,
-            "balance_ndn": 0.0,  # Начальный баланс 0 NDN - покупается только за Stars
+            "balance_ndn": 100.0,  # Начальный баланс 100 NDN для майнинга
             "balance_stars": 0.0,
             "total_stars_earned": 0.0,
             "total_stars_spent": 0.0,
@@ -475,7 +475,7 @@ def get_or_create_user(telegram_user: Dict[str, Any], referral_token: str = None
         
         if response.status_code == 201:
             created_user = response.json()[0]
-            print(f"✅ New user created: {created_user.get('first_name', 'Unknown')} (ID: {created_user['id']}) Balance: {created_user.get('balance_ndn', 0)} NDN (Stars purchase required)")
+            print(f"✅ New user created: {created_user.get('first_name', 'Unknown')} (ID: {created_user['id']}) Balance: {created_user.get('balance_ndn', 0)} NDN (100 NDN starting bonus)")
             
             # Создаем статистику рефералов
             for level in range(1, 8):
