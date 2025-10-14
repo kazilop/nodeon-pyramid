@@ -3097,7 +3097,7 @@ async def get_achievements(user_id: int):
 # NDN Miner API endpoints
 @app.get("/api/miner/data/{user_id}")
 async def get_miner_data(user_id: int):
-    """Получить данные майнера пользователя"""
+    """Получить данные майнера пользователя с расчетом оффлайн заработка"""
     try:
         # Получаем пользователя из БД
         user = await get_user_by_telegram_id(user_id)
@@ -3118,15 +3118,90 @@ async def get_miner_data(user_id: int):
                     "automation": 0
                 },
                 "total_gas_earned": 100,
-                "last_energy_refill": int(time.time() * 1000)
+                "last_energy_refill": int(time.time() * 1000),
+                "last_update": int(time.time() * 1000)
             }
         else:
             miner_data = user.miner_data
+        
+        # Рассчитываем оффлайн заработок
+        current_time = int(time.time() * 1000)
+        last_update = miner_data.get("last_update", current_time)
+        time_diff = current_time - last_update
+        
+        # Если прошло больше 1 секунды, рассчитываем заработок
+        if time_diff > 1000:
+            offline_earnings = calculate_offline_earnings(miner_data, time_diff)
+            if offline_earnings > 0:
+                miner_data["ndn_gas"] += offline_earnings
+                miner_data["total_gas_earned"] += offline_earnings
+                print(f"💰 Оффлайн заработок для пользователя {user_id}: {offline_earnings} Gas за {time_diff/1000:.1f} секунд")
+        
+        # Обновляем время последнего обновления
+        miner_data["last_update"] = current_time
+        
+        # Сохраняем обновленные данные
+        await update_user_miner_data(user_id, miner_data)
         
         return {"success": True, "miner_data": miner_data}
     except Exception as e:
         print(f"Error getting miner data: {e}")
         return {"success": False, "error": "Failed to get miner data"}
+
+def calculate_offline_earnings(miner_data: dict, time_diff_ms: int) -> float:
+    """Рассчитывает заработок за время отсутствия игрока"""
+    try:
+        if not miner_data.get("farms") or len(miner_data["farms"]) == 0:
+            return 0
+        
+        # Рассчитываем общую генерацию в минуту
+        total_gas_per_minute = 0
+        total_energy_cost = 0
+        
+        for farm in miner_data["farms"]:
+            farm_type = farm.get("type")
+            if farm_type == "cpu_miner":
+                base_gas = 1
+                energy_cost = 1
+            elif farm_type == "gpu_farm":
+                base_gas = 5
+                energy_cost = 3
+            elif farm_type == "asic_rig":
+                base_gas = 20
+                energy_cost = 8
+            elif farm_type == "data_center":
+                base_gas = 100
+                energy_cost = 25
+            else:
+                continue
+            
+            # Применяем улучшения скорости
+            speed_multiplier = 1 + (miner_data.get("upgrades", {}).get("speed", 0) * 0.1)
+            efficiency_multiplier = 1 - (miner_data.get("upgrades", {}).get("efficiency", 0) * 0.2)
+            
+            total_gas_per_minute += base_gas * speed_multiplier
+            total_energy_cost += energy_cost * efficiency_multiplier
+        
+        # Проверяем энергию
+        current_energy = miner_data.get("energy", 100)
+        if total_energy_cost > current_energy:
+            # Недостаточно энергии - майнинг не работает
+            return 0
+        
+        # Рассчитываем время в минутах
+        time_diff_minutes = time_diff_ms / (1000 * 60)
+        
+        # Рассчитываем заработок
+        earnings = total_gas_per_minute * time_diff_minutes
+        
+        # Обновляем энергию (потребление за время)
+        energy_consumption = total_energy_cost * time_diff_minutes
+        miner_data["energy"] = max(0, current_energy - energy_consumption)
+        
+        return round(earnings, 2)
+    except Exception as e:
+        print(f"Error calculating offline earnings: {e}")
+        return 0
 
 @app.post("/api/miner/buy-farm")
 async def buy_farm(request: Request):
@@ -3156,28 +3231,44 @@ async def buy_farm(request: Request):
         if not cost:
             return {"success": False, "error": "Invalid farm type"}
         
-        # Проверяем баланс Gas
+        # Получаем текущие данные майнера
         if not hasattr(user, 'miner_data') or user.miner_data is None:
-            user.miner_data = {"ndn_gas": 100}
+            miner_data = {
+                "ndn_gas": 100,
+                "energy": 100,
+                "max_energy": 100,
+                "gas_per_minute": 0,
+                "farms": [],
+                "upgrades": {"speed": 0, "efficiency": 0, "automation": 0},
+                "total_gas_earned": 100,
+                "last_energy_refill": int(time.time() * 1000),
+                "last_update": int(time.time() * 1000)
+            }
+        else:
+            miner_data = user.miner_data
         
-        if user.miner_data.get("ndn_gas", 0) < cost:
+        # Проверяем баланс Gas
+        if miner_data.get("ndn_gas", 0) < cost:
             return {"success": False, "error": "Not enough Gas"}
         
         # Покупаем ферму
-        user.miner_data["ndn_gas"] -= cost
-        if "farms" not in user.miner_data:
-            user.miner_data["farms"] = []
+        miner_data["ndn_gas"] -= cost
+        if "farms" not in miner_data:
+            miner_data["farms"] = []
         
-        user.miner_data["farms"].append({
+        miner_data["farms"].append({
             "type": farm_type,
             "level": 1,
             "purchased_at": int(time.time() * 1000)
         })
         
-        # Сохраняем в БД
-        await update_user_miner_data(user_id, user.miner_data)
+        # Обновляем время последнего обновления
+        miner_data["last_update"] = int(time.time() * 1000)
         
-        return {"success": True, "message": "Farm purchased successfully"}
+        # Сохраняем в БД
+        await update_user_miner_data(user_id, miner_data)
+        
+        return {"success": True, "message": "Farm purchased successfully", "miner_data": miner_data}
     except Exception as e:
         print(f"Error buying farm: {e}")
         return {"success": False, "error": "Failed to buy farm"}
@@ -3237,6 +3328,28 @@ async def buy_premium_farm(request: Request):
     except Exception as e:
         print(f"Error buying premium farm: {e}")
         return {"success": False, "error": "Failed to buy premium farm"}
+
+@app.post("/api/miner/save-state")
+async def save_miner_state(request: Request):
+    """Сохранить состояние майнера на сервере"""
+    try:
+        data = await request.json()
+        user_id = data.get("user_id")
+        miner_data = data.get("miner_data")
+        
+        if not user_id or not miner_data:
+            return {"success": False, "error": "Missing parameters"}
+        
+        # Обновляем время последнего обновления
+        miner_data["last_update"] = int(time.time() * 1000)
+        
+        # Сохраняем в БД
+        await update_user_miner_data(user_id, miner_data)
+        
+        return {"success": True, "message": "Miner state saved successfully"}
+    except Exception as e:
+        print(f"Error saving miner state: {e}")
+        return {"success": False, "error": "Failed to save miner state"}
 
 async def update_user_miner_data(user_id: int, miner_data: dict):
     """Обновить данные майнера пользователя в БД"""
