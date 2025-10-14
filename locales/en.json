@@ -183,7 +183,8 @@
     "stats": {
       "ndn_gas": "NDN Gas",
       "energy": "Energy",
-      "gas_per_second": "Gas/sec"
+      "gas_per_second": "Gas/sec",
+      "gas_per_minute": "Gas/min"
     },
     "farms": {
       "title": "Mining Farms",
@@ -196,6 +197,7 @@
       "data_center": "Data Center",
       "data_center_desc": "Mega-farm in data center",
       "gas_per_sec": "Gas/sec",
+      "gas_per_min": "Gas/min",
       "energy_cost": "Energy",
       "quantity": "Quantity",
       "cost": "Cost",
@@ -256,6 +258,13 @@
       "farms_count": "Farms",
       "level": "Level",
       "you": "You"
+    },
+    "energy": {
+      "refill_button": "Refill Energy",
+      "waiting": "Waiting...",
+      "next_refill": "Next refill in:",
+      "refilled": "Energy fully restored!",
+      "cooldown": "Next refill in:"
     }
   }
 }

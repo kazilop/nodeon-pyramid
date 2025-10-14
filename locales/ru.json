@@ -271,7 +271,8 @@
     "stats": {
       "ndn_gas": "NDN Gas",
       "energy": "Энергия",
-      "gas_per_second": "Gas/сек"
+      "gas_per_second": "Gas/сек",
+      "gas_per_minute": "Gas/мин"
     },
     "farms": {
       "title": "Фермы майнинга",
@@ -284,6 +285,7 @@
       "data_center": "Data Center",
       "data_center_desc": "Мега-ферма в дата-центре",
       "gas_per_sec": "Gas/сек",
+      "gas_per_min": "Gas/мин",
       "energy_cost": "Энергия",
       "quantity": "Количество",
       "cost": "Стоимость",
@@ -344,6 +346,13 @@
       "farms_count": "Ферм",
       "level": "Уровень",
       "you": "Вы"
+    },
+    "energy": {
+      "refill_button": "Пополнить энергию",
+      "waiting": "Ожидание...",
+      "next_refill": "Следующее пополнение через:",
+      "refilled": "Энергия полностью восстановлена!",
+      "cooldown": "Следующее пополнение через:"
     }
   }
 }

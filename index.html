@@ -2852,7 +2852,7 @@
                 <div class="miner-stat-item">
                     <div class="miner-stat-icon">📊</div>
                     <div class="miner-stat-info">
-                        <div class="miner-stat-label" data-i18n="miner.stats.gas_per_second">Gas/сек</div>
+                        <div class="miner-stat-label" data-i18n="miner.stats.gas_per_minute">Gas/мин</div>
                         <div class="miner-stat-value" id="gasPerSecond">0</div>
                     </div>
                 </div>
@@ -2861,10 +2861,10 @@
             <!-- Кнопка пополнения энергии -->
             <div class="energy-refill-section">
                 <button class="energy-refill-button" id="energyRefillButton" onclick="refillEnergy()">
-                    ⚡ Пополнить энергию
+                    ⚡ <span data-i18n="miner.energy.refill_button">Пополнить энергию</span>
                 </button>
                 <div class="energy-refill-info" id="energyRefillInfo">
-                    Следующее пополнение через: <span id="nextRefillTime">3:00:00</span>
+                    <span data-i18n="miner.energy.next_refill">Следующее пополнение через:</span> <span id="nextRefillTime">3:00:00</span>
                 </div>
             </div>
 
@@ -3309,8 +3309,8 @@
                 name: 'CPU Miner',
                 icon: '💻',
                 description: 'Базовая ферма на процессоре',
-                baseGasPerSecond: 1,
-                baseCost: 50, // Увеличено в 5 раз: 10 * 5 = 50
+                baseGasPerMinute: 1, // Изменено с baseGasPerSecond на baseGasPerMinute
+                baseCost: 50,
                 energyCost: 1,
                 unlockLevel: 1
             },
@@ -3319,8 +3319,8 @@
                 name: 'GPU Farm',
                 icon: '🎮',
                 description: 'Мощная ферма на видеокартах',
-                baseGasPerSecond: 5,
-                baseCost: 250, // Увеличено в 5 раз: 50 * 5 = 250
+                baseGasPerMinute: 5, // Изменено с baseGasPerSecond на baseGasPerMinute
+                baseCost: 250,
                 energyCost: 3,
                 unlockLevel: 3
             },
@@ -3329,8 +3329,8 @@
                 name: 'ASIC Rig',
                 icon: '⚡',
                 description: 'Профессиональная ферма ASIC',
-                baseGasPerSecond: 20,
-                baseCost: 1000, // Увеличено в 5 раз: 200 * 5 = 1000
+                baseGasPerMinute: 20, // Изменено с baseGasPerSecond на baseGasPerMinute
+                baseCost: 1000,
                 energyCost: 8,
                 unlockLevel: 5
             },
@@ -3339,8 +3339,8 @@
                 name: 'Data Center',
                 icon: '🏢',
                 description: 'Мега-ферма в дата-центре',
-                baseGasPerSecond: 100,
-                baseCost: 5000, // Увеличено в 5 раз: 1000 * 5 = 5000
+                baseGasPerMinute: 100, // Изменено с baseGasPerSecond на baseGasPerMinute
+                baseCost: 5000,
                 energyCost: 25,
                 unlockLevel: 10
             }
@@ -3889,7 +3889,7 @@
                         <div class="farm-name" data-i18n="miner.farms.${farm.id}">${farm.name}</div>
                         <div class="farm-description" data-i18n="miner.farms.${farm.id}_desc">${farm.description}</div>
                         <div class="farm-stats">
-                            <span data-i18n="miner.farms.gas_per_sec">Gas/сек</span>: ${farm.baseGasPerSecond}
+                            <span data-i18n="miner.farms.gas_per_min">Gas/мин</span>: ${farm.baseGasPerMinute}
                             <span data-i18n="miner.farms.energy_cost">Энергия</span>: ${farm.energyCost}
                         </div>
                         <div class="farm-stats">
@@ -3920,12 +3920,12 @@
             minerData.farms.push({
                 type: farmId,
                 level: 1,
-                gasPerSecond: farm.baseGasPerSecond,
+                gasPerMinute: farm.baseGasPerMinute,
                 energyCost: farm.energyCost
             });
             
             // Пересчитываем общую генерацию
-            calculateGasPerSecond();
+            calculateGasPerMinute();
             
             // Обновляем UI
             updateMinerUI();
@@ -3937,14 +3937,14 @@
             showNotification(`Куплена ферма: ${farm.name}!`, 'success');
         }
 
-        function calculateGasPerSecond() {
+        function calculateGasPerMinute() {
             let totalGas = 0;
             let totalEnergy = 0;
             
             minerData.farms.forEach(farm => {
                 const farmType = farmTypes.find(f => f.id === farm.type);
                 if (farmType) {
-                    totalGas += farm.gasPerSecond * (1 + minerData.upgrades.speed * 0.1);
+                    totalGas += farm.gasPerMinute * (1 + minerData.upgrades.speed * 0.1);
                     totalEnergy += farm.energyCost * (1 - minerData.upgrades.efficiency * 0.2);
                 }
             });
@@ -3954,7 +3954,7 @@
                 minerData.gasPerSecond = 0; // Полностью останавливаем майнинг
                 console.log('⚠️ Недостаточно энергии! Майнеры остановлены.');
             } else {
-                minerData.gasPerSecond = totalGas;
+                minerData.gasPerSecond = totalGas / 60; // Конвертируем в Gas/сек для отображения
             }
         }
 
@@ -3974,7 +3974,7 @@
                     minerData.energy = Math.max(0, minerData.energy - energyConsumption);
                     
                     // Пересчитываем генерацию после потребления энергии
-                    calculateGasPerSecond();
+                    calculateGasPerMinute();
                     
                     updateMinerUI();
                 }
@@ -4024,7 +4024,7 @@
             minerData.upgrades[category] = index + 1;
             
             // Пересчитываем генерацию
-            calculateGasPerSecond();
+            calculateGasPerMinute();
             
             // Обновляем UI
             updateMinerUI();
@@ -4185,7 +4185,7 @@
                 minerData.lastEnergyRefill = now;
                 
                 // Пересчитываем генерацию
-                calculateGasPerSecond();
+                calculateGasPerMinute();
                 updateMinerUI();
                 updateEnergyRefillButton();
                 saveMinerData();
@@ -4214,11 +4214,11 @@
             
             if (remainingTime <= 0) {
                 button.disabled = false;
-                button.textContent = '⚡ Пополнить энергию';
+                button.innerHTML = '⚡ <span data-i18n="miner.energy.refill_button">Пополнить энергию</span>';
                 info.style.display = 'none';
             } else {
                 button.disabled = true;
-                button.textContent = '⏰ Ожидание...';
+                button.innerHTML = '⏰ <span data-i18n="miner.energy.waiting">Ожидание...</span>';
                 info.style.display = 'block';
                 
                 const hours = Math.floor(remainingTime / (1000 * 60 * 60));

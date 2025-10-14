@@ -3094,6 +3094,164 @@ async def get_achievements(user_id: int):
         print(f"Error getting achievements: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
+# NDN Miner API endpoints
+@app.get("/api/miner/data/{user_id}")
+async def get_miner_data(user_id: int):
+    """Получить данные майнера пользователя"""
+    try:
+        # Получаем пользователя из БД
+        user = await get_user_by_telegram_id(user_id)
+        if not user:
+            return {"success": False, "error": "User not found"}
+        
+        # Инициализируем данные майнера если их нет
+        if not hasattr(user, 'miner_data') or user.miner_data is None:
+            miner_data = {
+                "ndn_gas": 100,  # Начальные 100 Gas
+                "energy": 100,
+                "max_energy": 100,
+                "gas_per_minute": 0,
+                "farms": [],
+                "upgrades": {
+                    "speed": 0,
+                    "efficiency": 0,
+                    "automation": 0
+                },
+                "total_gas_earned": 100,
+                "last_energy_refill": int(time.time() * 1000)
+            }
+        else:
+            miner_data = user.miner_data
+        
+        return {"success": True, "miner_data": miner_data}
+    except Exception as e:
+        print(f"Error getting miner data: {e}")
+        return {"success": False, "error": "Failed to get miner data"}
+
+@app.post("/api/miner/buy-farm")
+async def buy_farm(request: Request):
+    """Купить ферму майнинга"""
+    try:
+        data = await request.json()
+        user_id = data.get("user_id")
+        farm_type = data.get("farm_type")
+        
+        if not user_id or not farm_type:
+            return {"success": False, "error": "Missing parameters"}
+        
+        # Получаем пользователя
+        user = await get_user_by_telegram_id(user_id)
+        if not user:
+            return {"success": False, "error": "User not found"}
+        
+        # Определяем стоимость фермы
+        farm_costs = {
+            "cpu_miner": 50,
+            "gpu_farm": 250,
+            "asic_rig": 1000,
+            "data_center": 5000
+        }
+        
+        cost = farm_costs.get(farm_type)
+        if not cost:
+            return {"success": False, "error": "Invalid farm type"}
+        
+        # Проверяем баланс Gas
+        if not hasattr(user, 'miner_data') or user.miner_data is None:
+            user.miner_data = {"ndn_gas": 100}
+        
+        if user.miner_data.get("ndn_gas", 0) < cost:
+            return {"success": False, "error": "Not enough Gas"}
+        
+        # Покупаем ферму
+        user.miner_data["ndn_gas"] -= cost
+        if "farms" not in user.miner_data:
+            user.miner_data["farms"] = []
+        
+        user.miner_data["farms"].append({
+            "type": farm_type,
+            "level": 1,
+            "purchased_at": int(time.time() * 1000)
+        })
+        
+        # Сохраняем в БД
+        await update_user_miner_data(user_id, user.miner_data)
+        
+        return {"success": True, "message": "Farm purchased successfully"}
+    except Exception as e:
+        print(f"Error buying farm: {e}")
+        return {"success": False, "error": "Failed to buy farm"}
+
+@app.post("/api/miner/buy-premium-farm")
+async def buy_premium_farm(request: Request):
+    """Купить премиум ферму за реальные NDN"""
+    try:
+        data = await request.json()
+        user_id = data.get("user_id")
+        farm_type = data.get("farm_type")
+        
+        if not user_id or not farm_type:
+            return {"success": False, "error": "Missing parameters"}
+        
+        # Получаем пользователя
+        user = await get_user_by_telegram_id(user_id)
+        if not user:
+            return {"success": False, "error": "User not found"}
+        
+        # Определяем стоимость в NDN
+        premium_farm_costs = {
+            "golden_farm": 500,  # 500 NDN
+            "diamond_farm": 2000,  # 2000 NDN
+            "quantum_farm": 10000  # 10000 NDN
+        }
+        
+        cost_ndn = premium_farm_costs.get(farm_type)
+        if not cost_ndn:
+            return {"success": False, "error": "Invalid premium farm type"}
+        
+        # Проверяем баланс NDN
+        if user.balance_ndn < cost_ndn:
+            return {"success": False, "error": "Not enough NDN"}
+        
+        # Списываем NDN и добавляем ферму
+        user.balance_ndn -= cost_ndn
+        
+        if not hasattr(user, 'miner_data') or user.miner_data is None:
+            user.miner_data = {"farms": []}
+        
+        if "farms" not in user.miner_data:
+            user.miner_data["farms"] = []
+        
+        user.miner_data["farms"].append({
+            "type": farm_type,
+            "level": 1,
+            "premium": True,
+            "purchased_at": int(time.time() * 1000)
+        })
+        
+        # Сохраняем в БД
+        await update_user_miner_data(user_id, user.miner_data)
+        await update_user_balance(user_id, user.balance_ndn)
+        
+        return {"success": True, "message": "Premium farm purchased successfully"}
+    except Exception as e:
+        print(f"Error buying premium farm: {e}")
+        return {"success": False, "error": "Failed to buy premium farm"}
+
+async def update_user_miner_data(user_id: int, miner_data: dict):
+    """Обновить данные майнера пользователя в БД"""
+    # Здесь должна быть логика обновления БД
+    # Пока что просто логируем
+    print(f"Updating miner data for user {user_id}: {miner_data}")
+    pass
+
+async def update_user_balance(user_id: int, new_balance: float):
+    """Обновить баланс пользователя в БД"""
+    # Здесь должна быть логика обновления БД
+    # Пока что просто логируем
+    print(f"Updating balance for user {user_id}: {new_balance}")
+    pass
+
 if __name__ == "__main__":
     import uvicorn
     import os
