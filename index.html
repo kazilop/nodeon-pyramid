@@ -3724,20 +3724,47 @@
                 updateLanguage();
                 
                 // Обновляем балансы
-                document.getElementById('ndnBalance').textContent = (userData.balance_ndn || 0).toFixed(2);
-                document.getElementById('modalNdnBalance').textContent = (userData.balance_ndn || 0).toFixed(2);
+                const ndnBalanceElement = document.getElementById('ndnBalance');
+                const modalNdnBalanceElement = document.getElementById('modalNdnBalance');
+                
+                console.log('Элементы баланса:', {
+                    ndnBalanceElement: !!ndnBalanceElement,
+                    modalNdnBalanceElement: !!modalNdnBalanceElement
+                });
+                
+                if (ndnBalanceElement) {
+                    ndnBalanceElement.textContent = (userData.balance_ndn || 0).toFixed(2);
+                    console.log('Баланс NDN обновлен:', (userData.balance_ndn || 0).toFixed(2));
+                } else {
+                    console.error('Элемент ndnBalance не найден!');
+                }
+                
+                if (modalNdnBalanceElement) {
+                    modalNdnBalanceElement.textContent = (userData.balance_ndn || 0).toFixed(2);
+                } else {
+                    console.error('Элемент modalNdnBalance не найден!');
+                }
                 
                 // Обновляем игровые данные
                 updateGameData();
                 
                 // Обновляем игровой ID
-                document.getElementById('userId').textContent = userData.id || '-';
+                const userIdElement = document.getElementById('userId');
+                if (userIdElement) {
+                    userIdElement.textContent = userData.id || '-';
+                    console.log('Игровой ID обновлен:', userData.id || '-');
+                } else {
+                    console.error('Элемент userId не найден!');
+                }
                 
                 // Обновляем заголовок с именем пользователя
                 const welcomeTitle = document.querySelector('.subtitle');
                 if (welcomeTitle) {
                     const proStatus = userData.is_pro ? ' 💎 PRO' : '';
                     welcomeTitle.textContent = `Добро пожаловать, ${userData.first_name || 'Пользователь'}!${proStatus}`;
+                    console.log('Заголовок обновлен:', welcomeTitle.textContent);
+                } else {
+                    console.error('Элемент .subtitle не найден!');
                 }
                 
                 // Обновляем кнопку Pro статуса
@@ -4993,11 +5020,22 @@
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM загружен, инициализируем приложение...');
             createParticles();
-            loadUserData();
             
             // Обработчики событий
-            document.getElementById('ndnAmount').addEventListener('input', updateStarsCost);
+            const ndnAmountInput = document.getElementById('ndnAmount');
+            if (ndnAmountInput) {
+                ndnAmountInput.addEventListener('input', updateStarsCost);
+            }
+            
+            // Загружаем данные пользователя после инициализации DOM
+            setTimeout(() => {
+                loadUserData();
+            }, 100);
+            
+            // Инициализируем обработчики переводов
+            initializeTransferHandlers();
             
             // Закрытие модальных окон по клику вне их
             document.querySelectorAll('.modal').forEach(modal => {
@@ -5462,12 +5500,12 @@
         }
         
         // Обработчик изменения суммы перевода
-        document.addEventListener('DOMContentLoaded', function() {
+        function initializeTransferHandlers() {
             const transferAmountInput = document.getElementById('transferAmount');
             if (transferAmountInput) {
                 transferAmountInput.addEventListener('input', updateTransferButton);
             }
-        });
+        }
         
         function shareViaOther() {
             const linkInput = document.getElementById('referralLinkInput');
