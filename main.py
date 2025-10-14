@@ -3104,26 +3104,15 @@ async def get_miner_data(user_id: int):
         if not user:
             return {"success": False, "error": "User not found"}
         
-        # Пока что таблицы майнера не созданы в БД
-        # Возвращаем дефолтные данные с правильной структурой
-        current_time = int(time.time() * 1000)
-        miner_data = {
-            "ndn_gas": 100.0,
-            "energy": 100,
-            "max_energy": 100,
-            "gas_per_minute": 0.0,
-            "farms": [],
-            "upgrades": {
-                "speed": 0,
-                "efficiency": 0,
-                "automation": 0
-            },
-            "total_gas_earned": 100.0,
-            "last_energy_refill": current_time,
-            "last_update": current_time
-        }
+        # Получаем данные майнинга из таблицы nodeon_miner_data
+        miner_data = await get_miner_data_from_db(user_id)
         
-        print(f"📊 Возвращаем дефолтные данные майнинга для пользователя {user_id}")
+        if not miner_data:
+            # Создаем начальные данные майнинга
+            miner_data = await create_initial_miner_data(user_id)
+            print(f"📊 Созданы начальные данные майнинга для пользователя {user_id}")
+        else:
+            print(f"📊 Загружены данные майнинга для пользователя {user_id}")
         
         # Рассчитываем оффлайн заработок
         current_time = int(time.time() * 1000)
@@ -3141,8 +3130,8 @@ async def get_miner_data(user_id: int):
         # Обновляем время последнего обновления
         miner_data["last_update"] = current_time
         
-        # Пока что данные сохраняются в localStorage на клиенте
-        # await update_user_miner_data(user_id, miner_data)
+        # Сохраняем обновленные данные в БД
+        await update_user_miner_data(user_id, miner_data)
         
         return {"success": True, "miner_data": miner_data}
     except Exception as e:
@@ -3238,20 +3227,11 @@ async def buy_farm(request: Request):
             return {"success": False, "error": "Invalid farm type"}
         
         # Получаем текущие данные майнера
-        if not hasattr(user, 'miner_data') or user.miner_data is None:
-            miner_data = {
-                "ndn_gas": 100,
-                "energy": 100,
-                "max_energy": 100,
-                "gas_per_minute": 0,
-                "farms": [],
-                "upgrades": {"speed": 0, "efficiency": 0, "automation": 0},
-                "total_gas_earned": 100,
-                "last_energy_refill": int(time.time() * 1000),
-                "last_update": int(time.time() * 1000)
-            }
-        else:
-            miner_data = user.miner_data
+        miner_data = await get_miner_data_from_db(user_id)
+        if not miner_data:
+            miner_data = await create_initial_miner_data(user_id)
+            if not miner_data:
+                return {"success": False, "error": "Failed to create miner data"}
         
         # Проверяем баланс Gas
         if miner_data.get("ndn_gas", 0) < cost:
@@ -3310,24 +3290,31 @@ async def buy_premium_farm(request: Request):
         if user.balance_ndn < cost_ndn:
             return {"success": False, "error": "Not enough NDN"}
         
+        # Получаем данные майнера
+        miner_data = await get_miner_data_from_db(user_id)
+        if not miner_data:
+            miner_data = await create_initial_miner_data(user_id)
+            if not miner_data:
+                return {"success": False, "error": "Failed to create miner data"}
+        
         # Списываем NDN и добавляем ферму
         user.balance_ndn -= cost_ndn
         
-        if not hasattr(user, 'miner_data') or user.miner_data is None:
-            user.miner_data = {"farms": []}
+        if "farms" not in miner_data:
+            miner_data["farms"] = []
         
-        if "farms" not in user.miner_data:
-            user.miner_data["farms"] = []
-        
-        user.miner_data["farms"].append({
+        miner_data["farms"].append({
             "type": farm_type,
             "level": 1,
             "premium": True,
             "purchased_at": int(time.time() * 1000)
         })
         
+        # Обновляем время последнего обновления
+        miner_data["last_update"] = int(time.time() * 1000)
+        
         # Сохраняем в БД
-        await update_user_miner_data(user_id, user.miner_data)
+        await update_user_miner_data(user_id, miner_data)
         await update_user_balance(user_id, user.balance_ndn)
         
         return {"success": True, "message": "Premium farm purchased successfully"}
@@ -3362,8 +3349,8 @@ async def get_miner_data_from_db(user_id: int) -> dict:
     try:
         url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data?user_id=eq.{user_id}&select=*"
         headers = {
-            "apikey": SUPABASE_KEY,
-            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
             "Content-Type": "application/json"
         }
         
@@ -3371,8 +3358,12 @@ async def get_miner_data_from_db(user_id: int) -> dict:
         
         if response.status_code == 200:
             data = response.json()
-            if data:
-                return data[0]
+            if data and len(data) > 0:
+                miner_record = data[0]
+                # Парсим JSON данные майнера
+                if miner_record.get("miner_data"):
+                    import json
+                    return json.loads(miner_record["miner_data"])
         return None
     except Exception as e:
         print(f"Error getting miner data from DB: {e}")
@@ -3389,38 +3380,43 @@ async def create_initial_miner_data(user_id: int) -> dict:
         current_time = int(time.time() * 1000)
         
         miner_data = {
-            "user_id": user_id,
-            "telegram_id": user_id,
             "ndn_gas": 100.0,
             "energy": 100,
             "max_energy": 100,
             "gas_per_minute": 0.0,
+            "farms": [],
+            "upgrades": {
+                "speed": 0,
+                "efficiency": 0,
+                "automation": 0
+            },
             "total_gas_earned": 100.0,
-            "total_gas_spent": 0.0,
-            "total_farms_bought": 0,
-            "total_upgrades_bought": 0,
-            "speed_upgrades": 0,
-            "efficiency_upgrades": 0,
-            "automation_upgrades": 0,
             "last_energy_refill": current_time,
             "last_update": current_time
         }
         
         # Создаем запись в БД
+        import json
         url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data"
         headers = {
-            "apikey": SUPABASE_KEY,
-            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
             "Content-Type": "application/json"
         }
         
-        response = requests.post(url, headers=headers, json=miner_data)
+        db_data = {
+            "user_id": user_id,
+            "miner_data": json.dumps(miner_data),
+            "last_update": current_time
+        }
+        
+        response = requests.post(url, headers=headers, json=db_data)
         
         if response.status_code == 201:
             print(f"Created initial miner data for user {user_id}")
             return miner_data
         else:
-            print(f"Error creating miner data: {response.status_code}")
+            print(f"Error creating miner data: {response.status_code} - {response.text}")
             return None
             
     except Exception as e:
@@ -3430,28 +3426,21 @@ async def create_initial_miner_data(user_id: int) -> dict:
 async def update_user_miner_data(user_id: int, miner_data: dict):
     """Обновить данные майнера пользователя в БД"""
     try:
+        import json
+        current_time = int(time.time() * 1000)
+        
         # Обновляем основные данные
         url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data?user_id=eq.{user_id}"
         headers = {
-            "apikey": SUPABASE_KEY,
-            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
             "Content-Type": "application/json",
             "Prefer": "return=minimal"
         }
         
         update_data = {
-            "ndn_gas": miner_data.get("ndn_gas", 100.0),
-            "energy": miner_data.get("energy", 100),
-            "gas_per_minute": miner_data.get("gas_per_minute", 0.0),
-            "total_gas_earned": miner_data.get("total_gas_earned", 100.0),
-            "total_gas_spent": miner_data.get("total_gas_spent", 0.0),
-            "total_farms_bought": miner_data.get("total_farms_bought", 0),
-            "total_upgrades_bought": miner_data.get("total_upgrades_bought", 0),
-            "speed_upgrades": miner_data.get("upgrades", {}).get("speed", 0),
-            "efficiency_upgrades": miner_data.get("upgrades", {}).get("efficiency", 0),
-            "automation_upgrades": miner_data.get("upgrades", {}).get("automation", 0),
-            "last_energy_refill": miner_data.get("last_energy_refill", 0),
-            "last_update": miner_data.get("last_update", 0)
+            "miner_data": json.dumps(miner_data),
+            "last_update": current_time
         }
         
         response = requests.patch(url, headers=headers, json=update_data)
@@ -3483,26 +3472,26 @@ async def update_miner_stats(user_id: int):
         
         # Рассчитываем уровень
         total_gas = miner_data.get("total_gas_earned", 0)
-        miner_level = max(1, int(total_gas / 1000) + 1)
+        level = max(1, int(total_gas / 1000) + 1)
+        
+        # Подсчитываем фермы и улучшения
+        farms_count = len(miner_data.get("farms", []))
+        upgrades_count = sum(miner_data.get("upgrades", {}).values())
         
         stats_data = {
             "user_id": user_id,
-            "telegram_id": user_id,
-            "username": user.get("username", ""),
-            "first_name": user.get("first_name", ""),
+            "level": level,
             "total_gas_earned": total_gas,
-            "total_farms": miner_data.get("total_farms_bought", 0),
-            "total_upgrades": miner_data.get("total_upgrades_bought", 0),
-            "current_gas_per_minute": miner_data.get("gas_per_minute", 0.0),
-            "miner_level": miner_level,
-            "last_activity": datetime.now().isoformat()
+            "total_farms": farms_count,
+            "total_upgrades": upgrades_count,
+            "last_update": int(time.time() * 1000)
         }
         
         # Обновляем статистику
         url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_stats"
         headers = {
-            "apikey": SUPABASE_KEY,
-            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
             "Content-Type": "application/json",
             "Prefer": "resolution=merge-duplicates"
         }
@@ -3575,10 +3564,31 @@ async def get_miner_user_stats(user_id: int):
 
 async def update_user_balance(user_id: int, new_balance: float):
     """Обновить баланс пользователя в БД"""
-    # Здесь должна быть логика обновления БД
-    # Пока что просто логируем
-    print(f"Updating balance for user {user_id}: {new_balance}")
-    pass
+    try:
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_users?telegram_id=eq.{user_id}"
+        headers = {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal"
+        }
+        
+        update_data = {
+            "balance_ndn": new_balance
+        }
+        
+        response = requests.patch(url, headers=headers, json=update_data)
+        
+        if response.status_code in [200, 204]:
+            print(f"Updated balance for user {user_id}: {new_balance}")
+            return True
+        else:
+            print(f"Error updating balance: {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print(f"Error updating user balance: {e}")
+        return False
 
 if __name__ == "__main__":
     import uvicorn
