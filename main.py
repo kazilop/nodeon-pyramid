@@ -3287,35 +3287,44 @@ async def buy_premium_farm(request: Request):
             return {"success": False, "error": "Invalid premium farm type"}
         
         # Проверяем баланс NDN
+        print(f"Checking balance for user {user_id}: {user.balance_ndn} NDN, cost: {cost_ndn} NDN")
         if user.balance_ndn < cost_ndn:
             return {"success": False, "error": "Not enough NDN"}
         
         # Получаем данные майнера
         miner_data = await get_miner_data_from_db(user_id)
         if not miner_data:
+            print(f"Creating initial miner data for user {user_id}")
             miner_data = await create_initial_miner_data(user_id)
             if not miner_data:
                 return {"success": False, "error": "Failed to create miner data"}
         
         # Списываем NDN и добавляем ферму
+        old_balance = user.balance_ndn
         user.balance_ndn -= cost_ndn
+        print(f"Updating balance: {old_balance} -> {user.balance_ndn}")
         
         if "farms" not in miner_data:
             miner_data["farms"] = []
         
-        miner_data["farms"].append({
+        new_farm = {
             "type": farm_type,
             "level": 1,
             "premium": True,
             "purchased_at": int(time.time() * 1000)
-        })
+        }
+        miner_data["farms"].append(new_farm)
+        print(f"Added farm: {new_farm}")
         
         # Обновляем время последнего обновления
         miner_data["last_update"] = int(time.time() * 1000)
         
         # Сохраняем в БД
-        await update_user_miner_data(user_id, miner_data)
-        await update_user_balance(user_id, user.balance_ndn)
+        print(f"Saving miner data and balance for user {user_id}")
+        miner_saved = await update_user_miner_data(user_id, miner_data)
+        balance_saved = await update_user_balance(user_id, user.balance_ndn)
+        
+        print(f"Save results - Miner: {miner_saved}, Balance: {balance_saved}")
         
         return {"success": True, "message": "Premium farm purchased successfully"}
     except Exception as e:
@@ -3347,7 +3356,13 @@ async def save_miner_state(request: Request):
 async def get_miner_data_from_db(user_id: int) -> dict:
     """Получить данные майнера из БД"""
     try:
-        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data?user_id=eq.{user_id}&select=*"
+        # Получаем пользователя по telegram_id, чтобы найти его ID в БД
+        user = await get_user_by_telegram_id(user_id)
+        if not user:
+            print(f"User with telegram_id {user_id} not found")
+            return None
+        
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data?user_id=eq.{user['id']}&select=*"
         headers = {
             "apikey": SUPABASE_ANON_KEY,
             "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
@@ -3405,7 +3420,7 @@ async def create_initial_miner_data(user_id: int) -> dict:
         }
         
         db_data = {
-            "user_id": user_id,
+            "user_id": user["id"],  # Используем ID пользователя из БД
             "miner_data": json.dumps(miner_data),
             "last_update": current_time
         }
@@ -3429,8 +3444,14 @@ async def update_user_miner_data(user_id: int, miner_data: dict):
         import json
         current_time = int(time.time() * 1000)
         
-        # Обновляем основные данные
-        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data?user_id=eq.{user_id}"
+        # Получаем пользователя по telegram_id, чтобы найти его ID в БД
+        user = await get_user_by_telegram_id(user_id)
+        if not user:
+            print(f"User with telegram_id {user_id} not found")
+            return False
+        
+        # Обновляем основные данные по ID пользователя в БД
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data?user_id=eq.{user['id']}"
         headers = {
             "apikey": SUPABASE_ANON_KEY,
             "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
@@ -3479,7 +3500,7 @@ async def update_miner_stats(user_id: int):
         upgrades_count = sum(miner_data.get("upgrades", {}).values())
         
         stats_data = {
-            "user_id": user_id,
+            "user_id": user["id"],  # Используем ID пользователя из БД
             "level": level,
             "total_gas_earned": total_gas,
             "total_farms": farms_count,
@@ -3565,7 +3586,14 @@ async def get_miner_user_stats(user_id: int):
 async def update_user_balance(user_id: int, new_balance: float):
     """Обновить баланс пользователя в БД"""
     try:
-        url = f"{SUPABASE_URL}/rest/v1/nodeon_users?telegram_id=eq.{user_id}"
+        # Получаем пользователя по telegram_id, чтобы найти его ID в БД
+        user = await get_user_by_telegram_id(user_id)
+        if not user:
+            print(f"User with telegram_id {user_id} not found")
+            return False
+        
+        # Обновляем баланс по ID пользователя в БД
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_users?id=eq.{user['id']}"
         headers = {
             "apikey": SUPABASE_ANON_KEY,
             "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
@@ -3580,10 +3608,10 @@ async def update_user_balance(user_id: int, new_balance: float):
         response = requests.patch(url, headers=headers, json=update_data)
         
         if response.status_code in [200, 204]:
-            print(f"Updated balance for user {user_id}: {new_balance}")
+            print(f"Updated balance for user {user_id} (DB ID: {user['id']}): {new_balance}")
             return True
         else:
-            print(f"Error updating balance: {response.status_code}")
+            print(f"Error updating balance: {response.status_code} - {response.text}")
             return False
             
     except Exception as e:
