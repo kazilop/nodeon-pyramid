@@ -2713,7 +2713,10 @@
             ];
 
             const container = document.getElementById('dailyRewards');
-            if (!container) return;
+            if (!container) {
+                console.warn('Контейнер dailyRewards не найден');
+                return;
+            }
 
             container.innerHTML = rewards.map(reward => {
                 const isToday = reward.day === new Date().getDay() + 1;
@@ -2773,7 +2776,10 @@
 
         async function loadAchievements() {
             const container = document.getElementById('achievementsList');
-            if (!container) return;
+            if (!container) {
+                console.warn('Контейнер achievementsList не найден');
+                return;
+            }
 
             try {
                 const response = await fetch(`/api/game/achievements/${userData?.id || 0}`, {
@@ -2859,7 +2865,10 @@
             ];
 
             const container = document.getElementById('achievementsList');
-            if (!container) return;
+            if (!container) {
+                console.warn('Контейнер achievementsList не найден в fallback');
+                return;
+            }
 
             container.innerHTML = achievements.map(achievement => {
                 const isCompleted = achievement.progress >= achievement.maxProgress;
@@ -2889,10 +2898,35 @@
             const currentLevelXP = (gameData.level - 1) * 100;
             const progress = ((gameData.xp - currentLevelXP) / (xpForNextLevel - currentLevelXP)) * 100;
 
-            document.getElementById('playerLevel').textContent = gameData.level;
-            document.getElementById('currentXP').textContent = gameData.xp;
-            document.getElementById('nextLevelXP').textContent = xpForNextLevel;
-            document.getElementById('levelProgress').style.width = `${Math.min(progress, 100)}%`;
+            // Проверяем существование элементов перед обновлением
+            const playerLevelElement = document.getElementById('playerLevel');
+            const currentXPElement = document.getElementById('currentXP');
+            const nextLevelXPElement = document.getElementById('nextLevelXP');
+            const levelProgressElement = document.getElementById('levelProgress');
+
+            if (playerLevelElement) {
+                playerLevelElement.textContent = gameData.level;
+            } else {
+                console.warn('Элемент playerLevel не найден');
+            }
+
+            if (currentXPElement) {
+                currentXPElement.textContent = gameData.xp;
+            } else {
+                console.warn('Элемент currentXP не найден');
+            }
+
+            if (nextLevelXPElement) {
+                nextLevelXPElement.textContent = xpForNextLevel;
+            } else {
+                console.warn('Элемент nextLevelXP не найден');
+            }
+
+            if (levelProgressElement) {
+                levelProgressElement.style.width = `${Math.min(progress, 100)}%`;
+            } else {
+                console.warn('Элемент levelProgress не найден');
+            }
 
             // Проверяем повышение уровня
             if (gameData.xp >= xpForNextLevel) {
@@ -2903,10 +2937,35 @@
         }
 
         function loadGameStats() {
-            document.getElementById('daysPlayed').textContent = gameData.stats.daysPlayed;
-            document.getElementById('achievementsCount').textContent = gameData.achievements.length;
-            document.getElementById('totalEarned').textContent = gameData.stats.totalEarned;
-            document.getElementById('totalReferrals').textContent = gameData.stats.totalReferrals;
+            // Проверяем существование элементов перед обновлением
+            const daysPlayedElement = document.getElementById('daysPlayed');
+            const achievementsCountElement = document.getElementById('achievementsCount');
+            const totalEarnedElement = document.getElementById('totalEarned');
+            const totalReferralsElement = document.getElementById('totalReferrals');
+
+            if (daysPlayedElement) {
+                daysPlayedElement.textContent = gameData.stats.daysPlayed;
+            } else {
+                console.warn('Элемент daysPlayed не найден');
+            }
+
+            if (achievementsCountElement) {
+                achievementsCountElement.textContent = gameData.achievements.length;
+            } else {
+                console.warn('Элемент achievementsCount не найден');
+            }
+
+            if (totalEarnedElement) {
+                totalEarnedElement.textContent = gameData.stats.totalEarned;
+            } else {
+                console.warn('Элемент totalEarned не найден');
+            }
+
+            if (totalReferralsElement) {
+                totalReferralsElement.textContent = gameData.stats.totalReferrals;
+            } else {
+                console.warn('Элемент totalReferrals не найден');
+            }
         }
 
         function updateGameData() {
