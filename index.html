@@ -185,20 +185,20 @@
         }
 
         /* Индикатор прокрутки */
-        .daily-rewards::after {
-            content: "← Прокрутите →";
+        .daily-rewards-container::after {
+            content: "← Прокрутите для просмотра всех дней →";
             position: absolute;
             right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
+            bottom: -20px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
             pointer-events: none;
             z-index: 1;
         }
 
         .daily-rewards-container {
             position: relative;
+            margin-bottom: 25px;
         }
 
         .reward-day {
@@ -2815,14 +2815,15 @@
             }
 
             container.innerHTML = rewards.map(reward => {
-                const isToday = reward.day === new Date().getDay() + 1;
+                const today = new Date().getDay() + 1;
                 const isClaimed = gameData.dailyRewards.includes(reward.day);
-                const isAvailable = isToday && !isClaimed;
-                const isLocked = !isToday && !isClaimed;
+                const isAvailable = reward.day <= today && !isClaimed;
+                const isLocked = reward.day > today;
 
                 return `
                     <div class="reward-day ${isClaimed ? 'claimed' : isAvailable ? 'available' : isLocked ? 'locked' : ''}" 
-                         onclick="${isAvailable ? `claimDailyReward(${reward.day})` : ''}">
+                         onclick="${isAvailable ? `claimDailyReward(${reward.day})` : ''}"
+                         title="${isClaimed ? 'Получено' : isAvailable ? 'Доступно' : isLocked ? 'Заблокировано' : ''}">
                         <div class="reward-icon">${reward.icon}</div>
                         <div class="reward-amount">${reward.amount}</div>
                         <div style="font-size: 10px; margin-top: 2px;">День ${reward.day}</div>
@@ -2832,7 +2833,10 @@
         }
 
         async function claimDailyReward(day) {
-            if (gameData.dailyRewards.includes(day)) return;
+            if (gameData.dailyRewards.includes(day)) {
+                showNotification('Награда уже получена!', 'warning');
+                return;
+            }
 
             try {
                 const response = await fetch('/api/game/claim-daily-reward', {
@@ -2850,23 +2854,47 @@
                 const result = await response.json();
                 
                 if (result.success) {
+                    // Обновляем локальные данные
                     gameData.dailyRewards.push(day);
                     gameData.xp += result.reward_amount;
                     gameData.stats.totalEarned += result.reward_amount;
+
+                    // Обновляем баланс пользователя
+                    if (userData) {
+                        userData.balance_ndn = (userData.balance_ndn || 0) + result.reward_amount;
+                    }
 
                     // Обновляем UI
                     loadDailyRewards();
                     loadPlayerLevel();
                     loadGameStats();
+                    updateUI(); // Обновляем основной UI
 
-                    showNotification(result.message, 'success');
+                    showNotification(`🎁 Получена награда: ${result.reward_amount} NDN!`, 'success');
                     playSound('success');
                 } else {
                     showNotification('Ошибка получения награды', 'error');
                 }
             } catch (error) {
                 console.error('Error claiming daily reward:', error);
-                showNotification('Ошибка получения награды', 'error');
+                // Fallback - добавляем награду локально
+                const rewards = { 1: 10, 2: 20, 3: 30, 4: 50, 5: 75, 6: 100, 7: 200 };
+                const rewardAmount = rewards[day] || 0;
+                
+                gameData.dailyRewards.push(day);
+                gameData.xp += rewardAmount;
+                gameData.stats.totalEarned += rewardAmount;
+                
+                if (userData) {
+                    userData.balance_ndn = (userData.balance_ndn || 0) + rewardAmount;
+                }
+
+                loadDailyRewards();
+                loadPlayerLevel();
+                loadGameStats();
+                updateUI();
+
+                showNotification(`🎁 Получена награда: ${rewardAmount} NDN! (офлайн)`, 'success');
             }
         }
 
@@ -3078,6 +3106,20 @@
                     localStorage.setItem('lastLogin', today);
                 }
                 
+                // Загружаем сохраненные игровые данные
+                const savedGameData = localStorage.getItem('nodeon_game_data');
+                if (savedGameData) {
+                    try {
+                        const parsed = JSON.parse(savedGameData);
+                        gameData = { ...gameData, ...parsed };
+                    } catch (e) {
+                        console.warn('Ошибка загрузки игровых данных:', e);
+                    }
+                }
+                
+                // Проверяем сброс ежедневных наград (новая неделя)
+                checkWeeklyReset();
+                
                 // Обновляем достижения
                 loadAchievements();
                 loadPlayerLevel();
@@ -3085,6 +3127,23 @@
                 
                 // Проверяем напоминания
                 checkReminders();
+                
+                // Сохраняем игровые данные
+                localStorage.setItem('nodeon_game_data', JSON.stringify(gameData));
+            }
+        }
+
+        function checkWeeklyReset() {
+            const lastReset = localStorage.getItem('lastWeeklyReset');
+            const now = new Date();
+            const weekStart = new Date(now.setDate(now.getDate() - now.getDay()));
+            const weekStartString = weekStart.toDateString();
+            
+            if (lastReset !== weekStartString) {
+                // Новая неделя - сбрасываем ежедневные награды
+                gameData.dailyRewards = [];
+                localStorage.setItem('lastWeeklyReset', weekStartString);
+                console.log('🔄 Ежедневные награды сброшены - новая неделя');
             }
         }
 
