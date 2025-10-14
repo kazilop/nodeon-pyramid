@@ -484,6 +484,296 @@
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
         }
 
+        /* NDN Miner стили */
+        .miner-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .miner-stat-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            color: #000000;
+        }
+
+        .miner-stat-icon {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        .miner-stat-info {
+            flex: 1;
+        }
+
+        .miner-stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+            color: #333333;
+        }
+
+        .miner-stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .miner-farms, .miner-upgrades, .miner-shop {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #000000;
+        }
+
+        .miner-farms h3, .miner-upgrades h3, .miner-shop h3 {
+            color: #000000;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .farms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .farm-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            color: #000000;
+        }
+
+        .farm-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .farm-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .farm-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #000000;
+        }
+
+        .farm-description {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+
+        .farm-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #333333;
+        }
+
+        .farm-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .farm-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .farm-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .upgrades-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .upgrade-tab {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #000000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .upgrade-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .upgrade-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .upgrade-tab.active:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6a4190);
+        }
+
+        .upgrade-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+        }
+
+        .upgrade-info {
+            flex: 1;
+        }
+
+        .upgrade-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #000000;
+        }
+
+        .upgrade-description {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+            color: #333333;
+        }
+
+        .upgrade-cost {
+            font-size: 12px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .upgrade-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .upgrade-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .upgrade-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .shop-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            color: #000000;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-item.premium {
+            border: 2px solid #ffd700;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+        }
+
+        .shop-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .shop-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #000000;
+        }
+
+        .shop-description {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+
+        .shop-cost {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .shop-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .shop-button.premium {
+            background: linear-gradient(135deg, #ffd700, #ffb347);
+            color: #000000;
+        }
+
+        .shop-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .shop-button.premium:hover {
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+        }
+
         /* Заголовок */
         .header {
             text-align: center;
@@ -2140,6 +2430,9 @@
                 <button class="tab-button" onclick="switchTab('game')" data-i18n="tabs.game">
                     🎮 Игра
                 </button>
+                <button class="tab-button" onclick="switchTab('miner')" data-i18n="tabs.miner">
+                    ⛏️ NDN Miner
+                </button>
             </div>
         </div>
 
@@ -2392,6 +2685,64 @@
                             <div class="stat-value" id="totalReferrals">0</div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка NDN Miner -->
+        <div class="tab-content" id="minerTab">
+            <!-- Статистика майнинга -->
+            <div class="miner-stats">
+                <div class="miner-stat-item">
+                    <div class="miner-stat-icon">⛏️</div>
+                    <div class="miner-stat-info">
+                        <div class="miner-stat-label">NDN Gas</div>
+                        <div class="miner-stat-value" id="ndnGasBalance">0</div>
+                    </div>
+                </div>
+                <div class="miner-stat-item">
+                    <div class="miner-stat-icon">⚡</div>
+                    <div class="miner-stat-info">
+                        <div class="miner-stat-label">Энергия</div>
+                        <div class="miner-stat-value" id="energyLevel">100/100</div>
+                    </div>
+                </div>
+                <div class="miner-stat-item">
+                    <div class="miner-stat-icon">📊</div>
+                    <div class="miner-stat-info">
+                        <div class="miner-stat-label">Gas/сек</div>
+                        <div class="miner-stat-value" id="gasPerSecond">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Фермы майнинга -->
+            <div class="miner-farms">
+                <h3>🏭 Фермы майнинга</h3>
+                <div class="farms-grid" id="farmsGrid">
+                    <!-- Будет заполнено JavaScript -->
+                </div>
+            </div>
+
+            <!-- Улучшения -->
+            <div class="miner-upgrades">
+                <h3>🔧 Улучшения</h3>
+                <div class="upgrades-tabs">
+                    <button class="upgrade-tab active" onclick="switchUpgradeTab('speed')">Скорость</button>
+                    <button class="upgrade-tab" onclick="switchUpgradeTab('efficiency')">Эффективность</button>
+                    <button class="upgrade-tab" onclick="switchUpgradeTab('automation')">Автоматизация</button>
+                    <button class="upgrade-tab" onclick="switchUpgradeTab('premium')">Премиум</button>
+                </div>
+                <div class="upgrades-content" id="upgradesContent">
+                    <!-- Будет заполнено JavaScript -->
+                </div>
+            </div>
+
+            <!-- Магазин -->
+            <div class="miner-shop">
+                <h3>🛒 Магазин</h3>
+                <div class="shop-items" id="shopItems">
+                    <!-- Будет заполнено JavaScript -->
                 </div>
             </div>
         </div>
@@ -2773,6 +3124,85 @@
             }
         };
 
+        // NDN Miner данные
+        let minerData = {
+            ndnGas: 0,
+            energy: 100,
+            maxEnergy: 100,
+            gasPerSecond: 0,
+            farms: [],
+            upgrades: {
+                speed: 0,
+                efficiency: 0,
+                automation: 0
+            },
+            totalGasEarned: 0,
+            lastUpdate: Date.now()
+        };
+
+        // Фермы майнинга
+        const farmTypes = [
+            {
+                id: 'cpu_miner',
+                name: 'CPU Miner',
+                icon: '💻',
+                description: 'Базовая ферма на процессоре',
+                baseGasPerSecond: 1,
+                baseCost: 10,
+                energyCost: 1,
+                unlockLevel: 1
+            },
+            {
+                id: 'gpu_farm',
+                name: 'GPU Farm',
+                icon: '🎮',
+                description: 'Мощная ферма на видеокартах',
+                baseGasPerSecond: 5,
+                baseCost: 50,
+                energyCost: 3,
+                unlockLevel: 3
+            },
+            {
+                id: 'asic_rig',
+                name: 'ASIC Rig',
+                icon: '⚡',
+                description: 'Профессиональная ферма ASIC',
+                baseGasPerSecond: 20,
+                baseCost: 200,
+                energyCost: 8,
+                unlockLevel: 5
+            },
+            {
+                id: 'data_center',
+                name: 'Data Center',
+                icon: '🏢',
+                description: 'Мега-ферма в дата-центре',
+                baseGasPerSecond: 100,
+                baseCost: 1000,
+                energyCost: 25,
+                unlockLevel: 10
+            }
+        ];
+
+        // Улучшения
+        const upgradeTypes = {
+            speed: [
+                { name: 'Быстрый процессор', description: '+10% скорости', cost: 50, effect: 0.1 },
+                { name: 'Оптимизация кода', description: '+25% скорости', cost: 150, effect: 0.25 },
+                { name: 'Параллельные вычисления', description: '+50% скорости', cost: 400, effect: 0.5 }
+            ],
+            efficiency: [
+                { name: 'Энергосбережение', description: '-20% энергии', cost: 30, effect: 0.2 },
+                { name: 'Умное охлаждение', description: '-40% энергии', cost: 100, effect: 0.4 },
+                { name: 'Квантовая оптимизация', description: '-60% энергии', cost: 300, effect: 0.6 }
+            ],
+            automation: [
+                { name: 'Авто-сбор', description: 'Автоматический сбор Gas', cost: 100, effect: 1 },
+                { name: 'Умные алгоритмы', description: 'Оптимизация майнинга', cost: 250, effect: 2 },
+                { name: 'ИИ управление', description: 'Полная автоматизация', cost: 500, effect: 3 }
+            ]
+        };
+
         // Система вкладок
         function switchTab(tabName) {
             // Убираем активный класс со всех кнопок и контента
@@ -2786,6 +3216,11 @@
             // Загружаем данные для игровой вкладки
             if (tabName === 'game') {
                 loadGameData();
+            }
+            
+            // Инициализируем майнер при переключении на вкладку майнера
+            if (tabName === 'miner') {
+                initializeMinerData();
             }
         }
 
@@ -3195,6 +3630,305 @@
             checkWeeklyReset();
             
             console.log('📊 Текущие награды:', gameData.dailyRewards);
+        }
+
+        // NDN Miner функции
+        function initializeMinerData() {
+            console.log('⛏️ Инициализируем данные майнера...');
+            
+            // Загружаем сохраненные данные майнера
+            const savedMinerData = localStorage.getItem('nodeon_miner_data');
+            if (savedMinerData) {
+                try {
+                    const parsed = JSON.parse(savedMinerData);
+                    minerData = { ...minerData, ...parsed };
+                } catch (e) {
+                    console.warn('Ошибка загрузки данных майнера:', e);
+                }
+            }
+            
+            // Обновляем UI майнера
+            updateMinerUI();
+            loadFarms();
+            loadUpgrades('speed');
+            loadShop();
+            
+            // Запускаем основной цикл майнинга
+            startMiningLoop();
+            
+            console.log('📊 Данные майнера загружены:', minerData);
+        }
+
+        function updateMinerUI() {
+            // Обновляем статистику
+            const gasBalance = document.getElementById('ndnGasBalance');
+            const energyLevel = document.getElementById('energyLevel');
+            const gasPerSecond = document.getElementById('gasPerSecond');
+            
+            if (gasBalance) gasBalance.textContent = Math.floor(minerData.ndnGas).toLocaleString();
+            if (energyLevel) energyLevel.textContent = `${Math.floor(minerData.energy)}/${minerData.maxEnergy}`;
+            if (gasPerSecond) gasPerSecond.textContent = minerData.gasPerSecond.toFixed(1);
+        }
+
+        function loadFarms() {
+            const container = document.getElementById('farmsGrid');
+            if (!container) return;
+            
+            container.innerHTML = farmTypes.map(farm => {
+                const farmCount = minerData.farms.filter(f => f.type === farm.id).length;
+                const canAfford = minerData.ndnGas >= farm.baseCost;
+                const canUnlock = gameData.level >= farm.unlockLevel;
+                
+                return `
+                    <div class="farm-item ${!canUnlock ? 'locked' : ''}">
+                        <div class="farm-icon">${farm.icon}</div>
+                        <div class="farm-name">${farm.name}</div>
+                        <div class="farm-description">${farm.description}</div>
+                        <div class="farm-stats">
+                            <span>Gas/сек: ${farm.baseGasPerSecond}</span>
+                            <span>Энергия: ${farm.energyCost}</span>
+                        </div>
+                        <div class="farm-stats">
+                            <span>Количество: ${farmCount}</span>
+                            <span>Стоимость: ${farm.baseCost} Gas</span>
+                        </div>
+                        <button class="farm-button" 
+                                onclick="buyFarm('${farm.id}')" 
+                                ${!canAfford || !canUnlock ? 'disabled' : ''}>
+                            ${!canUnlock ? 'Заблокировано' : canAfford ? 'Купить' : 'Недостаточно Gas'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function buyFarm(farmId) {
+            const farm = farmTypes.find(f => f.id === farmId);
+            if (!farm) return;
+            
+            if (minerData.ndnGas < farm.baseCost) {
+                showNotification('Недостаточно NDN Gas!', 'error');
+                return;
+            }
+            
+            // Покупаем ферму
+            minerData.ndnGas -= farm.baseCost;
+            minerData.farms.push({
+                type: farmId,
+                level: 1,
+                gasPerSecond: farm.baseGasPerSecond,
+                energyCost: farm.energyCost
+            });
+            
+            // Пересчитываем общую генерацию
+            calculateGasPerSecond();
+            
+            // Обновляем UI
+            updateMinerUI();
+            loadFarms();
+            
+            // Сохраняем данные
+            saveMinerData();
+            
+            showNotification(`Куплена ферма: ${farm.name}!`, 'success');
+        }
+
+        function calculateGasPerSecond() {
+            let totalGas = 0;
+            let totalEnergy = 0;
+            
+            minerData.farms.forEach(farm => {
+                const farmType = farmTypes.find(f => f.id === farm.type);
+                if (farmType) {
+                    totalGas += farm.gasPerSecond * (1 + minerData.upgrades.speed * 0.1);
+                    totalEnergy += farm.energyCost * (1 - minerData.upgrades.efficiency * 0.2);
+                }
+            });
+            
+            minerData.gasPerSecond = totalGas;
+            
+            // Проверяем энергию
+            if (totalEnergy > minerData.energy) {
+                minerData.gasPerSecond *= 0.5; // Снижаем генерацию при нехватке энергии
+            }
+        }
+
+        function startMiningLoop() {
+            setInterval(() => {
+                if (minerData.gasPerSecond > 0) {
+                    const gasEarned = minerData.gasPerSecond / 10; // Обновляем 10 раз в секунду
+                    minerData.ndnGas += gasEarned;
+                    minerData.totalGasEarned += gasEarned;
+                    
+                    // Потребляем энергию
+                    const energyConsumption = minerData.farms.reduce((total, farm) => {
+                        const farmType = farmTypes.find(f => f.id === farm.type);
+                        return total + (farmType ? farm.energyCost * (1 - minerData.upgrades.efficiency * 0.2) : 0);
+                    }, 0) / 10;
+                    
+                    minerData.energy = Math.max(0, minerData.energy - energyConsumption);
+                    
+                    // Восстанавливаем энергию
+                    if (minerData.energy < minerData.maxEnergy) {
+                        minerData.energy = Math.min(minerData.maxEnergy, minerData.energy + 0.1);
+                    }
+                    
+                    updateMinerUI();
+                }
+            }, 100);
+        }
+
+        function loadUpgrades(category) {
+            const container = document.getElementById('upgradesContent');
+            if (!container) return;
+            
+            const upgrades = upgradeTypes[category] || [];
+            const currentLevel = minerData.upgrades[category] || 0;
+            
+            container.innerHTML = upgrades.map((upgrade, index) => {
+                const isUnlocked = index <= currentLevel;
+                const canAfford = minerData.ndnGas >= upgrade.cost;
+                const isMaxLevel = index === upgrades.length - 1;
+                
+                return `
+                    <div class="upgrade-item ${isUnlocked ? 'unlocked' : ''}">
+                        <div class="upgrade-info">
+                            <div class="upgrade-name">${upgrade.name}</div>
+                            <div class="upgrade-description">${upgrade.description}</div>
+                            <div class="upgrade-cost">Стоимость: ${upgrade.cost} Gas</div>
+                        </div>
+                        <button class="upgrade-button" 
+                                onclick="buyUpgrade('${category}', ${index})" 
+                                ${!canAfford || isUnlocked || isMaxLevel ? 'disabled' : ''}>
+                            ${isUnlocked ? 'Куплено' : isMaxLevel ? 'Макс. уровень' : canAfford ? 'Купить' : 'Недостаточно Gas'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function buyUpgrade(category, index) {
+            const upgrade = upgradeTypes[category][index];
+            if (!upgrade) return;
+            
+            if (minerData.ndnGas < upgrade.cost) {
+                showNotification('Недостаточно NDN Gas!', 'error');
+                return;
+            }
+            
+            // Покупаем улучшение
+            minerData.ndnGas -= upgrade.cost;
+            minerData.upgrades[category] = index + 1;
+            
+            // Пересчитываем генерацию
+            calculateGasPerSecond();
+            
+            // Обновляем UI
+            updateMinerUI();
+            loadUpgrades(category);
+            
+            // Сохраняем данные
+            saveMinerData();
+            
+            showNotification(`Куплено улучшение: ${upgrade.name}!`, 'success');
+        }
+
+        function switchUpgradeTab(category) {
+            // Убираем активный класс со всех вкладок
+            document.querySelectorAll('.upgrade-tab').forEach(tab => tab.classList.remove('active'));
+            
+            // Активируем выбранную вкладку
+            document.querySelector(`[onclick="switchUpgradeTab('${category}')"]`).classList.add('active');
+            
+            // Загружаем улучшения
+            loadUpgrades(category);
+        }
+
+        function loadShop() {
+            const container = document.getElementById('shopItems');
+            if (!container) return;
+            
+            const shopItems = [
+                {
+                    name: 'Энергетический напиток',
+                    icon: '⚡',
+                    description: 'Восстанавливает 50 энергии',
+                    cost: 25,
+                    currency: 'Gas',
+                    action: 'restoreEnergy'
+                },
+                {
+                    name: 'Премиум ускоритель',
+                    icon: '🚀',
+                    description: '2x скорость на 1 час',
+                    cost: 100,
+                    currency: 'NDN',
+                    action: 'speedBoost',
+                    premium: true
+                },
+                {
+                    name: 'Золотая ферма',
+                    icon: '🏆',
+                    description: 'Эксклюзивная ферма',
+                    cost: 500,
+                    currency: 'NDN',
+                    action: 'goldenFarm',
+                    premium: true
+                }
+            ];
+            
+            container.innerHTML = shopItems.map(item => `
+                <div class="shop-item ${item.premium ? 'premium' : ''}">
+                    <div class="shop-icon">${item.icon}</div>
+                    <div class="shop-name">${item.name}</div>
+                    <div class="shop-description">${item.description}</div>
+                    <div class="shop-cost">${item.cost} ${item.currency}</div>
+                    <button class="shop-button ${item.premium ? 'premium' : ''}" 
+                            onclick="buyShopItem('${item.action}', ${item.cost}, '${item.currency}')">
+                        Купить
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function buyShopItem(action, cost, currency) {
+            if (currency === 'Gas' && minerData.ndnGas < cost) {
+                showNotification('Недостаточно NDN Gas!', 'error');
+                return;
+            }
+            
+            if (currency === 'NDN' && (!userData || userData.balance_ndn < cost)) {
+                showNotification('Недостаточно NDN!', 'error');
+                return;
+            }
+            
+            // Выполняем действие
+            switch (action) {
+                case 'restoreEnergy':
+                    minerData.energy = Math.min(minerData.maxEnergy, minerData.energy + 50);
+                    minerData.ndnGas -= cost;
+                    showNotification('Энергия восстановлена!', 'success');
+                    break;
+                case 'speedBoost':
+                    // TODO: Реализовать временный буст
+                    showNotification('Ускоритель активирован!', 'success');
+                    break;
+                case 'goldenFarm':
+                    // TODO: Реализовать золотую ферму
+                    showNotification('Золотая ферма добавлена!', 'success');
+                    break;
+            }
+            
+            updateMinerUI();
+            saveMinerData();
+        }
+
+        function saveMinerData() {
+            try {
+                localStorage.setItem('nodeon_miner_data', JSON.stringify(minerData));
+            } catch (e) {
+                console.warn('Ошибка сохранения данных майнера:', e);
+            }
         }
 
         // Система уведомлений

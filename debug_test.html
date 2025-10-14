@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeOn Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+        .debug-section { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; }
+        .log { background: #f8f9fa; padding: 10px; margin: 5px 0; border-left: 4px solid #007bff; }
+        .error { border-left-color: #dc3545; background: #f8d7da; }
+        .success { border-left-color: #28a745; background: #d4edda; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 NodeOn Debug Test</h1>
+    
+    <div class="debug-section">
+        <h2>Тест загрузки приложения</h2>
+        <button onclick="testApp()">Запустить тест</button>
+        <div id="logs"></div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.appendChild(div);
+            console.log(message);
+        }
+
+        function testApp() {
+            log('🚀 Начинаем тест приложения...', 'info');
+            
+            // Тест 1: Проверка элементов DOM
+            log('📋 Тест 1: Проверка элементов DOM', 'info');
+            
+            const elements = {
+                'ndnBalance': document.getElementById('ndnBalance'),
+                'userId': document.getElementById('userId'),
+                'subtitle': document.querySelector('.subtitle')
+            };
+            
+            for (const [name, element] of Object.entries(elements)) {
+                if (element) {
+                    log(`✅ ${name}: найден`, 'success');
+                } else {
+                    log(`❌ ${name}: НЕ найден`, 'error');
+                }
+            }
+            
+            // Тест 2: Симуляция данных пользователя
+            setTimeout(() => {
+                log('👤 Тест 2: Симуляция данных пользователя', 'info');
+                
+                const testData = {
+                    id: 5,
+                    first_name: "Test User",
+                    balance_ndn: 1000.50,
+                    is_pro: true
+                };
+                
+                log(`Данные: ${JSON.stringify(testData)}`, 'info');
+                
+                // Симуляция updateUI
+                updateTestUI(testData);
+                
+            }, 1000);
+        }
+
+        function updateTestUI(userData) {
+            log('🔄 Обновляем UI с тестовыми данными...', 'info');
+            
+            // Обновляем баланс
+            const ndnBalance = document.getElementById('ndnBalance');
+            if (ndnBalance) {
+                ndnBalance.textContent = userData.balance_ndn.toFixed(2);
+                log(`✅ Баланс обновлен: ${userData.balance_ndn.toFixed(2)}`, 'success');
+            } else {
+                log('❌ Элемент ndnBalance не найден', 'error');
+            }
+            
+            // Обновляем заголовок
+            const subtitle = document.querySelector('.subtitle');
+            if (subtitle) {
+                const proStatus = userData.is_pro ? ' 💎 PRO' : '';
+                const welcomeText = `Добро пожаловать, ${userData.first_name}!${proStatus}`;
+                subtitle.textContent = welcomeText;
+                log(`✅ Заголовок обновлен: ${welcomeText}`, 'success');
+            } else {
+                log('❌ Элемент .subtitle не найден', 'error');
+            }
+            
+            // Обновляем ID
+            const userId = document.getElementById('userId');
+            if (userId) {
+                userId.textContent = userData.id;
+                log(`✅ ID обновлен: ${userData.id}`, 'success');
+            } else {
+                log('❌ Элемент userId не найден', 'error');
+            }
+        }
+
+        // Автоматический тест при загрузке
+        window.addEventListener('load', () => {
+            log('📄 Страница загружена', 'success');
+            setTimeout(testApp, 500);
+        });
+    </script>
+</body>
+</html>
