@@ -455,7 +455,7 @@ def get_or_create_user(telegram_user: Dict[str, Any], referral_token: str = None
             "username": username,
             "first_name": first_name,
             "last_name": last_name,
-            "balance_ndn": 100.0,  # Начальный баланс 100 NDN для майнинга
+            "balance_ndn": 0.0,  # Начальный баланс 0 NDN - покупается только за Stars
             "balance_stars": 0.0,
             "total_stars_earned": 0.0,
             "total_stars_spent": 0.0,
@@ -475,7 +475,7 @@ def get_or_create_user(telegram_user: Dict[str, Any], referral_token: str = None
         
         if response.status_code == 201:
             created_user = response.json()[0]
-            print(f"✅ New user created: {created_user.get('first_name', 'Unknown')} (ID: {created_user['id']}) Balance: {created_user.get('balance_ndn', 0)} NDN (100 NDN starting bonus)")
+            print(f"✅ New user created: {created_user.get('first_name', 'Unknown')} (ID: {created_user['id']}) Balance: {created_user.get('balance_ndn', 0)} NDN (Stars purchase required)")
             
             # Создаем статистику рефералов
             for level in range(1, 8):
@@ -3105,24 +3105,22 @@ async def get_miner_data(user_id: int):
             return {"success": False, "error": "User not found"}
         
         # Инициализируем данные майнера если их нет
-        if not hasattr(user, 'miner_data') or user.miner_data is None:
-            miner_data = {
-                "ndn_gas": 100,  # Начальные 100 Gas
-                "energy": 100,
-                "max_energy": 100,
-                "gas_per_minute": 0,
-                "farms": [],
-                "upgrades": {
-                    "speed": 0,
-                    "efficiency": 0,
-                    "automation": 0
-                },
-                "total_gas_earned": 100,
-                "last_energy_refill": int(time.time() * 1000),
-                "last_update": int(time.time() * 1000)
-            }
-        else:
-            miner_data = user.miner_data
+        # Пока что возвращаем дефолтные данные, так как колонка miner_data еще не добавлена в БД
+        miner_data = {
+            "ndn_gas": 100,  # Начальные 100 Gas
+            "energy": 100,
+            "max_energy": 100,
+            "gas_per_minute": 0,
+            "farms": [],
+            "upgrades": {
+                "speed": 0,
+                "efficiency": 0,
+                "automation": 0
+            },
+            "total_gas_earned": 100,
+            "last_energy_refill": int(time.time() * 1000),
+            "last_update": int(time.time() * 1000)
+        }
         
         # Рассчитываем оффлайн заработок
         current_time = int(time.time() * 1000)
@@ -3353,9 +3351,9 @@ async def save_miner_state(request: Request):
 
 async def update_user_miner_data(user_id: int, miner_data: dict):
     """Обновить данные майнера пользователя в БД"""
-    # Здесь должна быть логика обновления БД
-    # Пока что просто логируем
-    print(f"Updating miner data for user {user_id}: {miner_data}")
+    # Пока что колонка miner_data не добавлена в БД
+    # Данные сохраняются в localStorage на клиенте
+    print(f"Note: Miner data for user {user_id} saved locally (miner_data column not yet added to DB)")
     pass
 
 async def update_user_balance(user_id: int, new_balance: float):
