@@ -3123,6 +3123,8 @@ async def get_miner_data(user_id: int):
             "last_update": current_time
         }
         
+        print(f"📊 Возвращаем дефолтные данные майнинга для пользователя {user_id}")
+        
         # Рассчитываем оффлайн заработок
         current_time = int(time.time() * 1000)
         last_update = miner_data.get("last_update", current_time)
