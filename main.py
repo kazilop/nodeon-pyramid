@@ -3104,20 +3104,20 @@ async def get_miner_data(user_id: int):
         if not user:
             return {"success": False, "error": "User not found"}
         
-        # Инициализируем данные майнера если их нет
-        # Пока что возвращаем дефолтные данные, так как колонка miner_data еще не добавлена в БД
+        # Пока что таблицы майнера не созданы в БД
+        # Возвращаем дефолтные данные
         miner_data = {
-            "ndn_gas": 100,  # Начальные 100 Gas
+            "ndn_gas": 100.0,
             "energy": 100,
             "max_energy": 100,
-            "gas_per_minute": 0,
+            "gas_per_minute": 0.0,
             "farms": [],
             "upgrades": {
                 "speed": 0,
                 "efficiency": 0,
                 "automation": 0
             },
-            "total_gas_earned": 100,
+            "total_gas_earned": 100.0,
             "last_energy_refill": int(time.time() * 1000),
             "last_update": int(time.time() * 1000)
         }
@@ -3138,8 +3138,8 @@ async def get_miner_data(user_id: int):
         # Обновляем время последнего обновления
         miner_data["last_update"] = current_time
         
-        # Сохраняем обновленные данные
-        await update_user_miner_data(user_id, miner_data)
+        # Пока что данные сохраняются в localStorage на клиенте
+        # await update_user_miner_data(user_id, miner_data)
         
         return {"success": True, "miner_data": miner_data}
     except Exception as e:
@@ -3349,12 +3349,221 @@ async def save_miner_state(request: Request):
         print(f"Error saving miner state: {e}")
         return {"success": False, "error": "Failed to save miner state"}
 
+async def get_miner_data_from_db(user_id: int) -> dict:
+    """Получить данные майнера из БД"""
+    try:
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data?user_id=eq.{user_id}&select=*"
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data:
+                return data[0]
+        return None
+    except Exception as e:
+        print(f"Error getting miner data from DB: {e}")
+        return None
+
+async def create_initial_miner_data(user_id: int) -> dict:
+    """Создать начальные данные майнера"""
+    try:
+        # Получаем пользователя
+        user = await get_user_by_telegram_id(user_id)
+        if not user:
+            return None
+        
+        current_time = int(time.time() * 1000)
+        
+        miner_data = {
+            "user_id": user_id,
+            "telegram_id": user_id,
+            "ndn_gas": 100.0,
+            "energy": 100,
+            "max_energy": 100,
+            "gas_per_minute": 0.0,
+            "total_gas_earned": 100.0,
+            "total_gas_spent": 0.0,
+            "total_farms_bought": 0,
+            "total_upgrades_bought": 0,
+            "speed_upgrades": 0,
+            "efficiency_upgrades": 0,
+            "automation_upgrades": 0,
+            "last_energy_refill": current_time,
+            "last_update": current_time
+        }
+        
+        # Создаем запись в БД
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data"
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        response = requests.post(url, headers=headers, json=miner_data)
+        
+        if response.status_code == 201:
+            print(f"Created initial miner data for user {user_id}")
+            return miner_data
+        else:
+            print(f"Error creating miner data: {response.status_code}")
+            return None
+            
+    except Exception as e:
+        print(f"Error creating initial miner data: {e}")
+        return None
+
 async def update_user_miner_data(user_id: int, miner_data: dict):
     """Обновить данные майнера пользователя в БД"""
-    # Пока что колонка miner_data не добавлена в БД
-    # Данные сохраняются в localStorage на клиенте
-    print(f"Note: Miner data for user {user_id} saved locally (miner_data column not yet added to DB)")
-    pass
+    try:
+        # Обновляем основные данные
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data?user_id=eq.{user_id}"
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal"
+        }
+        
+        update_data = {
+            "ndn_gas": miner_data.get("ndn_gas", 100.0),
+            "energy": miner_data.get("energy", 100),
+            "gas_per_minute": miner_data.get("gas_per_minute", 0.0),
+            "total_gas_earned": miner_data.get("total_gas_earned", 100.0),
+            "total_gas_spent": miner_data.get("total_gas_spent", 0.0),
+            "total_farms_bought": miner_data.get("total_farms_bought", 0),
+            "total_upgrades_bought": miner_data.get("total_upgrades_bought", 0),
+            "speed_upgrades": miner_data.get("upgrades", {}).get("speed", 0),
+            "efficiency_upgrades": miner_data.get("upgrades", {}).get("efficiency", 0),
+            "automation_upgrades": miner_data.get("upgrades", {}).get("automation", 0),
+            "last_energy_refill": miner_data.get("last_energy_refill", 0),
+            "last_update": miner_data.get("last_update", 0)
+        }
+        
+        response = requests.patch(url, headers=headers, json=update_data)
+        
+        if response.status_code in [200, 204]:
+            # Обновляем статистику
+            await update_miner_stats(user_id)
+            return True
+        else:
+            print(f"Error updating miner data: {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print(f"Error updating miner data: {e}")
+        return False
+
+async def update_miner_stats(user_id: int):
+    """Обновить статистику майнера"""
+    try:
+        # Получаем данные майнера
+        miner_data = await get_miner_data_from_db(user_id)
+        if not miner_data:
+            return
+        
+        # Получаем данные пользователя
+        user = await get_user_by_telegram_id(user_id)
+        if not user:
+            return
+        
+        # Рассчитываем уровень
+        total_gas = miner_data.get("total_gas_earned", 0)
+        miner_level = max(1, int(total_gas / 1000) + 1)
+        
+        stats_data = {
+            "user_id": user_id,
+            "telegram_id": user_id,
+            "username": user.get("username", ""),
+            "first_name": user.get("first_name", ""),
+            "total_gas_earned": total_gas,
+            "total_farms": miner_data.get("total_farms_bought", 0),
+            "total_upgrades": miner_data.get("total_upgrades_bought", 0),
+            "current_gas_per_minute": miner_data.get("gas_per_minute", 0.0),
+            "miner_level": miner_level,
+            "last_activity": datetime.now().isoformat()
+        }
+        
+        # Обновляем статистику
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_stats"
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": "application/json",
+            "Prefer": "resolution=merge-duplicates"
+        }
+        
+        response = requests.post(url, headers=headers, json=stats_data)
+        
+        if response.status_code in [200, 201]:
+            print(f"Updated miner stats for user {user_id}")
+        else:
+            print(f"Error updating miner stats: {response.status_code}")
+            
+    except Exception as e:
+        print(f"Error updating miner stats: {e}")
+
+@app.get("/api/miner/leaderboard")
+async def get_miner_leaderboard():
+    """Получить лидерборд майнеров"""
+    try:
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_stats?select=*&order=total_gas_earned.desc,miner_level.desc&limit=50"
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code == 200:
+            leaderboard = response.json()
+            
+            # Добавляем позицию в рейтинге
+            for i, player in enumerate(leaderboard, 1):
+                player["rank"] = i
+            
+            return {"success": True, "leaderboard": leaderboard}
+        else:
+            print(f"Error getting leaderboard: {response.status_code}")
+            return {"success": False, "error": "Failed to get leaderboard"}
+            
+    except Exception as e:
+        print(f"Error getting leaderboard: {e}")
+        return {"success": False, "error": "Failed to get leaderboard"}
+
+@app.get("/api/miner/stats/{user_id}")
+async def get_miner_user_stats(user_id: int):
+    """Получить статистику конкретного пользователя"""
+    try:
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_stats?user_id=eq.{user_id}&select=*"
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data:
+                return {"success": True, "stats": data[0]}
+            else:
+                return {"success": False, "error": "User stats not found"}
+        else:
+            print(f"Error getting user stats: {response.status_code}")
+            return {"success": False, "error": "Failed to get user stats"}
+            
+    except Exception as e:
+        print(f"Error getting user stats: {e}")
+        return {"success": False, "error": "Failed to get user stats"}
 
 async def update_user_balance(user_id: int, new_balance: float):
     """Обновить баланс пользователя в БД"""
