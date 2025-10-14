@@ -3105,7 +3105,8 @@ async def get_miner_data(user_id: int):
             return {"success": False, "error": "User not found"}
         
         # Пока что таблицы майнера не созданы в БД
-        # Возвращаем дефолтные данные
+        # Возвращаем дефолтные данные с правильной структурой
+        current_time = int(time.time() * 1000)
         miner_data = {
             "ndn_gas": 100.0,
             "energy": 100,
@@ -3118,8 +3119,8 @@ async def get_miner_data(user_id: int):
                 "automation": 0
             },
             "total_gas_earned": 100.0,
-            "last_energy_refill": int(time.time() * 1000),
-            "last_update": int(time.time() * 1000)
+            "last_energy_refill": current_time,
+            "last_update": current_time
         }
         
         # Рассчитываем оффлайн заработок
@@ -3149,14 +3150,16 @@ async def get_miner_data(user_id: int):
 def calculate_offline_earnings(miner_data: dict, time_diff_ms: int) -> float:
     """Рассчитывает заработок за время отсутствия игрока"""
     try:
-        if not miner_data.get("farms") or len(miner_data["farms"]) == 0:
+        # Получаем фермы из данных майнера
+        farms = miner_data.get("farms", [])
+        if not farms or len(farms) == 0:
             return 0
         
         # Рассчитываем общую генерацию в минуту
         total_gas_per_minute = 0
         total_energy_cost = 0
         
-        for farm in miner_data["farms"]:
+        for farm in farms:
             farm_type = farm.get("type")
             if farm_type == "cpu_miner":
                 base_gas = 1
@@ -3174,8 +3177,9 @@ def calculate_offline_earnings(miner_data: dict, time_diff_ms: int) -> float:
                 continue
             
             # Применяем улучшения скорости
-            speed_multiplier = 1 + (miner_data.get("upgrades", {}).get("speed", 0) * 0.1)
-            efficiency_multiplier = 1 - (miner_data.get("upgrades", {}).get("efficiency", 0) * 0.2)
+            upgrades = miner_data.get("upgrades", {})
+            speed_multiplier = 1 + (upgrades.get("speed", 0) * 0.1)
+            efficiency_multiplier = 1 - (upgrades.get("efficiency", 0) * 0.2)
             
             total_gas_per_minute += base_gas * speed_multiplier
             total_energy_cost += energy_cost * efficiency_multiplier
@@ -3184,6 +3188,7 @@ def calculate_offline_earnings(miner_data: dict, time_diff_ms: int) -> float:
         current_energy = miner_data.get("energy", 100)
         if total_energy_cost > current_energy:
             # Недостаточно энергии - майнинг не работает
+            print(f"⚠️ Недостаточно энергии для майнинга: {total_energy_cost} > {current_energy}")
             return 0
         
         # Рассчитываем время в минутах
@@ -3196,6 +3201,7 @@ def calculate_offline_earnings(miner_data: dict, time_diff_ms: int) -> float:
         energy_consumption = total_energy_cost * time_diff_minutes
         miner_data["energy"] = max(0, current_energy - energy_consumption)
         
+        print(f"💰 Оффлайн расчет: {total_gas_per_minute} Gas/мин за {time_diff_minutes:.2f} мин = {earnings:.2f} Gas")
         return round(earnings, 2)
     except Exception as e:
         print(f"Error calculating offline earnings: {e}")
