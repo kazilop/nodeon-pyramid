@@ -3284,35 +3284,10 @@
             }
         };
 
-        // NDN Miner данные
-        let minerData = {
-            ndnGas: 100, // Начальные 100 Gas (достаточно для CPU Miner за 50)
-            energy: 100,
-            maxEnergy: 100,
-            gasPerSecond: 0,
-            farms: [],
-            upgrades: {
-                speed: 0,
-                efficiency: 0,
-                automation: 0
-            },
-            totalGasEarned: 100, // Учитываем начальные 100 Gas
-            lastUpdate: Date.now(),
-            lastEnergyRefill: Date.now(), // Время последнего пополнения энергии
-            energyRefillCooldown: 3 * 60 * 60 * 1000 // 3 часа в миллисекундах
-        };
+        // NDN Miner данные - инициализируем пустыми, загрузим с сервера
+        let minerData = {};
         
-        // Загружаем сохраненные данные при инициализации
-        const savedMinerData = localStorage.getItem('nodeon_miner_data');
-        if (savedMinerData) {
-            try {
-                const parsed = JSON.parse(savedMinerData);
-                minerData = { ...minerData, ...parsed };
-                console.log('💾 Начальные данные майнера загружены из localStorage:', minerData);
-            } catch (e) {
-                console.warn('Ошибка загрузки начальных данных майнера:', e);
-            }
-        }
+        // Данные майнера будут загружены с сервера в initializeMinerData()
 
         // Фермы майнинга
         const farmTypes = [
@@ -3827,7 +3802,7 @@
                 
                 if (result.success && result.miner_data) {
                     // Серверные данные имеют приоритет - они содержат расчет оффлайн заработка
-                    minerData = { ...minerData, ...result.miner_data };
+                    minerData = result.miner_data;
                     console.log('📡 Данные майнера загружены с сервера (с оффлайн расчетом):', minerData);
                     
                     // Сохраняем обновленные данные локально
@@ -3839,11 +3814,46 @@
                     if (savedMinerData) {
                         try {
                             const parsed = JSON.parse(savedMinerData);
-                            minerData = { ...minerData, ...parsed };
+                            minerData = parsed;
                             console.log('💾 Fallback на локальные данные:', minerData);
                         } catch (e) {
                             console.warn('Ошибка загрузки локальных данных майнера:', e);
+                            // Если и локальные данные не загрузились, используем дефолтные
+                            minerData = {
+                                ndnGas: 100,
+                                energy: 100,
+                                maxEnergy: 100,
+                                gasPerMinute: 0,
+                                farms: [],
+                                upgrades: {
+                                    speed: 0,
+                                    efficiency: 0,
+                                    automation: 0
+                                },
+                                totalGasEarned: 100,
+                                lastEnergyRefill: Date.now(),
+                                lastUpdate: Date.now(),
+                                energyRefillCooldown: 3 * 60 * 60 * 1000
+                            };
                         }
+                    } else {
+                        // Если нет локальных данных, используем дефолтные
+                        minerData = {
+                            ndnGas: 100,
+                            energy: 100,
+                            maxEnergy: 100,
+                            gasPerMinute: 0,
+                            farms: [],
+                            upgrades: {
+                                speed: 0,
+                                efficiency: 0,
+                                automation: 0
+                            },
+                            totalGasEarned: 100,
+                            lastEnergyRefill: Date.now(),
+                            lastUpdate: Date.now(),
+                            energyRefillCooldown: 3 * 60 * 60 * 1000
+                        };
                     }
                 }
             } catch (error) {
@@ -3853,11 +3863,46 @@
                 if (savedMinerData) {
                     try {
                         const parsed = JSON.parse(savedMinerData);
-                        minerData = { ...minerData, ...parsed };
+                        minerData = parsed;
                         console.log('💾 Fallback на локальные данные:', minerData);
                     } catch (e) {
                         console.warn('Ошибка загрузки локальных данных майнера:', e);
+                        // Если и локальные данные не загрузились, используем дефолтные
+                        minerData = {
+                            ndnGas: 100,
+                            energy: 100,
+                            maxEnergy: 100,
+                            gasPerMinute: 0,
+                            farms: [],
+                            upgrades: {
+                                speed: 0,
+                                efficiency: 0,
+                                automation: 0
+                            },
+                            totalGasEarned: 100,
+                            lastEnergyRefill: Date.now(),
+                            lastUpdate: Date.now(),
+                            energyRefillCooldown: 3 * 60 * 60 * 1000
+                        };
                     }
+                } else {
+                    // Если нет локальных данных, используем дефолтные
+                    minerData = {
+                        ndnGas: 100,
+                        energy: 100,
+                        maxEnergy: 100,
+                        gasPerMinute: 0,
+                        farms: [],
+                        upgrades: {
+                            speed: 0,
+                            efficiency: 0,
+                            automation: 0
+                        },
+                        totalGasEarned: 100,
+                        lastEnergyRefill: Date.now(),
+                        lastUpdate: Date.now(),
+                        energyRefillCooldown: 3 * 60 * 60 * 1000
+                    };
                 }
             }
             
@@ -3882,6 +3927,13 @@
 
         function updateMinerUI() {
             console.log('🔄 Обновляем UI майнера...');
+            console.log('📊 Текущие данные майнера:', minerData);
+            
+            // Проверяем, что данные майнера загружены
+            if (!minerData || Object.keys(minerData).length === 0) {
+                console.warn('⚠️ Данные майнера не загружены, пропускаем обновление UI');
+                return;
+            }
             
             // Обновляем статистику
             const gasBalance = document.getElementById('ndnGasBalance');
@@ -3903,15 +3955,15 @@
             }
             
             if (energyLevel) {
-                energyLevel.textContent = `${Math.floor(minerData.energy)}/${minerData.maxEnergy}`;
+                energyLevel.textContent = `${Math.floor(minerData.energy || 0)}/${minerData.maxEnergy || 100}`;
                 console.log('✅ Энергия обновлена:', energyLevel.textContent);
             } else {
                 console.error('❌ Элемент energyLevel не найден!');
             }
             
             if (gasPerSecond) {
-                gasPerSecond.textContent = minerData.gasPerSecond.toFixed(1);
-                console.log('✅ Gas/сек обновлен:', gasPerSecond.textContent);
+                gasPerSecond.textContent = (minerData.gasPerMinute || 0).toFixed(1);
+                console.log('✅ Gas/мин обновлен:', gasPerSecond.textContent);
             } else {
                 console.error('❌ Элемент gasPerSecond не найден!');
             }
@@ -3921,9 +3973,15 @@
             const container = document.getElementById('farmsGrid');
             if (!container) return;
             
+            // Проверяем, что данные майнера загружены
+            if (!minerData || !minerData.farms) {
+                console.warn('⚠️ Данные майнера не загружены, пропускаем загрузку ферм');
+                return;
+            }
+            
             container.innerHTML = farmTypes.map(farm => {
                 const farmCount = minerData.farms.filter(f => f.type === farm.id).length;
-                const canAfford = minerData.ndnGas >= farm.baseCost;
+                const canAfford = (minerData.ndnGas || 0) >= farm.baseCost;
                 const canUnlock = gameData.level >= farm.unlockLevel;
                 
                 return `
