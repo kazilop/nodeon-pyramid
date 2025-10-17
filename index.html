@@ -4314,6 +4314,29 @@
                 return;
             }
             
+            // Проверяем состояние таблиц БД
+            try {
+                const tablesResponse = await fetch('/api/miner/check-tables');
+                const tablesResult = await tablesResponse.json();
+                console.log('📊 Состояние таблиц БД:', tablesResult);
+                
+                if (!tablesResult.success) {
+                    console.error('❌ Ошибка проверки таблиц БД');
+                    showNotification('Ошибка подключения к базе данных. Обратитесь к администратору.', 'error');
+                    return;
+                }
+                
+                if (!tablesResult.tables.nodeon_miner_data) {
+                    console.error('❌ Таблица nodeon_miner_data не существует');
+                    showNotification('Таблица майнера не создана. Обратитесь к администратору.', 'error');
+                    return;
+                }
+            } catch (error) {
+                console.error('❌ Ошибка проверки таблиц:', error);
+                showNotification('Ошибка проверки базы данных.', 'error');
+                return;
+            }
+            
             // Валидация времени: проверяем, что время системы не было изменено
             const currentTime = Date.now();
             const lastKnownTime = parseInt(localStorage.getItem('last_known_time') || currentTime.toString());
@@ -4599,6 +4622,8 @@
                 console.log('📡 Отправляем запрос на сервер...');
                 console.log('👤 User ID:', userData.telegram_id);
                 console.log('🏭 Farm Type:', farmId);
+                console.log('💰 Текущий Gas:', currentGas);
+                console.log('💵 Стоимость фермы:', farm.baseCost);
                 
                 // Отправляем запрос на сервер
                 const response = await fetch('/api/miner/buy-farm', {
@@ -4613,6 +4638,13 @@
                 });
                 
                 console.log('📡 Ответ сервера:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    console.error('❌ Ошибка HTTP:', response.status, response.statusText);
+                    showNotification(`Ошибка сервера: ${response.status}`, 'error');
+                    return;
+                }
+                
                 const result = await response.json();
                 console.log('📊 Результат:', result);
                 

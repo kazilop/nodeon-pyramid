@@ -3218,13 +3218,19 @@ async def buy_farm(request: Request):
         user_id = data.get("user_id")
         farm_type = data.get("farm_type")
         
+        print(f"🛒 Покупка фермы: user_id={user_id}, farm_type={farm_type}")
+        
         if not user_id or not farm_type:
+            print("❌ Отсутствуют параметры")
             return {"success": False, "error": "Missing parameters"}
         
         # Получаем пользователя
         user = await get_user_by_telegram_id(user_id)
         if not user:
+            print(f"❌ Пользователь не найден: {user_id}")
             return {"success": False, "error": "User not found"}
+        
+        print(f"👤 Пользователь найден: {user['id']}")
         
         # Определяем стоимость фермы
         farm_costs = {
@@ -3236,21 +3242,30 @@ async def buy_farm(request: Request):
         
         cost = farm_costs.get(farm_type)
         if not cost:
+            print(f"❌ Неизвестный тип фермы: {farm_type}")
             return {"success": False, "error": "Invalid farm type"}
+        
+        print(f"💰 Стоимость фермы: {cost} Gas")
         
         # Получаем текущие данные майнера
         miner_data = await get_miner_data_from_db(user_id)
         if not miner_data:
+            print("📊 Создаем начальные данные майнера")
             miner_data = await create_initial_miner_data(user_id)
             if not miner_data:
+                print("❌ Не удалось создать данные майнера")
                 return {"success": False, "error": "Failed to create miner data"}
+        else:
+            print(f"📊 Данные майнера загружены: Gas={miner_data.get('ndnGas', 0)}")
         
         # Проверяем баланс Gas
-        if miner_data.get("ndnGas", 0) < cost:
+        current_gas = miner_data.get("ndnGas", 0)
+        if current_gas < cost:
+            print(f"❌ Недостаточно Gas: {current_gas} < {cost}")
             return {"success": False, "error": "Not enough Gas"}
         
         # Покупаем ферму
-        miner_data["ndnGas"] -= cost
+        miner_data["ndnGas"] = current_gas - cost
         if "farms" not in miner_data:
             miner_data["farms"] = []
         
@@ -3263,6 +3278,8 @@ async def buy_farm(request: Request):
         # Обновляем время последнего обновления
         miner_data["last_update"] = int(time.time() * 1000)
         
+        print(f"🔄 Обновляем данные: Gas={miner_data['ndnGas']}, Ферм={len(miner_data['farms'])}")
+        
         # Сохраняем в БД
         save_result = await update_user_miner_data(user_id, miner_data)
         if not save_result:
@@ -3270,12 +3287,44 @@ async def buy_farm(request: Request):
             return {"success": False, "error": "Failed to save miner data"}
         
         print(f"✅ Ферма {farm_type} успешно куплена пользователем {user_id}")
-        print(f"📊 Новые данные майнера: {miner_data}")
+        print(f"📊 Новые данные майнера: Gas={miner_data['ndnGas']}, Ферм={len(miner_data['farms'])}")
         
         return {"success": True, "message": "Farm purchased successfully", "miner_data": miner_data}
     except Exception as e:
-        print(f"Error buying farm: {e}")
+        print(f"❌ Ошибка покупки фермы: {e}")
+        import traceback
+        traceback.print_exc()
         return {"success": False, "error": "Failed to buy farm"}
+
+@app.get("/api/miner/check-tables")
+async def check_miner_tables():
+    """Проверить состояние таблиц майнера"""
+    try:
+        # Проверяем таблицу nodeon_miner_data
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data?select=count"
+        headers = {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": f"Bearer {SUPABASE_ANON_KEY}"
+        }
+        
+        response = requests.get(url, headers=headers)
+        miner_data_exists = response.status_code == 200
+        
+        # Проверяем таблицу nodeon_miner_stats
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_stats?select=count"
+        response = requests.get(url, headers=headers)
+        miner_stats_exists = response.status_code == 200
+        
+        return {
+            "success": True,
+            "tables": {
+                "nodeon_miner_data": miner_data_exists,
+                "nodeon_miner_stats": miner_stats_exists
+            }
+        }
+    except Exception as e:
+        print(f"Error checking tables: {e}")
+        return {"success": False, "error": str(e)}
 
 @app.post("/api/miner/save-gas")
 async def save_miner_gas(request: Request):
