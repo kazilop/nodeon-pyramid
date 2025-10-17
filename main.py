@@ -3000,9 +3000,9 @@ async def claim_daily_reward(request: Request):
         if not user_id or not day:
             raise HTTPException(status_code=400, detail="Missing user_id or day")
         
-        # Обновленные значения наград (уменьшены на 5)
+        # Обновленные значения наград (уменьшены в 5 раз)
         rewards = {
-            1: 5, 2: 15, 3: 25, 4: 45, 5: 70, 6: 95, 7: 195
+            1: 2, 2: 4, 3: 6, 4: 10, 5: 15, 6: 20, 7: 40
         }
         
         reward_amount = rewards.get(day, 0)
