@@ -264,6 +264,7 @@
       "waiting": "Waiting...",
       "next_refill": "Next refill in:",
       "refilled": "Energy fully restored!",
+      "next_event": "Next event",
       "cooldown": "Next refill in:"
     }
   }

@@ -487,9 +487,15 @@
         /* NDN Miner стили */
         .miner-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
             margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .miner-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         /* Анимации для смешных уведомлений */
@@ -2942,6 +2948,13 @@
                         <div class="miner-stat-value" id="gasPerSecond">0</div>
                     </div>
                 </div>
+                <div class="miner-stat-item">
+                    <div class="miner-stat-icon">🎲</div>
+                    <div class="miner-stat-info">
+                        <div class="miner-stat-label" data-i18n="miner.stats.next_event">След. событие</div>
+                        <div class="miner-stat-value" id="nextEventTime">24:00:00</div>
+                    </div>
+                </div>
             </div>
 
             <!-- Кнопка пополнения энергии -->
@@ -3423,7 +3436,7 @@
         ];
         
         let activeEvents = [];
-        let lastEventTime = 0;
+        let lastEventTime = parseInt(localStorage.getItem('miner_last_event_time') || '0');
         
         // Секретные достижения
         const secretAchievements = [
@@ -3972,6 +3985,13 @@
         async function initializeMinerData() {
             console.log('⛏️ Инициализируем данные майнера...');
             
+            // Проверяем, что userData загружен
+            if (!userData || !userData.telegram_id) {
+                console.error('❌ Данные пользователя не загружены!');
+                showNotification('Данные пользователя не загружены. Перезагрузите страницу.', 'error');
+                return;
+            }
+            
             // Проверяем, что вкладка майнера существует
             const minerTab = document.getElementById('minerTab');
             if (!minerTab) {
@@ -4151,6 +4171,30 @@
             } else {
                 console.error('❌ Элемент gasPerSecond не найден!');
             }
+            
+            // Обновляем время до следующего события
+            updateNextEventTime();
+        }
+        
+        function updateNextEventTime() {
+            const nextEventElement = document.getElementById('nextEventTime');
+            if (!nextEventElement) return;
+            
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000;
+            const timeUntilNextEvent = oneDay - (now - lastEventTime);
+            
+            if (timeUntilNextEvent <= 0) {
+                nextEventElement.textContent = 'Готово!';
+                return;
+            }
+            
+            const hours = Math.floor(timeUntilNextEvent / (1000 * 60 * 60));
+            const minutes = Math.floor((timeUntilNextEvent % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeUntilNextEvent % (1000 * 60)) / 1000);
+            
+            nextEventElement.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
         function loadFarms() {
@@ -4193,6 +4237,13 @@
 
         async function buyFarm(farmId) {
             console.log('🛒 Попытка покупки фермы:', farmId);
+            
+            // Проверяем, что userData загружен
+            if (!userData || !userData.telegram_id) {
+                console.error('❌ Данные пользователя не загружены');
+                showNotification('Данные пользователя не загружены. Перезагрузите страницу.', 'error');
+                return;
+            }
             
             // Проверяем, что данные майнера загружены
             if (!minerData || Object.keys(minerData).length === 0) {
@@ -4402,13 +4453,16 @@
         function checkRandomEvents() {
             const now = Date.now();
             
-            // Проверяем, прошло ли достаточно времени с последнего события (2-5 минут)
-            if (now - lastEventTime < 120000) return; // Минимум 2 минуты
+            // Проверяем, прошло ли 24 часа с последнего события
+            const oneDay = 24 * 60 * 60 * 1000; // 24 часа в миллисекундах
+            if (now - lastEventTime < oneDay) return;
             
-            // 5% шанс на событие каждые 100мс
-            if (Math.random() < 0.0005) {
+            // 10% шанс на событие раз в сутки
+            if (Math.random() < 0.1) {
                 triggerRandomEvent();
                 lastEventTime = now;
+                localStorage.setItem('miner_last_event_time', now.toString());
+                console.log('🎉 Случайное событие активировано! Следующее через 24 часа.');
             }
         }
         
