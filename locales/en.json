@@ -264,7 +264,10 @@
       "waiting": "Waiting...",
       "next_refill": "Next refill in:",
       "refilled": "Energy fully restored!",
-      "next_event": "Next event",
+        "next_event": "Next event"
+    },
+    "sync": {
+        "button": "Synchronize",
       "cooldown": "Next refill in:"
     },
     "tabs": {

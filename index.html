@@ -783,6 +783,33 @@
             color: #000000;
         }
 
+        .miner-sync-controls {
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .sync-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .sync-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .sync-button:active {
+            transform: translateY(0);
+        }
+
         .energy-refill-button {
             background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             color: white;
@@ -3113,6 +3140,13 @@
                 </div>
             </div>
 
+            <!-- Кнопка синхронизации -->
+            <div class="miner-sync-controls">
+                <button class="sync-button" onclick="forceSyncMinerData()">
+                    🔄 <span data-i18n="miner.sync.button">Синхронизировать</span>
+                </button>
+            </div>
+
             <!-- Кнопка пополнения энергии -->
             <div class="energy-refill-section">
                 <button class="energy-refill-button" id="energyRefillButton" onclick="refillEnergy()">
@@ -3883,7 +3917,8 @@
             if (tabName === 'miner') {
                 console.log('🔄 Переключаемся на вкладку майнера...');
                 setTimeout(() => {
-                    initializeMinerData();
+                    // Принудительная синхронизация при входе в майнер
+                    forceSyncMinerData();
                 }, 100);
             }
         }
@@ -4314,6 +4349,11 @@
                 return;
             }
             
+            // Очищаем кэш майнера для принудительной загрузки с сервера
+            console.log('🧹 Очищаем кэш майнера...');
+            localStorage.removeItem('nodeon_miner_data');
+            minerData = {};
+            
             // Проверяем состояние таблиц БД
             try {
                 const tablesResponse = await fetch('/api/miner/check-tables');
@@ -4352,8 +4392,16 @@
             localStorage.setItem('last_known_time', currentTime.toString());
             
             try {
-                // Получаем данные с сервера (приоритет серверных данных)
-                const response = await fetch(`/api/miner/data/${userData.telegram_id}`);
+                // Получаем данные с сервера (приоритет серверных данных) с принудительным обновлением
+                console.log('📡 Загружаем данные с сервера (принудительно)...');
+                const response = await fetch(`/api/miner/data/${userData.telegram_id}?t=${Date.now()}`, {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
                 const result = await response.json();
                 
                 if (result.success && result.miner_data) {
@@ -5600,6 +5648,48 @@
                 }
             } catch (error) {
                 console.error('Ошибка сохранения Gas:', error);
+            }
+        }
+        
+        async function forceSyncMinerData() {
+            console.log('🔄 Принудительная синхронизация данных майнера...');
+            
+            if (!userData || !userData.telegram_id) {
+                console.error('❌ Данные пользователя не загружены');
+                return;
+            }
+            
+            try {
+                // Очищаем локальный кэш
+                localStorage.removeItem('nodeon_miner_data');
+                minerData = {};
+                
+                // Загружаем свежие данные с сервера
+                const response = await fetch(`/api/miner/data/${userData.telegram_id}?t=${Date.now()}`, {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
+                
+                const result = await response.json();
+                if (result.success && result.miner_data) {
+                    minerData = result.miner_data;
+                    saveMinerData();
+                    calculateGasPerMinute();
+                    updateMinerUI();
+                    loadFarms();
+                    console.log('✅ Данные синхронизированы с сервером');
+                    showNotification('Данные синхронизированы с сервером', 'success');
+                } else {
+                    console.error('❌ Ошибка синхронизации:', result.error);
+                    showNotification('Ошибка синхронизации данных', 'error');
+                }
+            } catch (error) {
+                console.error('❌ Ошибка принудительной синхронизации:', error);
+                showNotification('Ошибка синхронизации', 'error');
             }
         }
 
