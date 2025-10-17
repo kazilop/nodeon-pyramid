@@ -4192,22 +4192,34 @@
         }
 
         async function buyFarm(farmId) {
+            console.log('🛒 Попытка покупки фермы:', farmId);
+            
             // Проверяем, что данные майнера загружены
             if (!minerData || Object.keys(minerData).length === 0) {
+                console.error('❌ Данные майнера не загружены');
                 showNotification('Данные майнера не загружены!', 'error');
                 return;
             }
             
             const farm = farmTypes.find(f => f.id === farmId);
-            if (!farm) return;
+            if (!farm) {
+                console.error('❌ Ферма не найдена:', farmId);
+                return;
+            }
             
             const currentGas = minerData.ndnGas || 0;
+            console.log('💰 Текущий Gas:', currentGas, 'Стоимость фермы:', farm.baseCost);
+            
             if (currentGas < farm.baseCost) {
                 showNotification(`Недостаточно NDN Gas! Нужно: ${farm.baseCost}, есть: ${Math.floor(currentGas)}`, 'error');
                 return;
             }
             
             try {
+                console.log('📡 Отправляем запрос на сервер...');
+                console.log('👤 User ID:', userData.telegram_id);
+                console.log('🏭 Farm Type:', farmId);
+                
                 // Отправляем запрос на сервер
                 const response = await fetch('/api/miner/buy-farm', {
                     method: 'POST',
@@ -4220,7 +4232,9 @@
                     })
                 });
                 
+                console.log('📡 Ответ сервера:', response.status, response.statusText);
                 const result = await response.json();
+                console.log('📊 Результат:', result);
                 
                 if (result.success) {
                     // Обновляем локальные данные данными с сервера

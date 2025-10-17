@@ -3254,7 +3254,13 @@ async def buy_farm(request: Request):
         miner_data["last_update"] = int(time.time() * 1000)
         
         # Сохраняем в БД
-        await update_user_miner_data(user_id, miner_data)
+        save_result = await update_user_miner_data(user_id, miner_data)
+        if not save_result:
+            print(f"❌ Ошибка сохранения данных майнера для пользователя {user_id}")
+            return {"success": False, "error": "Failed to save miner data"}
+        
+        print(f"✅ Ферма {farm_type} успешно куплена пользователем {user_id}")
+        print(f"📊 Новые данные майнера: {miner_data}")
         
         return {"success": True, "message": "Farm purchased successfully", "miner_data": miner_data}
     except Exception as e:
@@ -3468,13 +3474,15 @@ async def update_user_miner_data(user_id: int, miner_data: dict):
         
         response = requests.patch(url, headers=headers, json=update_data)
         
-        if response.status_code in [200, 204]:
-            # Обновляем статистику
-            await update_miner_stats(user_id)
-            return True
-        else:
-            print(f"Error updating miner data: {response.status_code}")
+        print(f"📡 Обновление данных майнера: {response.status_code}")
+        if response.status_code not in [200, 204]:
+            print(f"❌ Ошибка обновления данных майнера: {response.status_code} - {response.text}")
             return False
+        
+        # Обновляем статистику
+        await update_miner_stats(user_id)
+        print(f"✅ Данные майнера успешно обновлены для пользователя {user_id}")
+        return True
             
     except Exception as e:
         print(f"Error updating miner data: {e}")
