@@ -3598,7 +3598,22 @@
         };
 
         // NDN Miner данные - инициализируем пустыми, загрузим с сервера
-        let minerData = {};
+        let minerData = {
+            ndnGas: 100,
+            energy: 100,
+            maxEnergy: 100,
+            gasPerMinute: 0,
+            farms: [],
+            upgrades: {
+                speed: 0,
+                efficiency: 0,
+                automation: 0
+            },
+            totalGasEarned: 100,
+            lastEnergyRefill: Date.now(),
+            lastUpdate: Date.now(),
+            energyRefillCooldown: 3 * 60 * 60 * 1000
+        };
         
         // Смешные события и бонусы
         const funnyEvents = [
@@ -4527,10 +4542,18 @@
             console.log('📊 Текущие данные майнера:', minerData);
             
             // Проверяем, что данные майнера загружены
-            if (!minerData || Object.keys(minerData).length === 0) {
+            if (!minerData) {
                 console.warn('⚠️ Данные майнера не загружены, пропускаем обновление UI');
                 return;
             }
+            
+            // Инициализируем базовые поля если не существуют
+            if (minerData.ndnGas === undefined) minerData.ndnGas = 100;
+            if (minerData.energy === undefined) minerData.energy = 100;
+            if (minerData.maxEnergy === undefined) minerData.maxEnergy = 100;
+            if (minerData.gasPerMinute === undefined) minerData.gasPerMinute = 0;
+            if (minerData.farms === undefined) minerData.farms = [];
+            if (minerData.upgrades === undefined) minerData.upgrades = { speed: 0, efficiency: 0, automation: 0 };
             
             // Обновляем статистику
             const gasBalance = document.getElementById('ndnGasBalance');
@@ -4595,9 +4618,15 @@
             if (!container) return;
             
             // Проверяем, что данные майнера загружены
-            if (!minerData || !minerData.farms) {
+            if (!minerData) {
                 console.warn('⚠️ Данные майнера не загружены, пропускаем загрузку ферм');
                 return;
+            }
+            
+            // Инициализируем farms если не существует
+            if (!minerData.farms) {
+                minerData.farms = [];
+                console.log('📊 Инициализирован массив ферм');
             }
             
             container.innerHTML = farmTypes.map(farm => {
@@ -4639,11 +4668,15 @@
             }
             
             // Проверяем, что данные майнера загружены
-            if (!minerData || Object.keys(minerData).length === 0) {
+            if (!minerData) {
                 console.error('❌ Данные майнера не загружены');
                 showNotification('Данные майнера не загружены!', 'error');
                 return;
             }
+            
+            // Инициализируем базовые поля если не существуют
+            if (minerData.ndnGas === undefined) minerData.ndnGas = 100;
+            if (minerData.farms === undefined) minerData.farms = [];
             
             const farm = farmTypes.find(f => f.id === farmId);
             if (!farm) {
@@ -4747,9 +4780,15 @@
 
         function calculateGasPerMinute() {
             // Проверяем, что данные майнера загружены
-            if (!minerData || !minerData.farms) {
+            if (!minerData) {
                 console.warn('⚠️ Данные майнера не загружены для расчета');
                 return;
+            }
+            
+            // Инициализируем farms если не существует
+            if (!minerData.farms) {
+                minerData.farms = [];
+                console.log('📊 Инициализирован массив ферм для расчета');
             }
             
             let totalGas = 0;
@@ -4824,7 +4863,7 @@
 
         function startMiningLoop() {
             // Проверяем, что данные майнера загружены
-            if (!minerData || Object.keys(minerData).length === 0) {
+            if (!minerData) {
                 console.warn('⚠️ Данные майнера не загружены, майнинг не запущен');
                 return;
             }
