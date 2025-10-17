@@ -3917,8 +3917,7 @@
             if (tabName === 'miner') {
                 console.log('🔄 Переключаемся на вкладку майнера...');
                 setTimeout(() => {
-                    // Принудительная синхронизация при входе в майнер
-                    forceSyncMinerData();
+                    initializeMinerData();
                 }, 100);
             }
         }
@@ -4349,10 +4348,11 @@
                 return;
             }
             
-            // Очищаем кэш майнера для принудительной загрузки с сервера
-            console.log('🧹 Очищаем кэш майнера...');
-            localStorage.removeItem('nodeon_miner_data');
-            minerData = {};
+            // Инициализируем minerData если он пустой
+            if (!minerData || Object.keys(minerData).length === 0) {
+                console.log('📊 Инициализируем пустые данные майнера...');
+                minerData = {};
+            }
             
             // Проверяем состояние таблиц БД
             try {
@@ -4392,16 +4392,9 @@
             localStorage.setItem('last_known_time', currentTime.toString());
             
             try {
-                // Получаем данные с сервера (приоритет серверных данных) с принудительным обновлением
-                console.log('📡 Загружаем данные с сервера (принудительно)...');
-                const response = await fetch(`/api/miner/data/${userData.telegram_id}?t=${Date.now()}`, {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache, no-store, must-revalidate',
-                        'Pragma': 'no-cache',
-                        'Expires': '0'
-                    }
-                });
+                // Получаем данные с сервера (приоритет серверных данных)
+                console.log('📡 Загружаем данные с сервера...');
+                const response = await fetch(`/api/miner/data/${userData.telegram_id}`);
                 const result = await response.json();
                 
                 if (result.success && result.miner_data) {
@@ -5660,10 +5653,6 @@
             }
             
             try {
-                // Очищаем локальный кэш
-                localStorage.removeItem('nodeon_miner_data');
-                minerData = {};
-                
                 // Загружаем свежие данные с сервера
                 const response = await fetch(`/api/miner/data/${userData.telegram_id}?t=${Date.now()}`, {
                     method: 'GET',
@@ -5676,7 +5665,8 @@
                 
                 const result = await response.json();
                 if (result.success && result.miner_data) {
-                    minerData = result.miner_data;
+                    // Обновляем данные, но не сбрасываем полностью
+                    minerData = { ...minerData, ...result.miner_data };
                     saveMinerData();
                     calculateGasPerMinute();
                     updateMinerUI();
