@@ -3123,8 +3123,6 @@ async def get_miner_data(user_id: int):
         if time_diff > 1000:
             offline_earnings = calculate_offline_earnings(miner_data, time_diff)
             if offline_earnings > 0:
-                miner_data["ndn_gas"] += offline_earnings
-                miner_data["total_gas_earned"] += offline_earnings
                 print(f"💰 Оффлайн заработок для пользователя {user_id}: {offline_earnings} Gas за {time_diff/1000:.1f} секунд")
         
         # Обновляем время последнего обновления
@@ -3192,6 +3190,10 @@ def calculate_offline_earnings(miner_data: dict, time_diff_ms: int) -> float:
         energy_consumption = total_energy_cost * time_diff_minutes
         miner_data["energy"] = max(0, current_energy - energy_consumption)
         
+        # Обновляем Gas
+        miner_data["ndnGas"] = miner_data.get("ndnGas", 100) + earnings
+        miner_data["totalGasEarned"] = miner_data.get("totalGasEarned", 100) + earnings
+        
         print(f"💰 Оффлайн расчет: {total_gas_per_minute} Gas/мин за {time_diff_minutes:.2f} мин = {earnings:.2f} Gas")
         return round(earnings, 2)
     except Exception as e:
@@ -3234,11 +3236,11 @@ async def buy_farm(request: Request):
                 return {"success": False, "error": "Failed to create miner data"}
         
         # Проверяем баланс Gas
-        if miner_data.get("ndn_gas", 0) < cost:
+        if miner_data.get("ndnGas", 0) < cost:
             return {"success": False, "error": "Not enough Gas"}
         
         # Покупаем ферму
-        miner_data["ndn_gas"] -= cost
+        miner_data["ndnGas"] -= cost
         if "farms" not in miner_data:
             miner_data["farms"] = []
         
@@ -3395,19 +3397,19 @@ async def create_initial_miner_data(user_id: int) -> dict:
         current_time = int(time.time() * 1000)
         
         miner_data = {
-            "ndn_gas": 100.0,
+            "ndnGas": 100.0,
             "energy": 100,
-            "max_energy": 100,
-            "gas_per_minute": 0.0,
+            "maxEnergy": 100,
+            "gasPerMinute": 0.0,
             "farms": [],
             "upgrades": {
                 "speed": 0,
                 "efficiency": 0,
                 "automation": 0
             },
-            "total_gas_earned": 100.0,
-            "last_energy_refill": current_time,
-            "last_update": current_time
+            "totalGasEarned": 100.0,
+            "lastEnergyRefill": current_time,
+            "lastUpdate": current_time
         }
         
         # Создаем запись в БД

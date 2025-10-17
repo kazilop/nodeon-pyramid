@@ -4008,11 +4008,18 @@
         }
 
         async function buyFarm(farmId) {
+            // Проверяем, что данные майнера загружены
+            if (!minerData || Object.keys(minerData).length === 0) {
+                showNotification('Данные майнера не загружены!', 'error');
+                return;
+            }
+            
             const farm = farmTypes.find(f => f.id === farmId);
             if (!farm) return;
             
-            if (minerData.ndnGas < farm.baseCost) {
-                showNotification('Недостаточно NDN Gas!', 'error');
+            const currentGas = minerData.ndnGas || 0;
+            if (currentGas < farm.baseCost) {
+                showNotification(`Недостаточно NDN Gas! Нужно: ${farm.baseCost}, есть: ${Math.floor(currentGas)}`, 'error');
                 return;
             }
             
@@ -4033,7 +4040,11 @@
                 
                 if (result.success) {
                     // Обновляем локальные данные данными с сервера
-                    minerData = { ...minerData, ...result.miner_data };
+                    minerData = result.miner_data;
+                    console.log('📊 Данные майнера обновлены после покупки:', minerData);
+                    
+                    // Сохраняем локально
+                    saveMinerData();
                     
                     // Пересчитываем общую генерацию
                     calculateGasPerMinute();
@@ -4043,7 +4054,7 @@
                     loadFarms();
                     
                     // Автоматически запускаем майнинг если есть энергия
-                    if (minerData.energy > 0 && minerData.gasPerSecond > 0) {
+                    if ((minerData.energy || 0) > 0 && (minerData.gasPerMinute || 0) > 0) {
                         startMiningLoop();
                         console.log('🚀 Майнинг автоматически запущен после покупки фермы!');
                     }
@@ -4059,40 +4070,82 @@
         }
 
         function calculateGasPerMinute() {
+            // Проверяем, что данные майнера загружены
+            if (!minerData || !minerData.farms) {
+                console.warn('⚠️ Данные майнера не загружены для расчета');
+                return;
+            }
+            
             let totalGas = 0;
             let totalEnergy = 0;
+            
+            console.log('🔄 Пересчитываем генерацию Gas...');
+            console.log('Фермы:', minerData.farms);
+            console.log('Улучшения:', minerData.upgrades);
             
             minerData.farms.forEach(farm => {
                 const farmType = farmTypes.find(f => f.id === farm.type);
                 if (farmType) {
-                    totalGas += farm.gasPerMinute * (1 + minerData.upgrades.speed * 0.1);
-                    totalEnergy += farm.energyCost * (1 - minerData.upgrades.efficiency * 0.2);
+                    const speedMultiplier = 1 + (minerData.upgrades.speed || 0) * 0.1;
+                    const efficiencyMultiplier = 1 - (minerData.upgrades.efficiency || 0) * 0.2;
+                    
+                    totalGas += farmType.baseGasPerMinute * speedMultiplier;
+                    totalEnergy += farmType.energyCost * efficiencyMultiplier;
+                    
+                    console.log(`Ферма ${farm.type}: ${farmType.baseGasPerMinute} * ${speedMultiplier} = ${farmType.baseGasPerMinute * speedMultiplier} Gas/мин`);
                 }
             });
             
+            // Обновляем общую генерацию в минуту
+            minerData.gasPerMinute = totalGas;
+            
             // Проверяем энергию - если её недостаточно, майнеры не работают
-            if (totalEnergy > minerData.energy) {
-                minerData.gasPerSecond = 0; // Полностью останавливаем майнинг
+            if (totalEnergy > (minerData.energy || 0)) {
+                minerData.gasPerMinute = 0; // Полностью останавливаем майнинг
                 console.log('⚠️ Недостаточно энергии! Майнеры остановлены.');
+                console.log(`Потребление: ${totalEnergy}, Доступно: ${minerData.energy}`);
             } else {
-                minerData.gasPerSecond = totalGas / 60; // Конвертируем в Gas/сек для отображения
+                console.log(`✅ Майнинг активен: ${totalGas} Gas/мин, потребление энергии: ${totalEnergy}`);
             }
+            
+            console.log('📊 Итоговая генерация:', minerData.gasPerMinute, 'Gas/мин');
         }
 
         function startMiningLoop() {
+            // Проверяем, что данные майнера загружены
+            if (!minerData || Object.keys(minerData).length === 0) {
+                console.warn('⚠️ Данные майнера не загружены, майнинг не запущен');
+                return;
+            }
+            
+            // Пересчитываем генерацию перед запуском
+            calculateGasPerMinute();
+            
+            console.log('🚀 Запускаем цикл майнинга...');
+            console.log('Начальная генерация:', minerData.gasPerMinute, 'Gas/мин');
+            
             setInterval(() => {
-                if (minerData.gasPerSecond > 0) {
-                    const gasEarned = minerData.gasPerSecond / 10; // Обновляем 10 раз в секунду
-                    minerData.ndnGas += gasEarned;
-                    minerData.totalGasEarned += gasEarned;
+                if (minerData.gasPerMinute > 0) {
+                    // Зарабатываем Gas каждые 100мс (10 раз в секунду)
+                    const gasEarned = minerData.gasPerMinute / 600; // Gas/мин / 600 = Gas за 100мс
+                    minerData.ndnGas = (minerData.ndnGas || 0) + gasEarned;
+                    minerData.totalGasEarned = (minerData.totalGasEarned || 0) + gasEarned;
                     
                     // Потребляем энергию
-                    const energyConsumption = minerData.farms.reduce((total, farm) => {
-                        const farmType = farmTypes.find(f => f.id === farm.type);
-                        return total + (farmType ? farm.energyCost * (1 - minerData.upgrades.efficiency * 0.2) : 0);
-                    }, 0) / 10;
+                    let totalEnergyConsumption = 0;
+                    if (minerData.farms) {
+                        minerData.farms.forEach(farm => {
+                            const farmType = farmTypes.find(f => f.id === farm.type);
+                            if (farmType) {
+                                const efficiencyMultiplier = 1 - (minerData.upgrades.efficiency || 0) * 0.2;
+                                totalEnergyConsumption += farmType.energyCost * efficiencyMultiplier;
+                            }
+                        });
+                    }
                     
-                    minerData.energy = Math.max(0, minerData.energy - energyConsumption);
+                    // Потребляем энергию каждые 100мс
+                    const energyConsumption = totalEnergyConsumption / 600; // Потребление в минуту / 600
+                    minerData.energy = Math.max(0, (minerData.energy || 0) - energyConsumption);
                     
                     // Пересчитываем генерацию после потребления энергии
                     calculateGasPerMinute();
