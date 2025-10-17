@@ -3311,6 +3311,36 @@ async def buy_farm(request: Request):
         traceback.print_exc()
         return {"success": False, "error": "Failed to buy farm"}
 
+@app.post("/api/miner/save-state")
+async def save_miner_state(request: Request):
+    """Сохранить состояние майнера на сервере"""
+    try:
+        data = await request.json()
+        user_id = data.get("user_id")
+        miner_data = data.get("miner_data")
+        
+        print(f"💾 Сохранение состояния майнера: user_id={user_id}")
+        
+        if not user_id or not miner_data:
+            return {"success": False, "error": "Missing parameters"}
+        
+        # Получаем пользователя
+        user = await get_user_by_telegram_id(user_id)
+        if not user:
+            return {"success": False, "error": "User not found"}
+        
+        # Сохраняем данные майнера в БД
+        success = await update_user_miner_data(user_id, miner_data)
+        if not success:
+            return {"success": False, "error": "Failed to save miner data"}
+        
+        print(f"✅ Состояние майнера сохранено для пользователя {user_id}")
+        return {"success": True, "message": "Miner state saved successfully"}
+        
+    except Exception as e:
+        print(f"❌ Ошибка сохранения состояния майнера: {e}")
+        return {"success": False, "error": "Failed to save miner state"}
+
 @app.get("/api/miner/check-tables")
 async def check_miner_tables():
     """Проверить состояние таблиц майнера"""

@@ -4615,7 +4615,10 @@
 
         function loadFarms() {
             const container = document.getElementById('farmsGrid');
-            if (!container) return;
+            if (!container) {
+                console.error('❌ Контейнер farmsGrid не найден');
+                return;
+            }
             
             // Проверяем, что данные майнера загружены
             if (!minerData) {
@@ -4629,10 +4632,16 @@
                 console.log('📊 Инициализирован массив ферм');
             }
             
+            console.log('🔄 Загружаем фермы:', {
+                gas: minerData.ndnGas,
+                farms: minerData.farms.length,
+                level: gameData?.level || 1
+            });
+            
             container.innerHTML = farmTypes.map(farm => {
                 const farmCount = minerData.farms.filter(f => f.type === farm.id).length;
                 const canAfford = (minerData.ndnGas || 0) >= farm.baseCost;
-                const canUnlock = gameData.level >= farm.unlockLevel;
+                const canUnlock = (gameData?.level || 1) >= farm.unlockLevel;
                 
                 return `
                     <div class="farm-item ${!canUnlock ? 'locked' : ''}" data-farm-id="${farm.id}">
@@ -4729,6 +4738,9 @@
                     
                     // Сохраняем локально
                     saveMinerData();
+                    
+                    // Сохраняем на сервере
+                    await saveMinerDataToServer();
                     
                     // Пересчитываем общую генерацию
                     calculateGasPerMinute();
@@ -4920,11 +4932,11 @@
                         checkAchievements();
                     }
                     
-                    // Сохраняем на сервер каждые 30 секунд или при значительном изменении Gas
+                    // Сохраняем на сервер каждые 10 секунд или при значительном изменении Gas
                     const currentTime = Date.now();
                     const gasIncrease = (minerData.ndnGas || 0) - lastGasAmount;
                     
-                    if (currentTime - lastSaveTime > 30000 || gasIncrease > 100) {
+                    if (currentTime - lastSaveTime > 10000 || gasIncrease > 50) {
                         saveMinerDataToServer();
                         lastSaveTime = currentTime;
                         lastGasAmount = minerData.ndnGas || 0;
@@ -5625,7 +5637,7 @@
                 // Сначала сохраняем Gas на сервере с защитой от читерства
                 await saveGasToServer();
                 
-                // Затем сохраняем остальные данные
+                // Затем сохраняем полное состояние майнера
                 const response = await fetch('/api/miner/save-state', {
                     method: 'POST',
                     headers: {
