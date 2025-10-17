@@ -583,6 +583,162 @@
                 transform: scale(1);
             }
         }
+        
+        /* Стили для новых разделов */
+        .miner-boosts, .miner-special, .miner-quests {
+            margin-bottom: 20px;
+        }
+        
+        .boosts-grid, .special-miners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .boost-item, .special-miner-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .boost-item:hover, .special-miner-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+        }
+        
+        .boost-icon, .special-miner-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .boost-name, .special-miner-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        
+        .boost-description, .special-miner-description {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+        }
+        
+        .boost-cost, .special-miner-cost {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .boost-button, .special-miner-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .boost-button:hover, .special-miner-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .boost-button:disabled, .special-miner-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .ad-button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+        
+        .ad-button:hover {
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .quests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .quest-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .quest-item.completed {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.1));
+            border-color: rgba(76, 175, 80, 0.5);
+        }
+        
+        .quest-icon {
+            font-size: 24px;
+        }
+        
+        .quest-info {
+            flex: 1;
+        }
+        
+        .quest-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .quest-description {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+        }
+        
+        .quest-reward {
+            font-size: 11px;
+            color: #ffd700;
+        }
+        
+        .quest-progress {
+            font-size: 12px;
+            color: #4caf50;
+            font-weight: bold;
+        }
+        
+        .quest-button {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.3s ease;
+        }
+        
+        .quest-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .quest-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         .miner-stat-item {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
@@ -2989,6 +3145,30 @@
                 </div>
             </div>
 
+            <!-- Бусты -->
+            <div class="miner-boosts" style="display: none;">
+                <h3>💎 Бусты</h3>
+                <div class="boosts-grid" id="boostsGrid">
+                    <!-- Будет заполнено JavaScript -->
+                </div>
+            </div>
+
+            <!-- Особые майнеры -->
+            <div class="miner-special" style="display: none;">
+                <h3>🌟 Особые майнеры</h3>
+                <div class="special-miners-grid" id="specialMinersGrid">
+                    <!-- Будет заполнено JavaScript -->
+                </div>
+            </div>
+
+            <!-- Квесты -->
+            <div class="miner-quests" style="display: none;">
+                <h3>📋 Квесты</h3>
+                <div class="quests-list" id="questsList">
+                    <!-- Будет заполнено JavaScript -->
+                </div>
+            </div>
+
             <!-- Магазин -->
             <div class="miner-shop">
                 <h3 data-i18n="miner.shop.title">🛒 Магазин</h3>
@@ -3437,6 +3617,141 @@
         
         let activeEvents = [];
         let lastEventTime = parseInt(localStorage.getItem('miner_last_event_time') || '0');
+        
+        // Система уровней и престижа
+        let prestigeData = {
+            level: 1,
+            prestigePoints: 0,
+            totalPrestigePoints: 0,
+            prestigeMultiplier: 1.0,
+            prestigeUnlocked: false
+        };
+        
+        // Система квестов
+        const quests = [
+            {
+                id: 'first_miner',
+                name: 'Первый майнер',
+                description: 'Купите свой первый майнер',
+                icon: '🌱',
+                reward: { gas: 100, xp: 50 },
+                condition: (data) => data.farms && data.farms.length >= 1,
+                completed: false
+            },
+            {
+                id: 'gas_collector',
+                name: 'Собиратель',
+                description: 'Накопите 1000 Gas',
+                icon: '💰',
+                reward: { gas: 500, xp: 100 },
+                condition: (data) => data.totalGasEarned >= 1000,
+                completed: false
+            },
+            {
+                id: 'mining_tycoon',
+                name: 'Магнат',
+                description: 'Купите 5 ферм',
+                icon: '🏭',
+                reward: { gas: 1000, xp: 200 },
+                condition: (data) => data.farms && data.farms.length >= 5,
+                completed: false
+            },
+            {
+                id: 'energy_master',
+                name: 'Мастер энергии',
+                description: 'Пополните энергию 10 раз',
+                icon: '⚡',
+                reward: { gas: 800, xp: 150 },
+                condition: (data) => data.energyRefills >= 10,
+                completed: false
+            },
+            {
+                id: 'speed_demon',
+                name: 'Скоростной демон',
+                description: 'Достигните 100 Gas/мин',
+                icon: '🚀',
+                reward: { gas: 2000, xp: 300 },
+                condition: (data) => data.gasPerMinute >= 100,
+                completed: false
+            }
+        ];
+        
+        let completedQuests = JSON.parse(localStorage.getItem('miner_completed_quests') || '[]');
+        
+        // Система бустов
+        const boosts = [
+            {
+                id: 'double_gas',
+                name: 'Двойной Gas',
+                description: 'Удваивает генерацию Gas на 1 час',
+                icon: '💎',
+                duration: 60 * 60 * 1000, // 1 час
+                effect: 'gas_multiplier',
+                value: 2,
+                cost: 1000
+            },
+            {
+                id: 'energy_saver',
+                name: 'Энергосберегатель',
+                description: 'Снижает потребление энергии на 50% на 2 часа',
+                icon: '🔋',
+                duration: 2 * 60 * 60 * 1000, // 2 часа
+                effect: 'energy_efficiency',
+                value: 0.5,
+                cost: 1500
+            },
+            {
+                id: 'speed_boost',
+                name: 'Турбо-режим',
+                description: 'Увеличивает скорость майнинга в 3 раза на 30 минут',
+                icon: '⚡',
+                duration: 30 * 60 * 1000, // 30 минут
+                effect: 'mining_speed',
+                value: 3,
+                cost: 800
+            }
+        ];
+        
+        let activeBoosts = [];
+        
+        // Особые майнеры (только на сутки)
+        const specialMiners = [
+            {
+                id: 'quantum_miner',
+                name: 'Квантовый майнер',
+                description: 'Сверхмощный майнер на 24 часа',
+                icon: '🔮',
+                gasPerMinute: 1000,
+                energyCost: 50,
+                duration: 24 * 60 * 60 * 1000, // 24 часа
+                cost: 5000,
+                adRequired: true
+            },
+            {
+                id: 'time_warp_miner',
+                name: 'Машина времени',
+                description: 'Майнер из будущего на 24 часа',
+                icon: '⏰',
+                gasPerMinute: 2000,
+                energyCost: 100,
+                duration: 24 * 60 * 60 * 1000,
+                cost: 10000,
+                adRequired: true
+            },
+            {
+                id: 'galaxy_miner',
+                name: 'Галактический майнер',
+                description: 'Майнер с другой планеты на 24 часа',
+                icon: '🌌',
+                gasPerMinute: 5000,
+                energyCost: 200,
+                duration: 24 * 60 * 60 * 1000,
+                cost: 25000,
+                adRequired: true
+            }
+        ];
+        
+        let activeSpecialMiners = [];
         
         // Секретные достижения
         const secretAchievements = [
@@ -4356,7 +4671,10 @@
             console.log('🔄 Пересчитываем генерацию Gas...');
             console.log('Фермы:', minerData.farms);
             console.log('Улучшения:', minerData.upgrades);
+            console.log('Активные бусты:', activeBoosts);
+            console.log('Особые майнеры:', activeSpecialMiners);
             
+            // Обычные фермы
             minerData.farms.forEach(farm => {
                 const farmType = farmTypes.find(f => f.id === farm.type);
                 if (farmType) {
@@ -4369,6 +4687,38 @@
                     console.log(`Ферма ${farm.type}: ${farmType.baseGasPerMinute} * ${speedMultiplier} = ${farmType.baseGasPerMinute * speedMultiplier} Gas/мин`);
                 }
             });
+            
+            // Особые майнеры
+            activeSpecialMiners.forEach(miner => {
+                totalGas += miner.gasPerMinute;
+                totalEnergy += miner.energyCost;
+                console.log(`Особый майнер ${miner.name}: ${miner.gasPerMinute} Gas/мин`);
+            });
+            
+            // Применяем эффекты бустов
+            let boostMultiplier = 1;
+            activeBoosts.forEach(boost => {
+                switch (boost.effect) {
+                    case 'gas_multiplier':
+                        boostMultiplier *= boost.value;
+                        break;
+                    case 'mining_speed':
+                        boostMultiplier *= boost.value;
+                        break;
+                }
+            });
+            
+            totalGas *= boostMultiplier;
+            
+            // Применяем эффекты бустов к энергии
+            let energyMultiplier = 1;
+            activeBoosts.forEach(boost => {
+                if (boost.effect === 'energy_efficiency') {
+                    energyMultiplier *= boost.value;
+                }
+            });
+            
+            totalEnergy *= energyMultiplier;
             
             // Обновляем общую генерацию в минуту
             minerData.gasPerMinute = totalGas;
@@ -4659,6 +5009,146 @@
             }, 6000);
         }
         
+        // Функции для новых систем
+        function buyBoost(boostId) {
+            const boost = boosts.find(b => b.id === boostId);
+            if (!boost) return;
+            
+            if ((minerData.ndnGas || 0) < boost.cost) {
+                showNotification('Недостаточно Gas!', 'error');
+                return;
+            }
+            
+            minerData.ndnGas -= boost.cost;
+            activeBoosts.push({
+                ...boost,
+                startTime: Date.now(),
+                id: boostId + '_' + Date.now()
+            });
+            
+            // Удаляем буст через указанное время
+            setTimeout(() => {
+                removeBoost(boostId);
+            }, boost.duration);
+            
+            updateMinerUI();
+            loadBoosts();
+            showNotification(`Активирован буст: ${boost.name}!`, 'success');
+        }
+        
+        function removeBoost(boostId) {
+            const index = activeBoosts.findIndex(b => b.id.startsWith(boostId));
+            if (index !== -1) {
+                activeBoosts.splice(index, 1);
+                loadBoosts();
+                showNotification(`Буст ${boostId} завершен`, 'info');
+            }
+        }
+        
+        function buySpecialMiner(minerId) {
+            const miner = specialMiners.find(m => m.id === minerId);
+            if (!miner) return;
+            
+            if ((minerData.ndnGas || 0) < miner.cost) {
+                showNotification('Недостаточно Gas!', 'error');
+                return;
+            }
+            
+            // Показываем рекламу (заглушка)
+            showAdForSpecialMiner(miner);
+        }
+        
+        function showAdForSpecialMiner(miner) {
+            // Заглушка для рекламы Yandex Ads
+            const adModal = document.createElement('div');
+            adModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+            
+            adModal.innerHTML = `
+                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; max-width: 400px;">
+                    <h3>📺 Реклама</h3>
+                    <p>Смотрите рекламу для получения ${miner.name}</p>
+                    <div style="background: #f0f0f0; padding: 20px; margin: 10px 0; border-radius: 5px;">
+                        <p>Здесь будет реклама Yandex Ads</p>
+                        <p>⏱️ 5 секунд...</p>
+                    </div>
+                    <button onclick="completeAd('${miner.id}')" style="background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                        Получить майнер
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(adModal);
+        }
+        
+        function completeAd(minerId) {
+            const miner = specialMiners.find(m => m.id === minerId);
+            if (!miner) return;
+            
+            // Убираем модальное окно
+            document.querySelector('div[style*="position: fixed"]').remove();
+            
+            // Списываем Gas
+            minerData.ndnGas -= miner.cost;
+            
+            // Добавляем особый майнер
+            activeSpecialMiners.push({
+                ...miner,
+                startTime: Date.now(),
+                id: minerId + '_' + Date.now()
+            });
+            
+            // Удаляем майнер через 24 часа
+            setTimeout(() => {
+                removeSpecialMiner(minerId);
+            }, miner.duration);
+            
+            updateMinerUI();
+            loadSpecialMiners();
+            showNotification(`Получен особый майнер: ${miner.name}!`, 'success');
+        }
+        
+        function removeSpecialMiner(minerId) {
+            const index = activeSpecialMiners.findIndex(m => m.id.startsWith(minerId));
+            if (index !== -1) {
+                activeSpecialMiners.splice(index, 1);
+                loadSpecialMiners();
+                showNotification(`Особый майнер ${minerId} завершен`, 'info');
+            }
+        }
+        
+        function completeQuest(questId) {
+            const quest = quests.find(q => q.id === questId);
+            if (!quest) return;
+            
+            if (!quest.condition(minerData)) {
+                showNotification('Квест еще не выполнен!', 'error');
+                return;
+            }
+            
+            // Добавляем награду
+            minerData.ndnGas += quest.reward.gas;
+            minerData.totalGasEarned += quest.reward.gas;
+            
+            // Отмечаем квест как выполненный
+            completedQuests.push(questId);
+            localStorage.setItem('miner_completed_quests', JSON.stringify(completedQuests));
+            
+            updateMinerUI();
+            loadQuests();
+            showNotification(`Квест выполнен: ${quest.name}! +${quest.reward.gas} Gas`, 'success');
+        }
+        
         // Добавляем анимации для достижений
         const style = document.createElement('style');
         style.textContent = `
@@ -4792,7 +5282,123 @@
             // Загружаем улучшения
             loadUpgrades(category);
         }
+        
+        // Функция переключения между разделами майнера
+        function switchMinerTab(tabName) {
+            // Скрываем все разделы
+            document.querySelectorAll('.miner-farms, .miner-upgrades, .miner-boosts, .miner-special, .miner-quests, .miner-shop, .miner-leaderboard').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Показываем выбранный раздел
+            switch(tabName) {
+                case 'farms':
+                    document.querySelector('.miner-farms').style.display = 'block';
+                    loadFarms();
+                    break;
+                case 'upgrades':
+                    document.querySelector('.miner-upgrades').style.display = 'block';
+                    loadUpgrades('speed');
+                    break;
+                case 'boosts':
+                    document.querySelector('.miner-boosts').style.display = 'block';
+                    loadBoosts();
+                    break;
+                case 'special':
+                    document.querySelector('.miner-special').style.display = 'block';
+                    loadSpecialMiners();
+                    break;
+                case 'quests':
+                    document.querySelector('.miner-quests').style.display = 'block';
+                    loadQuests();
+                    break;
+                case 'shop':
+                    document.querySelector('.miner-shop').style.display = 'block';
+                    loadShop();
+                    break;
+                case 'leaderboard':
+                    document.querySelector('.miner-leaderboard').style.display = 'block';
+                    loadLeaderboard();
+                    break;
+            }
+        }
 
+        // Функции для новых разделов
+        function loadBoosts() {
+            const container = document.getElementById('boostsGrid');
+            if (!container) return;
+            
+            container.innerHTML = boosts.map(boost => {
+                const canAfford = (minerData.ndnGas || 0) >= boost.cost;
+                const isActive = activeBoosts.some(b => b.id === boost.id);
+                
+                return `
+                    <div class="boost-item">
+                        <div class="boost-icon">${boost.icon}</div>
+                        <div class="boost-name">${boost.name}</div>
+                        <div class="boost-description">${boost.description}</div>
+                        <div class="boost-cost">${boost.cost} Gas</div>
+                        <button class="boost-button ${!canAfford ? 'disabled' : ''}" 
+                                ${canAfford && !isActive ? `onclick="buyBoost('${boost.id}')"` : ''}
+                                ${isActive ? 'disabled' : ''}>
+                            ${isActive ? 'Активен' : canAfford ? 'Активировать' : 'Недостаточно Gas'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function loadSpecialMiners() {
+            const container = document.getElementById('specialMinersGrid');
+            if (!container) return;
+            
+            container.innerHTML = specialMiners.map(miner => {
+                const canAfford = (minerData.ndnGas || 0) >= miner.cost;
+                const isActive = activeSpecialMiners.some(m => m.id === miner.id);
+                
+                return `
+                    <div class="special-miner-item">
+                        <div class="special-miner-icon">${miner.icon}</div>
+                        <div class="special-miner-name">${miner.name}</div>
+                        <div class="special-miner-description">${miner.description}</div>
+                        <div class="special-miner-cost">${miner.cost} Gas</div>
+                        <button class="special-miner-button ad-button ${!canAfford ? 'disabled' : ''}" 
+                                ${canAfford && !isActive ? `onclick="buySpecialMiner('${miner.id}')"` : ''}
+                                ${isActive ? 'disabled' : ''}>
+                            ${isActive ? 'Активен' : canAfford ? 'Смотреть рекламу' : 'Недостаточно Gas'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function loadQuests() {
+            const container = document.getElementById('questsList');
+            if (!container) return;
+            
+            container.innerHTML = quests.map(quest => {
+                const isCompleted = completedQuests.includes(quest.id);
+                const canComplete = quest.condition(minerData) && !isCompleted;
+                
+                return `
+                    <div class="quest-item ${isCompleted ? 'completed' : ''}">
+                        <div class="quest-icon">${quest.icon}</div>
+                        <div class="quest-info">
+                            <div class="quest-name">${quest.name}</div>
+                            <div class="quest-description">${quest.description}</div>
+                            <div class="quest-reward">Награда: +${quest.reward.gas} Gas, +${quest.reward.xp} XP</div>
+                            ${!isCompleted ? `<div class="quest-progress">${quest.condition(minerData) ? 'Готово!' : 'В процессе...'}</div>` : ''}
+                        </div>
+                        <button class="quest-button" 
+                                ${canComplete ? `onclick="completeQuest('${quest.id}')"` : ''}
+                                ${!canComplete ? 'disabled' : ''}>
+                            ${isCompleted ? 'Выполнено' : canComplete ? 'Получить награду' : 'В процессе'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
         function loadShop() {
             const container = document.getElementById('shopItems');
             if (!container) return;

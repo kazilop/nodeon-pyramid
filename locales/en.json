@@ -266,6 +266,35 @@
       "refilled": "Energy fully restored!",
       "next_event": "Next event",
       "cooldown": "Next refill in:"
+    },
+    "tabs": {
+      "farms": "Farms",
+      "upgrades": "Upgrades",
+      "boosts": "Boosts",
+      "special": "Special",
+      "quests": "Quests",
+      "shop": "Shop",
+      "leaderboard": "Leaderboard"
+    },
+    "boosts": {
+      "title": "Boosts",
+      "activate": "Activate",
+      "active": "Active",
+      "not_enough_gas": "Not enough Gas"
+    },
+    "special": {
+      "title": "Special Miners",
+      "watch_ad": "Watch Ad",
+      "active": "Active",
+      "not_enough_gas": "Not enough Gas"
+    },
+    "quests": {
+      "title": "Quests",
+      "reward": "Reward",
+      "complete": "Get Reward",
+      "completed": "Completed",
+      "in_progress": "In Progress"
+    }
     }
   }
 }

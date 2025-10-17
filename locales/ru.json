@@ -354,6 +354,35 @@
       "refilled": "Энергия полностью восстановлена!",
       "next_event": "След. событие",
       "cooldown": "Следующее пополнение через:"
+    },
+    "tabs": {
+      "farms": "Фермы",
+      "upgrades": "Улучшения",
+      "boosts": "Бусты",
+      "special": "Особые",
+      "quests": "Квесты",
+      "shop": "Магазин",
+      "leaderboard": "Рейтинг"
+    },
+    "boosts": {
+      "title": "Бусты",
+      "activate": "Активировать",
+      "active": "Активен",
+      "not_enough_gas": "Недостаточно Gas"
+    },
+    "special": {
+      "title": "Особые майнеры",
+      "watch_ad": "Смотреть рекламу",
+      "active": "Активен",
+      "not_enough_gas": "Недостаточно Gas"
+    },
+    "quests": {
+      "title": "Квесты",
+      "reward": "Награда",
+      "complete": "Получить награду",
+      "completed": "Выполнено",
+      "in_progress": "В процессе"
+    }
     }
   }
 }
