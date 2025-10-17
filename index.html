@@ -491,6 +491,92 @@
             gap: 15px;
             margin-bottom: 20px;
         }
+        
+        /* Анимации для смешных уведомлений */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        .funny-notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .funny-icon {
+            font-size: 24px;
+            animation: bounce 1s infinite;
+        }
+        
+        .funny-text {
+            flex: 1;
+        }
+        
+        .funny-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .funny-description {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+        
+        .funny-message {
+            font-size: 11px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-5px);
+            }
+            60% {
+                transform: translateY(-3px);
+            }
+        }
+        
+        /* Анимация для ферм при покупке */
+        .farm-item.purchased {
+            animation: purchasePulse 0.6s ease-out;
+        }
+        
+        @keyframes purchasePulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
 
         .miner-stat-item {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
@@ -3287,6 +3373,104 @@
         // NDN Miner данные - инициализируем пустыми, загрузим с сервера
         let minerData = {};
         
+        // Смешные события и бонусы
+        const funnyEvents = [
+            {
+                id: 'cat_on_keyboard',
+                name: 'Кот на клавиатуре!',
+                description: 'Ваш кот случайно нажал на кнопку "Турбо-режим"!',
+                icon: '🐱',
+                effect: 'speed_boost',
+                duration: 30000, // 30 секунд
+                message: 'Майнеры работают в 2 раза быстрее!'
+            },
+            {
+                id: 'coffee_spill',
+                name: 'Пролитый кофе',
+                description: 'Кофе попал на сервер, но почему-то улучшил производительность!',
+                icon: '☕',
+                effect: 'efficiency_boost',
+                duration: 45000, // 45 секунд
+                message: 'Потребление энергии снижено на 50%!'
+            },
+            {
+                id: 'bitcoin_halving',
+                name: 'Bitcoin Halving',
+                description: 'Случайно произошел халвинг Bitcoin, все майнеры стали работать лучше!',
+                icon: '₿',
+                effect: 'all_boost',
+                duration: 60000, // 1 минута
+                message: 'Все майнеры работают в 3 раза эффективнее!'
+            },
+            {
+                id: 'alien_tech',
+                name: 'Инопланетная технология',
+                description: 'Пришельцы поделились своими технологиями!',
+                icon: '👽',
+                effect: 'free_gas',
+                duration: 0,
+                message: 'Получено 1000 Gas от инопланетян!'
+            },
+            {
+                id: 'miner_strike',
+                name: 'Забастовка майнеров',
+                description: 'Майнеры объявили забастовку и требуют больше энергии!',
+                icon: '✊',
+                effect: 'energy_drain',
+                duration: 20000, // 20 секунд
+                message: 'Майнеры не работают, но потребляют энергию!'
+            }
+        ];
+        
+        let activeEvents = [];
+        let lastEventTime = 0;
+        
+        // Секретные достижения
+        const secretAchievements = [
+            {
+                id: 'first_farm',
+                name: 'Первый шаг',
+                description: 'Купили первую ферму!',
+                icon: '🌱',
+                condition: (data) => data.farms && data.farms.length >= 1,
+                reward: 50
+            },
+            {
+                id: 'gas_collector',
+                name: 'Собиратель Gas',
+                description: 'Накопили 1000 Gas!',
+                icon: '💰',
+                condition: (data) => data.totalGasEarned >= 1000,
+                reward: 100
+            },
+            {
+                id: 'mining_tycoon',
+                name: 'Магнат майнинга',
+                description: 'Купили 10 ферм!',
+                icon: '🏭',
+                condition: (data) => data.farms && data.farms.length >= 10,
+                reward: 500
+            },
+            {
+                id: 'energy_master',
+                name: 'Мастер энергии',
+                description: 'Пополнили энергию 5 раз!',
+                icon: '⚡',
+                condition: (data) => data.energyRefills >= 5,
+                reward: 200
+            },
+            {
+                id: 'lucky_strike',
+                name: 'Удачливый удар',
+                description: 'Получили 3 случайных события подряд!',
+                icon: '🍀',
+                condition: (data) => data.consecutiveEvents >= 3,
+                reward: 300
+            }
+        ];
+        
+        let unlockedAchievements = JSON.parse(localStorage.getItem('miner_achievements') || '[]');
+        
         // Данные майнера будут загружены с сервера в initializeMinerData()
 
         // Фермы майнинга
@@ -3985,7 +4169,7 @@
                 const canUnlock = gameData.level >= farm.unlockLevel;
                 
                 return `
-                    <div class="farm-item ${!canUnlock ? 'locked' : ''}">
+                    <div class="farm-item ${!canUnlock ? 'locked' : ''}" data-farm-id="${farm.id}">
                         <div class="farm-icon">${farm.icon}</div>
                         <div class="farm-name" data-i18n="miner.farms.${farm.id}">${farm.name}</div>
                         <div class="farm-description" data-i18n="miner.farms.${farm.id}_desc">${farm.description}</div>
@@ -4053,13 +4237,38 @@
                     updateMinerUI();
                     loadFarms();
                     
+                    // Проверяем достижения
+                    checkAchievements();
+                    
                     // Автоматически запускаем майнинг если есть энергия
                     if ((minerData.energy || 0) > 0 && (minerData.gasPerMinute || 0) > 0) {
                         startMiningLoop();
                         console.log('🚀 Майнинг автоматически запущен после покупки фермы!');
                     }
                     
-                    showNotification(`Куплена ферма: ${farm.name}!`, 'success');
+                    // Показываем забавное сообщение
+                    const funnyMessages = [
+                        `🎉 Куплена ферма: ${farm.name}! Теперь у вас есть ${farm.icon}`,
+                        `💪 ${farm.name} готов к работе! ${farm.icon} будет добывать Gas!`,
+                        `🚀 Новая ферма ${farm.name} запущена! ${farm.icon} работает на полную мощность!`,
+                        `⚡ ${farm.name} подключен к сети! ${farm.icon} начинает майнинг!`,
+                        `🔥 Ферма ${farm.name} активирована! ${farm.icon} готов к добыче!`,
+                        `💎 ${farm.name} установлен! ${farm.icon} будет приносить прибыль!`,
+                        `🎯 Ферма ${farm.name} готова! ${farm.icon} начинает работу!`,
+                        `🌟 ${farm.name} запущен! ${farm.icon} добывает Gas!`
+                    ];
+                    
+                    const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+                    showNotification(randomMessage, 'success');
+                    
+                    // Добавляем анимацию к купленной ферме
+                    const farmElement = document.querySelector(`[data-farm-id="${farmId}"]`);
+                    if (farmElement) {
+                        farmElement.classList.add('purchased');
+                        setTimeout(() => {
+                            farmElement.classList.remove('purchased');
+                        }, 600);
+                    }
                 } else {
                     showNotification(`Ошибка: ${result.error}`, 'error');
                 }
@@ -4125,9 +4334,16 @@
             console.log('Начальная генерация:', minerData.gasPerMinute, 'Gas/мин');
             
             setInterval(() => {
+                // Проверяем случайные события
+                checkRandomEvents();
+                
                 if (minerData.gasPerMinute > 0) {
                     // Зарабатываем Gas каждые 100мс (10 раз в секунду)
-                    const gasEarned = minerData.gasPerMinute / 600; // Gas/мин / 600 = Gas за 100мс
+                    let gasEarned = minerData.gasPerMinute / 600; // Gas/мин / 600 = Gas за 100мс
+                    
+                    // Применяем активные события
+                    gasEarned = applyEventEffects(gasEarned);
+                    
                     minerData.ndnGas = (minerData.ndnGas || 0) + gasEarned;
                     minerData.totalGasEarned = (minerData.totalGasEarned || 0) + gasEarned;
                     
@@ -4143,6 +4359,9 @@
                         });
                     }
                     
+                    // Применяем эффекты событий к потреблению энергии
+                    totalEnergyConsumption = applyEnergyEffects(totalEnergyConsumption);
+                    
                     // Потребляем энергию каждые 100мс
                     const energyConsumption = totalEnergyConsumption / 600; // Потребление в минуту / 600
                     minerData.energy = Math.max(0, (minerData.energy || 0) - energyConsumption);
@@ -4152,6 +4371,11 @@
                     
                     updateMinerUI();
                     
+                    // Проверяем достижения каждые 5 секунд
+                    if (Date.now() % 5000 < 100) {
+                        checkAchievements();
+                    }
+                    
                     // Сохраняем на сервер каждые 30 секунд
                     if (Date.now() % 30000 < 100) {
                         saveMinerDataToServer();
@@ -4160,6 +4384,280 @@
             }, 100);
         }
 
+        // Функции для случайных событий
+        function checkRandomEvents() {
+            const now = Date.now();
+            
+            // Проверяем, прошло ли достаточно времени с последнего события (2-5 минут)
+            if (now - lastEventTime < 120000) return; // Минимум 2 минуты
+            
+            // 5% шанс на событие каждые 100мс
+            if (Math.random() < 0.0005) {
+                triggerRandomEvent();
+                lastEventTime = now;
+            }
+        }
+        
+        function triggerRandomEvent() {
+            const event = funnyEvents[Math.floor(Math.random() * funnyEvents.length)];
+            
+            console.log('🎉 Случайное событие:', event.name);
+            
+            // Добавляем событие в активные
+            const eventData = {
+                ...event,
+                startTime: Date.now(),
+                id: event.id + '_' + Date.now()
+            };
+            
+            activeEvents.push(eventData);
+            
+            // Показываем уведомление
+            showFunnyNotification(event);
+            
+            // Применяем мгновенные эффекты
+            if (event.effect === 'free_gas') {
+                minerData.ndnGas = (minerData.ndnGas || 0) + 1000;
+                minerData.totalGasEarned = (minerData.totalGasEarned || 0) + 1000;
+                updateMinerUI();
+            }
+            
+            // Удаляем событие через указанное время
+            if (event.duration > 0) {
+                setTimeout(() => {
+                    removeEvent(eventData.id);
+                }, event.duration);
+            }
+        }
+        
+        function applyEventEffects(gasEarned) {
+            let multiplier = 1;
+            
+            activeEvents.forEach(event => {
+                switch (event.effect) {
+                    case 'speed_boost':
+                        multiplier *= 2;
+                        break;
+                    case 'all_boost':
+                        multiplier *= 3;
+                        break;
+                    case 'energy_drain':
+                        // При забастовке майнеры не работают
+                        multiplier *= 0;
+                        break;
+                }
+            });
+            
+            return gasEarned * multiplier;
+        }
+        
+        function applyEnergyEffects(energyConsumption) {
+            let multiplier = 1;
+            
+            activeEvents.forEach(event => {
+                switch (event.effect) {
+                    case 'efficiency_boost':
+                        multiplier *= 0.5;
+                        break;
+                    case 'energy_drain':
+                        // При забастовке потребляют энергию, но не работают
+                        multiplier *= 1.5;
+                        break;
+                }
+            });
+            
+            return energyConsumption * multiplier;
+        }
+        
+        function removeEvent(eventId) {
+            const eventIndex = activeEvents.findIndex(e => e.id === eventId);
+            if (eventIndex !== -1) {
+                const event = activeEvents[eventIndex];
+                activeEvents.splice(eventIndex, 1);
+                console.log('⏰ Событие завершено:', event.name);
+            }
+        }
+        
+        function showFunnyNotification(event) {
+            const notification = document.createElement('div');
+            notification.className = 'funny-notification';
+            notification.innerHTML = `
+                <div class="funny-notification-content">
+                    <div class="funny-icon">${event.icon}</div>
+                    <div class="funny-text">
+                        <div class="funny-title">${event.name}</div>
+                        <div class="funny-description">${event.description}</div>
+                        <div class="funny-message">${event.message}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Добавляем стили
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 15px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideInRight 0.5s ease-out;
+                max-width: 300px;
+                font-family: Arial, sans-serif;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Удаляем через 5 секунд
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.5s ease-in';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 500);
+            }, 5000);
+        }
+        
+        // Функции для достижений
+        function checkAchievements() {
+            if (!minerData || Object.keys(minerData).length === 0) return;
+            
+            secretAchievements.forEach(achievement => {
+                if (!unlockedAchievements.includes(achievement.id) && achievement.condition(minerData)) {
+                    unlockAchievement(achievement);
+                }
+            });
+        }
+        
+        function unlockAchievement(achievement) {
+            unlockedAchievements.push(achievement.id);
+            localStorage.setItem('miner_achievements', JSON.stringify(unlockedAchievements));
+            
+            // Добавляем награду
+            minerData.ndnGas = (minerData.ndnGas || 0) + achievement.reward;
+            minerData.totalGasEarned = (minerData.totalGasEarned || 0) + achievement.reward;
+            
+            // Показываем уведомление о достижении
+            showAchievementNotification(achievement);
+            
+            console.log('🏆 Достижение разблокировано:', achievement.name);
+        }
+        
+        function showAchievementNotification(achievement) {
+            const notification = document.createElement('div');
+            notification.className = 'achievement-notification';
+            notification.innerHTML = `
+                <div class="achievement-content">
+                    <div class="achievement-icon">${achievement.icon}</div>
+                    <div class="achievement-text">
+                        <div class="achievement-title">🏆 ДОСТИЖЕНИЕ!</div>
+                        <div class="achievement-name">${achievement.name}</div>
+                        <div class="achievement-description">${achievement.description}</div>
+                        <div class="achievement-reward">+${achievement.reward} Gas!</div>
+                    </div>
+                </div>
+            `;
+            
+            // Добавляем стили
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+                color: #333;
+                padding: 15px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+                z-index: 10001;
+                animation: slideInLeft 0.5s ease-out;
+                max-width: 300px;
+                font-family: Arial, sans-serif;
+                border: 2px solid #ffd700;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Удаляем через 6 секунд
+            setTimeout(() => {
+                notification.style.animation = 'slideOutLeft 0.5s ease-in';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 500);
+            }, 6000);
+        }
+        
+        // Добавляем анимации для достижений
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInLeft {
+                from {
+                    transform: translateX(-100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOutLeft {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(-100%);
+                    opacity: 0;
+                }
+            }
+            
+            .achievement-content {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .achievement-icon {
+                font-size: 24px;
+                animation: bounce 1s infinite;
+            }
+            
+            .achievement-text {
+                flex: 1;
+            }
+            
+            .achievement-title {
+                font-weight: bold;
+                font-size: 12px;
+                color: #b8860b;
+                margin-bottom: 2px;
+            }
+            
+            .achievement-name {
+                font-weight: bold;
+                font-size: 14px;
+                margin-bottom: 4px;
+            }
+            
+            .achievement-description {
+                font-size: 12px;
+                opacity: 0.8;
+                margin-bottom: 4px;
+            }
+            
+            .achievement-reward {
+                font-size: 11px;
+                font-weight: bold;
+                color: #228b22;
+            }
+        `;
+        document.head.appendChild(style);
+        
         function loadUpgrades(category) {
             const container = document.getElementById('upgradesContent');
             if (!container) return;
