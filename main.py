@@ -3114,15 +3114,25 @@ async def get_miner_data(user_id: int):
         else:
             print(f"📊 Загружены данные майнинга для пользователя {user_id}")
         
-        # Рассчитываем оффлайн заработок
+        # Рассчитываем оффлайн заработок с защитой от читерства
         current_time = int(time.time() * 1000)
         last_update = miner_data.get("last_update", current_time)
         time_diff = current_time - last_update
+        
+        # Защита от читерства: проверяем разумность времени
+        max_reasonable_time = 7 * 24 * 60 * 60 * 1000  # 7 дней в миллисекундах
+        if time_diff > max_reasonable_time:
+            print(f"⚠️ Подозрительное время для пользователя {user_id}: {time_diff/1000/60/60:.1f} часов")
+            time_diff = max_reasonable_time
+            last_update = current_time - time_diff
         
         # Если прошло больше 1 секунды, рассчитываем заработок
         if time_diff > 1000:
             offline_earnings = calculate_offline_earnings(miner_data, time_diff)
             if offline_earnings > 0:
+                # Обновляем Gas на сервере
+                miner_data["ndnGas"] = miner_data.get("ndnGas", 100) + offline_earnings
+                miner_data["totalGasEarned"] = miner_data.get("totalGasEarned", 100) + offline_earnings
                 print(f"💰 Оффлайн заработок для пользователя {user_id}: {offline_earnings} Gas за {time_diff/1000:.1f} секунд")
         
         # Обновляем время последнего обновления
@@ -3266,6 +3276,52 @@ async def buy_farm(request: Request):
     except Exception as e:
         print(f"Error buying farm: {e}")
         return {"success": False, "error": "Failed to buy farm"}
+
+@app.post("/api/miner/save-gas")
+async def save_miner_gas(request: Request):
+    """Сохранить Gas майнера на сервере"""
+    try:
+        data = await request.json()
+        user_id = data.get("user_id")
+        gas_amount = data.get("gas_amount")
+        total_gas_earned = data.get("total_gas_earned")
+        last_update = data.get("last_update")
+        
+        if not user_id or gas_amount is None:
+            return {"success": False, "error": "Missing parameters"}
+        
+        # Получаем пользователя
+        user = await get_user_by_telegram_id(user_id)
+        if not user:
+            return {"success": False, "error": "User not found"}
+        
+        # Получаем текущие данные майнера
+        miner_data = await get_miner_data_from_db(user_id)
+        if not miner_data:
+            return {"success": False, "error": "Miner data not found"}
+        
+        # Валидация: проверяем, что Gas не увеличился подозрительно
+        current_gas = miner_data.get("ndnGas", 100)
+        if gas_amount > current_gas + 10000:  # Максимум +10000 Gas за раз
+            print(f"⚠️ Подозрительное увеличение Gas для пользователя {user_id}: {current_gas} -> {gas_amount}")
+            return {"success": False, "error": "Suspicious gas increase detected"}
+        
+        # Обновляем данные
+        miner_data["ndnGas"] = gas_amount
+        miner_data["totalGasEarned"] = total_gas_earned or gas_amount
+        miner_data["last_update"] = last_update or int(time.time() * 1000)
+        
+        # Сохраняем в БД
+        success = await update_user_miner_data(user_id, miner_data)
+        if not success:
+            return {"success": False, "error": "Failed to save data"}
+        
+        print(f"✅ Gas сохранен для пользователя {user_id}: {gas_amount}")
+        return {"success": True, "message": "Gas saved successfully"}
+        
+    except Exception as e:
+        print(f"Error saving miner gas: {e}")
+        return {"success": False, "error": "Failed to save gas"}
 
 @app.post("/api/miner/buy-premium-farm")
 async def buy_premium_farm(request: Request):

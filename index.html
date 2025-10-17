@@ -4314,6 +4314,20 @@
                 return;
             }
             
+            // Валидация времени: проверяем, что время системы не было изменено
+            const currentTime = Date.now();
+            const lastKnownTime = parseInt(localStorage.getItem('last_known_time') || currentTime.toString());
+            const timeDiff = Math.abs(currentTime - lastKnownTime);
+            
+            // Если разница больше 1 часа, подозреваем читерство
+            if (timeDiff > 60 * 60 * 1000) {
+                console.warn('⚠️ Подозрительное изменение времени системы');
+                showNotification('Обнаружено изменение времени системы. Данные могут быть сброшены.', 'warning');
+            }
+            
+            // Сохраняем текущее время
+            localStorage.setItem('last_known_time', currentTime.toString());
+            
             try {
                 // Получаем данные с сервера (приоритет серверных данных)
                 const response = await fetch(`/api/miner/data/${userData.telegram_id}`);
@@ -4748,6 +4762,9 @@
             console.log('🚀 Запускаем цикл майнинга...');
             console.log('Начальная генерация:', minerData.gasPerMinute, 'Gas/мин');
             
+            let lastSaveTime = Date.now();
+            let lastGasAmount = minerData.ndnGas || 100;
+            
             setInterval(() => {
                 // Проверяем случайные события
                 checkRandomEvents();
@@ -4791,9 +4808,14 @@
                         checkAchievements();
                     }
                     
-                    // Сохраняем на сервер каждые 30 секунд
-                    if (Date.now() % 30000 < 100) {
+                    // Сохраняем на сервер каждые 30 секунд или при значительном изменении Gas
+                    const currentTime = Date.now();
+                    const gasIncrease = (minerData.ndnGas || 0) - lastGasAmount;
+                    
+                    if (currentTime - lastSaveTime > 30000 || gasIncrease > 100) {
                         saveMinerDataToServer();
+                        lastSaveTime = currentTime;
+                        lastGasAmount = minerData.ndnGas || 0;
                     }
                 }
             }, 100);
@@ -5488,6 +5510,10 @@
 
         async function saveMinerDataToServer() {
             try {
+                // Сначала сохраняем Gas на сервере с защитой от читерства
+                await saveGasToServer();
+                
+                // Затем сохраняем остальные данные
                 const response = await fetch('/api/miner/save-state', {
                     method: 'POST',
                     headers: {
@@ -5507,6 +5533,41 @@
                 }
             } catch (error) {
                 console.error('❌ Ошибка подключения к серверу для сохранения:', error);
+            }
+        }
+        
+        async function saveGasToServer() {
+            if (!userData || !userData.telegram_id) return;
+            
+            const currentTime = Date.now();
+            
+            try {
+                const response = await fetch('/api/miner/save-gas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userData.telegram_id,
+                        gas_amount: minerData.ndnGas || 100,
+                        total_gas_earned: minerData.totalGasEarned || 100,
+                        last_update: currentTime
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    console.log('✅ Gas сохранен на сервере');
+                } else {
+                    console.error('❌ Ошибка сохранения Gas:', result.error);
+                    // Если сервер отклонил данные, загружаем актуальные с сервера
+                    if (result.error.includes('Suspicious')) {
+                        showNotification('Обнаружено подозрительное поведение. Данные сброшены.', 'error');
+                        await initializeMinerData();
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка сохранения Gas:', error);
             }
         }
 
