@@ -3947,13 +3947,13 @@
 
         function loadDailyRewards() {
             const rewards = [
-                { day: 1, icon: '💰', amount: 10, claimed: false },
-                { day: 2, icon: '💎', amount: 20, claimed: false },
-                { day: 3, icon: '⭐', amount: 30, claimed: false },
-                { day: 4, icon: '🎁', amount: 50, claimed: false },
-                { day: 5, icon: '💎', amount: 75, claimed: false },
-                { day: 6, icon: '⭐', amount: 100, claimed: false },
-                { day: 7, icon: '🏆', amount: 200, claimed: false }
+                { day: 1, icon: '💰', amount: 5, claimed: false },
+                { day: 2, icon: '💎', amount: 15, claimed: false },
+                { day: 3, icon: '⭐', amount: 25, claimed: false },
+                { day: 4, icon: '🎁', amount: 45, claimed: false },
+                { day: 5, icon: '💎', amount: 70, claimed: false },
+                { day: 6, icon: '⭐', amount: 95, claimed: false },
+                { day: 7, icon: '🏆', amount: 195, claimed: false }
             ];
 
             const container = document.getElementById('dailyRewards');
@@ -4032,7 +4032,7 @@
             } catch (error) {
                 console.error('Error claiming daily reward:', error);
                 // Fallback - добавляем награду локально
-                const rewards = { 1: 10, 2: 20, 3: 30, 4: 50, 5: 75, 6: 100, 7: 200 };
+                const rewards = { 1: 5, 2: 15, 3: 25, 4: 45, 5: 70, 6: 95, 7: 195 };
                 const rewardAmount = rewards[day] || 0;
                 
                 gameData.dailyRewards.push(day);

@@ -2995,24 +2995,39 @@ async def claim_daily_reward(request: Request):
         user_id = data.get("user_id")
         day = data.get("day")
         
+        print(f"🎁 Получение ежедневной награды: user_id={user_id}, day={day}")
+        
         if not user_id or not day:
             raise HTTPException(status_code=400, detail="Missing user_id or day")
         
-        # В реальном приложении здесь будет логика проверки и выдачи награды
+        # Обновленные значения наград (уменьшены на 5)
         rewards = {
-            1: 10, 2: 20, 3: 30, 4: 50, 5: 75, 6: 100, 7: 200
+            1: 5, 2: 15, 3: 25, 4: 45, 5: 70, 6: 95, 7: 195
         }
         
         reward_amount = rewards.get(day, 0)
+        
+        # Получаем пользователя по ID
+        user = await get_user_by_id(user_id)
+        if not user:
+            print(f"❌ Пользователь не найден: {user_id}")
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Обновляем баланс пользователя в БД
+        new_balance = user['balance_ndn'] + reward_amount
+        await update_user_balance(user_id, new_balance)
+        
+        print(f"✅ Награда выдана: {reward_amount} NDN, новый баланс: {new_balance}")
         
         return {
             "success": True,
             "message": f"Получена награда: {reward_amount} NDN",
             "reward_amount": reward_amount,
-            "day": day
+            "day": day,
+            "new_balance": new_balance
         }
     except Exception as e:
-        print(f"Error claiming daily reward: {e}")
+        print(f"❌ Ошибка получения ежедневной награды: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @app.post("/api/game/update-achievement")
@@ -3698,17 +3713,30 @@ async def get_miner_user_stats(user_id: int):
         print(f"Error getting user stats: {e}")
         return {"success": False, "error": "Failed to get user stats"}
 
+async def get_user_by_id(user_id: int):
+    """Получить пользователя по ID"""
+    try:
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_users?id=eq.{user_id}&select=*"
+        headers = {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": f"Bearer {SUPABASE_ANON_KEY}"
+        }
+        
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            users = response.json()
+            if users:
+                return users[0]
+        return None
+    except Exception as e:
+        print(f"Error getting user by ID: {e}")
+        return None
+
 async def update_user_balance(user_id: int, new_balance: float):
     """Обновить баланс пользователя в БД"""
     try:
-        # Получаем пользователя по telegram_id, чтобы найти его ID в БД
-        user = await get_user_by_telegram_id(user_id)
-        if not user:
-            print(f"User with telegram_id {user_id} not found")
-            return False
-        
         # Обновляем баланс по ID пользователя в БД
-        url = f"{SUPABASE_URL}/rest/v1/nodeon_users?id=eq.{user['id']}"
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_users?id=eq.{user_id}"
         headers = {
             "apikey": SUPABASE_ANON_KEY,
             "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
@@ -3723,10 +3751,10 @@ async def update_user_balance(user_id: int, new_balance: float):
         response = requests.patch(url, headers=headers, json=update_data)
         
         if response.status_code in [200, 204]:
-            print(f"Updated balance for user {user_id} (DB ID: {user['id']}): {new_balance}")
+            print(f"✅ Обновлен баланс пользователя {user_id}: {new_balance}")
             return True
         else:
-            print(f"Error updating balance: {response.status_code} - {response.text}")
+            print(f"❌ Ошибка обновления баланса: {response.status_code} - {response.text}")
             return False
             
     except Exception as e:
