@@ -3114,10 +3114,15 @@ async def get_achievements(user_id: int):
 async def get_miner_data(user_id: int):
     """Получить данные майнера пользователя с расчетом оффлайн заработка"""
     try:
+        print(f"🔍 Запрос данных майнера для user_id: {user_id}")
+        
         # Получаем пользователя из БД
         user = await get_user_by_telegram_id(user_id)
         if not user:
+            print(f"❌ Пользователь с telegram_id {user_id} не найден")
             return {"success": False, "error": "User not found"}
+        
+        print(f"✅ Пользователь найден: {user['id']} (telegram_id: {user['telegram_id']})")
         
         # Получаем данные майнинга из таблицы nodeon_miner_data
         miner_data = await get_miner_data_from_db(user_id)
@@ -3511,14 +3516,18 @@ async def save_miner_state(request: Request):
         print(f"Error saving miner state: {e}")
         return {"success": False, "error": "Failed to save miner state"}
 
-async def get_miner_data_from_db(user_id: int) -> dict:
+async def get_miner_data_from_db(telegram_id: int) -> dict:
     """Получить данные майнера из БД"""
     try:
+        print(f"🔍 Поиск данных майнера для telegram_id: {telegram_id}")
+        
         # Получаем пользователя по telegram_id, чтобы найти его ID в БД
-        user = await get_user_by_telegram_id(user_id)
+        user = await get_user_by_telegram_id(telegram_id)
         if not user:
-            print(f"User with telegram_id {user_id} not found")
+            print(f"❌ Пользователь с telegram_id {telegram_id} не найден")
             return None
+        
+        print(f"✅ Пользователь найден в БД: ID={user['id']}, telegram_id={user['telegram_id']}")
         
         url = f"{SUPABASE_URL}/rest/v1/nodeon_miner_data?user_id=eq.{user['id']}&select=*"
         headers = {
@@ -3528,15 +3537,27 @@ async def get_miner_data_from_db(user_id: int) -> dict:
         }
         
         response = requests.get(url, headers=headers)
+        print(f"📡 Запрос к БД: {url}")
+        print(f"📊 Статус ответа: {response.status_code}")
         
         if response.status_code == 200:
             data = response.json()
+            print(f"📋 Получено записей: {len(data) if data else 0}")
             if data and len(data) > 0:
                 miner_record = data[0]
+                print(f"📄 Запись майнера: {miner_record}")
                 # Парсим JSON данные майнера
                 if miner_record.get("miner_data"):
                     import json
-                    return json.loads(miner_record["miner_data"])
+                    parsed_data = json.loads(miner_record["miner_data"])
+                    print(f"✅ Данные майнера успешно загружены: {parsed_data}")
+                    return parsed_data
+                else:
+                    print("⚠️ Поле miner_data пустое")
+            else:
+                print("⚠️ Записи майнера не найдены")
+        else:
+            print(f"❌ Ошибка запроса к БД: {response.status_code} - {response.text}")
         return None
     except Exception as e:
         print(f"Error getting miner data from DB: {e}")
@@ -3760,6 +3781,25 @@ async def get_user_by_id(user_id: int):
         return None
     except Exception as e:
         print(f"Error getting user by ID: {e}")
+        return None
+
+async def get_user_by_telegram_id(telegram_id: int):
+    """Получить пользователя по telegram_id"""
+    try:
+        url = f"{SUPABASE_URL}/rest/v1/nodeon_users?telegram_id=eq.{telegram_id}&select=*"
+        headers = {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": f"Bearer {SUPABASE_ANON_KEY}"
+        }
+        
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            users = response.json()
+            if users:
+                return users[0]
+        return None
+    except Exception as e:
+        print(f"Error getting user by telegram_id: {e}")
         return None
 
 async def update_user_balance(user_id: int, new_balance: float):

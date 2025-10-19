@@ -5740,6 +5740,7 @@
             
             try {
                 // Загружаем свежие данные с сервера
+                console.log(`📡 Запрос данных майнера для telegram_id: ${userData.telegram_id}`);
                 const response = await fetch(`/api/miner/data/${userData.telegram_id}?t=${Date.now()}`, {
                     method: 'GET',
                     headers: {
@@ -5749,7 +5750,9 @@
                     }
                 });
                 
+                console.log(`📊 Статус ответа: ${response.status}`);
                 const result = await response.json();
+                console.log(`📋 Результат запроса:`, result);
                 if (result.success && result.miner_data) {
                     // Обновляем данные, но не сбрасываем полностью
                     minerData = { ...minerData, ...result.miner_data };
