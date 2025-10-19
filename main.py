@@ -3586,6 +3586,7 @@ async def create_initial_miner_data(user_id: int) -> dict:
             },
             "totalGasEarned": 100.0,
             "lastEnergyRefill": current_time,
+            "energyRefillCooldown": 3 * 60 * 60 * 1000,  # 3 часа в миллисекундах
             "lastUpdate": current_time
         }
         

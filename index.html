@@ -4554,6 +4554,7 @@
             startEnergyRefillTimer();
             
             // Обновляем кнопку пополнения энергии
+            console.log('🔋 Обновляем кнопку энергии, minerData:', minerData);
             updateEnergyRefillButton();
             
             console.log('📊 Данные майнера загружены:', minerData);
@@ -5820,10 +5821,21 @@
 
         // Система пополнения энергии
         function refillEnergy() {
-            const now = Date.now();
-            const timeSinceLastRefill = now - minerData.lastEnergyRefill;
+            console.log('⚡ Попытка пополнения энергии');
+            console.log('🔋 Данные энергии:', {
+                energy: minerData.energy,
+                maxEnergy: minerData.maxEnergy,
+                lastEnergyRefill: minerData.lastEnergyRefill,
+                energyRefillCooldown: minerData.energyRefillCooldown
+            });
             
-            if (timeSinceLastRefill >= minerData.energyRefillCooldown) {
+            const now = Date.now();
+            const timeSinceLastRefill = now - (minerData.lastEnergyRefill || now);
+            
+            console.log('⏰ Время с последнего пополнения:', timeSinceLastRefill, 'мс');
+            console.log('⏰ Кулдаун:', minerData.energyRefillCooldown, 'мс');
+            
+            if (timeSinceLastRefill >= (minerData.energyRefillCooldown || 3 * 60 * 60 * 1000)) {
                 // Можно пополнить энергию
                 minerData.energy = minerData.maxEnergy;
                 minerData.lastEnergyRefill = now;
@@ -5843,10 +5855,17 @@
                 
                 showNotification('⚡ Энергия полностью восстановлена!', 'success');
             } else {
-                const remainingTime = minerData.energyRefillCooldown - timeSinceLastRefill;
+                const remainingTime = (minerData.energyRefillCooldown || 3 * 60 * 60 * 1000) - timeSinceLastRefill;
                 const hours = Math.floor(remainingTime / (1000 * 60 * 60));
                 const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                
+                console.log('⏰ Пополнение недоступно, осталось времени:', {
+                    remainingTime,
+                    hours,
+                    minutes,
+                    seconds
+                });
                 
                 showNotification(`⏰ Следующее пополнение через: ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`, 'warning');
             }
@@ -5857,11 +5876,30 @@
             const info = document.getElementById('energyRefillInfo');
             const nextRefillTime = document.getElementById('nextRefillTime');
             
-            if (!button || !info || !nextRefillTime) return;
+            console.log('🔋 Обновление кнопки энергии:', {
+                button: !!button,
+                info: !!info,
+                nextRefillTime: !!nextRefillTime,
+                minerData: minerData,
+                lastEnergyRefill: minerData?.lastEnergyRefill,
+                energyRefillCooldown: minerData?.energyRefillCooldown
+            });
+            
+            if (!button || !info || !nextRefillTime) {
+                console.error('❌ Элементы кнопки энергии не найдены');
+                return;
+            }
             
             const now = Date.now();
+            
+            // Инициализируем lastEnergyRefill если его нет
+            if (!minerData.lastEnergyRefill) {
+                minerData.lastEnergyRefill = now;
+                console.log('🔋 Инициализирован lastEnergyRefill:', now);
+            }
+            
             const timeSinceLastRefill = now - minerData.lastEnergyRefill;
-            const remainingTime = minerData.energyRefillCooldown - timeSinceLastRefill;
+            const remainingTime = (minerData.energyRefillCooldown || 3 * 60 * 60 * 1000) - timeSinceLastRefill;
             
             if (remainingTime <= 0) {
                 button.disabled = false;
