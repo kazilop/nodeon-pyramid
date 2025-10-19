@@ -268,7 +268,10 @@
     },
     "sync": {
         "button": "Synchronize",
-      "cooldown": "Next refill in:"
+        "waiting": "Synchronizing...",
+        "success": "Data synchronized with server",
+        "error": "Synchronization error",
+        "cooldown": "Next refill in:"
     },
     "tabs": {
       "farms": "Farms",

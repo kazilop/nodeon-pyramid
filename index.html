@@ -810,6 +810,17 @@
             transform: translateY(0);
         }
 
+        .sync-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .sync-button:disabled:hover {
+            transform: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
         .energy-refill-button {
             background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             color: white;
@@ -3933,6 +3944,17 @@
                 console.log('🔄 Переключаемся на вкладку майнера...');
                 setTimeout(() => {
                     initializeMinerData();
+                    
+                    // Проверяем, что кнопка синхронизации видна
+                    setTimeout(() => {
+                        const syncButton = document.querySelector('.sync-button');
+                        console.log('🔘 Кнопка синхронизации после перехода:', syncButton);
+                        if (syncButton) {
+                            console.log('✅ Кнопка синхронизации найдена и готова к использованию');
+                        } else {
+                            console.error('❌ Кнопка синхронизации не найдена после перехода на вкладку майнера!');
+                        }
+                    }, 500);
                 }, 100);
             }
         }
@@ -5697,10 +5719,23 @@
         
         async function forceSyncMinerData() {
             console.log('🔄 Принудительная синхронизация данных майнера...');
+            console.log('👤 Данные пользователя:', userData);
             
             if (!userData || !userData.telegram_id) {
                 console.error('❌ Данные пользователя не загружены');
+                showNotification('Данные пользователя не загружены', 'error');
                 return;
+            }
+            
+            // Блокируем кнопку и показываем индикатор загрузки
+            const syncButton = document.querySelector('.sync-button');
+            console.log('🔘 Кнопка синхронизации найдена:', syncButton);
+            if (syncButton) {
+                syncButton.disabled = true;
+                syncButton.innerHTML = '⏳ <span data-i18n="miner.sync.waiting">Синхронизация...</span>';
+                console.log('🔒 Кнопка заблокирована');
+            } else {
+                console.error('❌ Кнопка синхронизации не найдена!');
             }
             
             try {
@@ -5731,6 +5766,12 @@
             } catch (error) {
                 console.error('❌ Ошибка принудительной синхронизации:', error);
                 showNotification('Ошибка синхронизации', 'error');
+            } finally {
+                // Восстанавливаем кнопку
+                if (syncButton) {
+                    syncButton.disabled = false;
+                    syncButton.innerHTML = '🔄 <span data-i18n="miner.sync.button">Синхронизировать</span>';
+                }
             }
         }
 
