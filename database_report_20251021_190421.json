@@ -1,0 +1,237 @@
+{
+  "timestamp": "2025-10-21T19:04:21.808450",
+  "supabase_url": "https://ahxwpzgltlzlvrtrbanm.supabase.co",
+  "results": {
+    "nodeon_users": {
+      "exists": true,
+      "message": "Таблица существует",
+      "stats": {
+        "exists": true,
+        "count": 5,
+        "sample_data": [
+          {
+            "id": 5,
+            "telegram_id": 207940967,
+            "username": "NobodyYety",
+            "first_name": "Fish",
+            "last_name": "",
+            "balance_ndn": 9345.0,
+            "balance_stars": 0.0,
+            "total_stars_earned": 0.0,
+            "total_stars_spent": 0.0,
+            "is_pro": true,
+            "referral_link": "ref_5",
+            "inviter_id": null,
+            "referral_path": "5",
+            "referral_level": 0,
+            "is_active": true,
+            "created_at": "2025-10-10T12:51:37.24637+00:00",
+            "updated_at": "2025-10-10T12:51:37.24637+00:00",
+            "user_status": "developer"
+          },
+          {
+            "id": 7,
+            "telegram_id": 2111833109,
+            "username": "teplo_vizor_sergey",
+            "first_name": "Ser",
+            "last_name": "",
+            "balance_ndn": 100.0,
+            "balance_stars": 0.0,
+            "total_stars_earned": 0.0,
+            "total_stars_spent": 0.0,
+            "is_pro": true,
+            "referral_link": null,
+            "inviter_id": 5,
+            "referral_path": "5,7",
+            "referral_level": 1,
+            "is_active": true,
+            "created_at": "2025-10-11T10:07:51.594911+00:00",
+            "updated_at": "2025-10-11T10:07:51.594911+00:00",
+            "user_status": "user"
+          },
+          {
+            "id": 17,
+            "telegram_id": 348777122,
+            "username": "Oleg_Cherkalin",
+            "first_name": "Oleg",
+            "last_name": "Cherkalin",
+            "balance_ndn": 100.0,
+            "balance_stars": 0.0,
+            "total_stars_earned": 0.0,
+            "total_stars_spent": 0.0,
+            "is_pro": true,
+            "referral_link": "",
+            "inviter_id": 5,
+            "referral_path": "5,17",
+            "referral_level": 1,
+            "is_active": true,
+            "created_at": "2025-10-13T15:27:44.318813+00:00",
+            "updated_at": "2025-10-13T15:27:44.318813+00:00",
+            "user_status": "user"
+          }
+        ]
+      }
+    },
+    "nodeon_transactions": {
+      "exists": true,
+      "message": "Таблица существует",
+      "stats": {
+        "exists": true,
+        "count": 5,
+        "sample_data": [
+          {
+            "id": 2,
+            "user_id": 5,
+            "type": "buy_ndn",
+            "amount_ndn": 1.0,
+            "amount_stars": 1.0,
+            "stars_amount": 0.0,
+            "stars_balance_after": 0.0,
+            "description": "Покупка 1 NDN за 1 Telegram Stars (ID: stxLT--fe95F2FgEwToG3UkPcC7KA9CLiBQafY9a_eldqQ4GT7FothnHS8P2-aLOcxNBAukVieJfdWieBsq43zo80z0FI9jjC6Q4N6VBkGDO6xNC1kP6qeH3KQ2Nxnu2Ajz)",
+            "referral_level": null,
+            "created_at": "2025-10-10T20:22:43.5914+00:00"
+          },
+          {
+            "id": 3,
+            "user_id": 5,
+            "type": "exchange_request",
+            "amount_ndn": -1.0,
+            "amount_stars": 1.0,
+            "stars_amount": 0.0,
+            "stars_balance_after": 0.0,
+            "description": "❌ Отклонено: 1.0 NDN → Stars (отклонено Fish)",
+            "referral_level": null,
+            "created_at": "2025-10-10T20:46:46.92285+00:00"
+          },
+          {
+            "id": 5,
+            "user_id": 5,
+            "type": "transfer_out",
+            "amount_ndn": -500.0,
+            "amount_stars": 0.0,
+            "stars_amount": 0.0,
+            "stars_balance_after": 0.0,
+            "description": "Перевод игроку Ser (ID: 7)",
+            "referral_level": null,
+            "created_at": "2025-10-11T11:57:04.395329+00:00"
+          }
+        ]
+      }
+    },
+    "nodeon_referral_stats": {
+      "exists": true,
+      "message": "Таблица существует",
+      "stats": {
+        "exists": true,
+        "count": 5,
+        "sample_data": [
+          {
+            "id": 8,
+            "user_id": 3,
+            "level": 1,
+            "total_referrals": 0,
+            "total_earnings": 0.0,
+            "updated_at": "2025-10-05T11:43:50.132185+00:00"
+          },
+          {
+            "id": 9,
+            "user_id": 3,
+            "level": 2,
+            "total_referrals": 0,
+            "total_earnings": 0.0,
+            "updated_at": "2025-10-05T11:43:50.818378+00:00"
+          },
+          {
+            "id": 10,
+            "user_id": 3,
+            "level": 3,
+            "total_referrals": 0,
+            "total_earnings": 0.0,
+            "updated_at": "2025-10-05T11:43:51.08705+00:00"
+          }
+        ]
+      }
+    },
+    "nodeon_miner_data": {
+      "exists": true,
+      "message": "Таблица существует",
+      "stats": {
+        "exists": true,
+        "count": 1,
+        "sample_data": [
+          {
+            "id": 1,
+            "user_id": 5,
+            "miner_data": "{\"ndnGas\": 2207.4225333333325, \"energy\": 0, \"maxEnergy\": 100, \"gasPerMinute\": 0, \"farms\": [{\"type\": \"cpu_miner\", \"level\": 1, \"purchased_at\": 1760868438231}, {\"type\": \"cpu_miner\", \"level\": 1, \"purchased_at\": 1760868440764}, {\"type\": \"cpu_miner\", \"level\": 1, \"purchased_at\": 1760868483679}, {\"type\": \"cpu_miner\", \"level\": 1, \"purchased_at\": 1760891032874}, {\"type\": \"cpu_miner\", \"level\": 1, \"purchased_at\": 1760891046920}], \"upgrades\": {\"speed\": 0, \"efficiency\": 0, \"automation\": 0}, \"totalGasEarned\": 2407.4225333333297, \"lastEnergyRefill\": 1760868431171, \"lastUpdate\": 1760868431171, \"last_update\": 1760891055288}",
+            "last_update": 1760891055288,
+            "created_at": "2025-10-19T10:07:11.328493+00:00",
+            "updated_at": "2025-10-19T10:07:11.328493+00:00"
+          }
+        ]
+      }
+    },
+    "nodeon_miner_stats": {
+      "exists": true,
+      "message": "Таблица существует",
+      "stats": {
+        "exists": true,
+        "count": 1,
+        "sample_data": [
+          {
+            "id": 1,
+            "user_id": 5,
+            "level": 1,
+            "total_gas_earned": 0.0,
+            "total_farms": 0,
+            "total_upgrades": 0,
+            "last_update": 1760868432845,
+            "created_at": "2025-10-19T10:07:13.001567+00:00",
+            "updated_at": "2025-10-19T10:07:13.001567+00:00"
+          }
+        ]
+      }
+    },
+    "nodeon_miner_farms": {
+      "exists": true,
+      "message": "Таблица существует",
+      "stats": {
+        "exists": true,
+        "count": 0,
+        "sample_data": []
+      }
+    },
+    "nodeon_miner_upgrades": {
+      "exists": true,
+      "message": "Таблица существует",
+      "stats": {
+        "exists": true,
+        "count": 0,
+        "sample_data": []
+      }
+    },
+    "nodeon_miner_transactions": {
+      "exists": true,
+      "message": "Таблица существует",
+      "stats": {
+        "exists": true,
+        "count": 0,
+        "sample_data": []
+      }
+    },
+    "nodeon_achievements": {
+      "exists": false,
+      "message": "Таблица не найдена",
+      "stats": null
+    },
+    "nodeon_shops": {
+      "exists": false,
+      "message": "Таблица не найдена",
+      "stats": null
+    }
+  },
+  "summary": {
+    "total_tables": 10,
+    "existing_tables": 8,
+    "missing_tables": 2
+  }
+}

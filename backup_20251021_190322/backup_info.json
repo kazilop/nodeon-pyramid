@@ -1,0 +1,19 @@
+{
+  "backup_date": "2025-10-21T19:03:37.936436",
+  "supabase_url": "https://ahxwpzgltlzlvrtrbanm.supabase.co",
+  "tables": {
+    "nodeon_users": true,
+    "nodeon_transactions": true,
+    "nodeon_referral_stats": true,
+    "nodeon_miner_data": true,
+    "nodeon_miner_stats": true,
+    "nodeon_miner_farms": true,
+    "nodeon_miner_upgrades": true,
+    "nodeon_miner_transactions": true,
+    "nodeon_achievements": false,
+    "nodeon_shops": false
+  },
+  "total_tables": 10,
+  "successful_backups": 8,
+  "failed_backups": 2
+}

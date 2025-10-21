@@ -1,0 +1,15 @@
+{
+  "table_name": "nodeon_miner_stats",
+  "backup_date": "2025-10-21T19:03:28.346420",
+  "sample_record": {
+    "id": 1,
+    "user_id": 5,
+    "level": 1,
+    "total_gas_earned": 0.0,
+    "total_farms": 0,
+    "total_upgrades": 0,
+    "last_update": 1760868432845,
+    "created_at": "2025-10-19T10:07:13.001567+00:00",
+    "updated_at": "2025-10-19T10:07:13.001567+00:00"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "table_name": "nodeon_referral_stats",
+  "backup_date": "2025-10-21T19:03:26.323164",
+  "sample_record": {
+    "id": 8,
+    "user_id": 3,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-05T11:43:50.132185+00:00"
+  }
+}

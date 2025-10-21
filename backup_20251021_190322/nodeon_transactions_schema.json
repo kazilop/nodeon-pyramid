@@ -1,0 +1,16 @@
+{
+  "table_name": "nodeon_transactions",
+  "backup_date": "2025-10-21T19:03:25.321843",
+  "sample_record": {
+    "id": 2,
+    "user_id": 5,
+    "type": "buy_ndn",
+    "amount_ndn": 1.0,
+    "amount_stars": 1.0,
+    "stars_amount": 0.0,
+    "stars_balance_after": 0.0,
+    "description": "Покупка 1 NDN за 1 Telegram Stars (ID: stxLT--fe95F2FgEwToG3UkPcC7KA9CLiBQafY9a_eldqQ4GT7FothnHS8P2-aLOcxNBAukVieJfdWieBsq43zo80z0FI9jjC6Q4N6VBkGDO6xNC1kP6qeH3KQ2Nxnu2Ajz)",
+    "referral_level": null,
+    "created_at": "2025-10-10T20:22:43.5914+00:00"
+  }
+}

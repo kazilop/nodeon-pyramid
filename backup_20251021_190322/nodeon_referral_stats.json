@@ -1,0 +1,618 @@
+[
+  {
+    "id": 8,
+    "user_id": 3,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-05T11:43:50.132185+00:00"
+  },
+  {
+    "id": 9,
+    "user_id": 3,
+    "level": 2,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-05T11:43:50.818378+00:00"
+  },
+  {
+    "id": 10,
+    "user_id": 3,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-05T11:43:51.08705+00:00"
+  },
+  {
+    "id": 11,
+    "user_id": 3,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-05T11:43:51.313446+00:00"
+  },
+  {
+    "id": 12,
+    "user_id": 3,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-05T11:43:51.568261+00:00"
+  },
+  {
+    "id": 13,
+    "user_id": 3,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-05T11:43:51.830825+00:00"
+  },
+  {
+    "id": 14,
+    "user_id": 3,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-05T11:43:52.094726+00:00"
+  },
+  {
+    "id": 15,
+    "user_id": 4,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-06T15:53:04.22159+00:00"
+  },
+  {
+    "id": 17,
+    "user_id": 4,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-06T15:53:05.731163+00:00"
+  },
+  {
+    "id": 18,
+    "user_id": 4,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-06T15:53:06.071604+00:00"
+  },
+  {
+    "id": 19,
+    "user_id": 4,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-06T15:53:06.393534+00:00"
+  },
+  {
+    "id": 20,
+    "user_id": 4,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-06T15:53:06.705351+00:00"
+  },
+  {
+    "id": 21,
+    "user_id": 4,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-06T15:53:07.052154+00:00"
+  },
+  {
+    "id": 36,
+    "user_id": 7,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T10:07:52.428015+00:00"
+  },
+  {
+    "id": 37,
+    "user_id": 7,
+    "level": 2,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T10:07:53.167063+00:00"
+  },
+  {
+    "id": 38,
+    "user_id": 7,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T10:07:53.86261+00:00"
+  },
+  {
+    "id": 39,
+    "user_id": 7,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T10:07:54.170557+00:00"
+  },
+  {
+    "id": 40,
+    "user_id": 7,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T10:07:54.466548+00:00"
+  },
+  {
+    "id": 41,
+    "user_id": 7,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T10:07:54.772391+00:00"
+  },
+  {
+    "id": 42,
+    "user_id": 7,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T10:07:55.50037+00:00"
+  },
+  {
+    "id": 43,
+    "user_id": 14,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T11:00:19.871495+00:00"
+  },
+  {
+    "id": 45,
+    "user_id": 14,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T11:00:20.790733+00:00"
+  },
+  {
+    "id": 46,
+    "user_id": 14,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T11:00:21.4194+00:00"
+  },
+  {
+    "id": 47,
+    "user_id": 14,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T11:00:21.701841+00:00"
+  },
+  {
+    "id": 48,
+    "user_id": 14,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T11:00:21.971602+00:00"
+  },
+  {
+    "id": 49,
+    "user_id": 14,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T11:00:22.233195+00:00"
+  },
+  {
+    "id": 24,
+    "user_id": 5,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-10T12:51:39.0428+00:00"
+  },
+  {
+    "id": 25,
+    "user_id": 5,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-10T12:51:39.360877+00:00"
+  },
+  {
+    "id": 26,
+    "user_id": 5,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-10T12:51:39.65767+00:00"
+  },
+  {
+    "id": 27,
+    "user_id": 5,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-10T12:51:39.972278+00:00"
+  },
+  {
+    "id": 28,
+    "user_id": 5,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-10T12:51:40.267513+00:00"
+  },
+  {
+    "id": 44,
+    "user_id": 14,
+    "level": 2,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-11T11:00:20.136468+00:00"
+  },
+  {
+    "id": 50,
+    "user_id": 15,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-12T14:22:51.205008+00:00"
+  },
+  {
+    "id": 51,
+    "user_id": 15,
+    "level": 2,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-12T14:22:51.556807+00:00"
+  },
+  {
+    "id": 52,
+    "user_id": 15,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-12T14:22:51.846518+00:00"
+  },
+  {
+    "id": 53,
+    "user_id": 15,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-12T14:22:52.144119+00:00"
+  },
+  {
+    "id": 54,
+    "user_id": 15,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-12T14:22:52.440582+00:00"
+  },
+  {
+    "id": 55,
+    "user_id": 15,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-12T14:22:52.745152+00:00"
+  },
+  {
+    "id": 56,
+    "user_id": 15,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-12T14:22:53.085127+00:00"
+  },
+  {
+    "id": 57,
+    "user_id": 16,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T00:14:31.354296+00:00"
+  },
+  {
+    "id": 58,
+    "user_id": 16,
+    "level": 2,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T00:14:31.688525+00:00"
+  },
+  {
+    "id": 59,
+    "user_id": 16,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T00:14:32.005816+00:00"
+  },
+  {
+    "id": 60,
+    "user_id": 16,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T00:14:32.264214+00:00"
+  },
+  {
+    "id": 61,
+    "user_id": 16,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T00:14:32.568273+00:00"
+  },
+  {
+    "id": 62,
+    "user_id": 16,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T00:14:32.854326+00:00"
+  },
+  {
+    "id": 63,
+    "user_id": 16,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T00:14:33.139869+00:00"
+  },
+  {
+    "id": 22,
+    "user_id": 5,
+    "level": 1,
+    "total_referrals": 4,
+    "total_earnings": 800.0,
+    "updated_at": "2025-10-10T12:51:37.964196+00:00"
+  },
+  {
+    "id": 16,
+    "user_id": 4,
+    "level": 2,
+    "total_referrals": 1,
+    "total_earnings": 150.0,
+    "updated_at": "2025-10-06T15:53:05.001489+00:00"
+  },
+  {
+    "id": 64,
+    "user_id": 17,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T15:27:44.671244+00:00"
+  },
+  {
+    "id": 65,
+    "user_id": 17,
+    "level": 2,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T15:27:44.994869+00:00"
+  },
+  {
+    "id": 66,
+    "user_id": 17,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T15:27:45.316846+00:00"
+  },
+  {
+    "id": 67,
+    "user_id": 17,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T15:27:46.01328+00:00"
+  },
+  {
+    "id": 68,
+    "user_id": 17,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T15:27:46.323423+00:00"
+  },
+  {
+    "id": 69,
+    "user_id": 17,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T15:27:46.613698+00:00"
+  },
+  {
+    "id": 70,
+    "user_id": 17,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-13T15:27:47.254289+00:00"
+  },
+  {
+    "id": 23,
+    "user_id": 5,
+    "level": 2,
+    "total_referrals": 1,
+    "total_earnings": 150.0,
+    "updated_at": "2025-10-10T12:51:38.711546+00:00"
+  },
+  {
+    "id": 71,
+    "user_id": 18,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-14T22:01:13.431832+00:00"
+  },
+  {
+    "id": 72,
+    "user_id": 18,
+    "level": 2,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-14T22:01:13.736863+00:00"
+  },
+  {
+    "id": 73,
+    "user_id": 18,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-14T22:01:14.055016+00:00"
+  },
+  {
+    "id": 74,
+    "user_id": 18,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-14T22:01:14.948396+00:00"
+  },
+  {
+    "id": 75,
+    "user_id": 18,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-14T22:01:15.334178+00:00"
+  },
+  {
+    "id": 76,
+    "user_id": 18,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-14T22:01:16.0171+00:00"
+  },
+  {
+    "id": 77,
+    "user_id": 18,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-14T22:01:16.292624+00:00"
+  },
+  {
+    "id": 78,
+    "user_id": 19,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T16:15:50.111218+00:00"
+  },
+  {
+    "id": 79,
+    "user_id": 19,
+    "level": 2,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T16:15:50.481106+00:00"
+  },
+  {
+    "id": 80,
+    "user_id": 19,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T16:15:50.745035+00:00"
+  },
+  {
+    "id": 81,
+    "user_id": 19,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T16:15:50.995585+00:00"
+  },
+  {
+    "id": 82,
+    "user_id": 19,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T16:15:51.251872+00:00"
+  },
+  {
+    "id": 83,
+    "user_id": 19,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T16:15:51.974289+00:00"
+  },
+  {
+    "id": 84,
+    "user_id": 19,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T16:15:52.239412+00:00"
+  },
+  {
+    "id": 85,
+    "user_id": 20,
+    "level": 1,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T18:20:24.782191+00:00"
+  },
+  {
+    "id": 86,
+    "user_id": 20,
+    "level": 2,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T18:20:25.099653+00:00"
+  },
+  {
+    "id": 87,
+    "user_id": 20,
+    "level": 3,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T18:20:25.394293+00:00"
+  },
+  {
+    "id": 88,
+    "user_id": 20,
+    "level": 4,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T18:20:25.679264+00:00"
+  },
+  {
+    "id": 89,
+    "user_id": 20,
+    "level": 5,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T18:20:25.97999+00:00"
+  },
+  {
+    "id": 90,
+    "user_id": 20,
+    "level": 6,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T18:20:26.767097+00:00"
+  },
+  {
+    "id": 91,
+    "user_id": 20,
+    "level": 7,
+    "total_referrals": 0,
+    "total_earnings": 0.0,
+    "updated_at": "2025-10-16T18:20:27.458935+00:00"
+  }
+]

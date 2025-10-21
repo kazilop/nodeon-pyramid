@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "user_id": 5,
+    "miner_data": "{\"ndnGas\": 2207.4225333333325, \"energy\": 0, \"maxEnergy\": 100, \"gasPerMinute\": 0, \"farms\": [{\"type\": \"cpu_miner\", \"level\": 1, \"purchased_at\": 1760868438231}, {\"type\": \"cpu_miner\", \"level\": 1, \"purchased_at\": 1760868440764}, {\"type\": \"cpu_miner\", \"level\": 1, \"purchased_at\": 1760868483679}, {\"type\": \"cpu_miner\", \"level\": 1, \"purchased_at\": 1760891032874}, {\"type\": \"cpu_miner\", \"level\": 1, \"purchased_at\": 1760891046920}], \"upgrades\": {\"speed\": 0, \"efficiency\": 0, \"automation\": 0}, \"totalGasEarned\": 2407.4225333333297, \"lastEnergyRefill\": 1760868431171, \"lastUpdate\": 1760868431171, \"last_update\": 1760891055288}",
+    "last_update": 1760891055288,
+    "created_at": "2025-10-19T10:07:11.328493+00:00",
+    "updated_at": "2025-10-19T10:07:11.328493+00:00"
+  }
+]
