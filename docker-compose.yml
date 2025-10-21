@@ -1,48 +1,22 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: nodeon_db
-      POSTGRES_USER: nodeon_user
-      POSTGRES_PASSWORD: nodeon_password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-
-  backend:
-    build: ./backend
+  app:
+    build: .
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://nodeon_user:nodeon_password@postgres:5432/nodeon_db
-      - REDIS_URL=redis://redis:6379
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-      - TELEGRAM_WEBHOOK_URL=${TELEGRAM_WEBHOOK_URL}
+      - DEVELOPER_TELEGRAM_ID=${DEVELOPER_TELEGRAM_ID}
       - SECRET_KEY=${SECRET_KEY}
-    depends_on:
-      - postgres
-      - redis
     volumes:
-      - ./backend:/app
-
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    environment:
-      - REACT_APP_API_URL=http://localhost:8000
-      - REACT_APP_TELEGRAM_BOT_USERNAME=${TELEGRAM_BOT_USERNAME}
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-
-volumes:
-  postgres_data:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
