@@ -120,3 +120,16 @@ restore-db: ## Восстановить базу данных из бэкапа
 check-db: ## Проверить состояние базы данных
 	@echo "$(YELLOW)Проверка состояния базы данных...$(NC)"
 	$(PYTHON) check_database.py
+
+# Команды для Netlify
+deploy-netlify: ## Деплой на Netlify
+	@echo "$(YELLOW)Деплой на Netlify...$(NC)"
+	powershell -ExecutionPolicy Bypass -File deploy_netlify.ps1
+
+netlify-login: ## Авторизация в Netlify
+	@echo "$(YELLOW)Авторизация в Netlify...$(NC)"
+	netlify login
+
+netlify-status: ## Статус Netlify
+	@echo "$(YELLOW)Статус Netlify...$(NC)"
+	netlify status
