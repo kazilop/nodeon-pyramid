@@ -1,0 +1,152 @@
+🔧 ИСПРАВЛЕНИЕ: Зацикливание редиректа в Nginx
+============================================
+
+❌ ПРОБЛЕМА:
+Ошибка: "rewrite or internal redirection cycle while internally redirecting to "/index.html""
+
+✅ ПРИЧИНА:
+Неправильная конфигурация try_files в Nginx создает бесконечный цикл редиректов
+
+🔧 РЕШЕНИЕ:
+
+1. ПОДКЛЮЧЕНИЕ К СЕРВЕРУ:
+   ssh root@147.45.110.220
+
+2. СОЗДАНИЕ ИСПРАВЛЕННОЙ КОНФИГУРАЦИИ NGINX:
+   cat > /etc/nginx/sites-available/nodeon << 'EOF'
+   server {
+       listen 443 ssl;
+       server_name sistemypro.ru www.sistemypro.ru;
+       
+       ssl_certificate /etc/letsencrypt/live/sistemypro.ru/fullchain.pem;
+       ssl_certificate_key /etc/letsencrypt/live/sistemypro.ru/privkey.pem;
+       include /etc/letsencrypt/options-ssl-nginx.conf;
+       ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+       
+       root /root/nodeon/public;
+       index index.html;
+       
+       # Serve static files directly
+       location / {
+           try_files $uri $uri/ @fallback;
+       }
+       
+       # Fallback to index.html for SPA routing
+       location @fallback {
+           try_files /index.html =404;
+       }
+       
+       # API routes - proxy to Node.js
+       location /api/ {
+           proxy_pass http://localhost:3000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+           proxy_set_header X-Forwarded-Host $host;
+           proxy_set_header X-Forwarded-Port $server_port;
+       }
+       
+       # Health check - proxy to Node.js
+       location /health {
+           proxy_pass http://localhost:3000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+
+   server {
+       listen 80;
+       server_name sistemypro.ru www.sistemypro.ru;
+       return 301 https://$host$request_uri;
+   }
+   EOF
+
+3. ПРОВЕРКА КОНФИГУРАЦИИ:
+   nginx -t
+
+4. ПЕРЕЗАПУСК NGINX:
+   systemctl restart nginx
+
+5. ПРОВЕРКА СТАТУСА:
+   systemctl status nginx
+
+6. ТЕСТИРОВАНИЕ:
+   curl -I https://sistemypro.ru/
+   curl -I https://sistemypro.ru/api/health
+
+🔍 АЛЬТЕРНАТИВНОЕ РЕШЕНИЕ (если первое не работает):
+
+Замените блок location / на:
+   location / {
+       try_files $uri $uri/ /index.html;
+       add_header Cache-Control "no-cache, no-store, must-revalidate";
+       add_header Pragma "no-cache";
+       add_header Expires "0";
+   }
+
+Или еще проще:
+   location / {
+       root /root/nodeon/public;
+       index index.html;
+       try_files $uri $uri/ =404;
+   }
+   
+   location /app {
+       root /root/nodeon/public;
+       try_files /index.html =404;
+   }
+
+🚨 ЕСЛИ НИЧЕГО НЕ ПОМОГАЕТ:
+
+1. УДАЛИТЕ СТАРУЮ КОНФИГУРАЦИЮ:
+   rm /etc/nginx/sites-available/nodeon
+
+2. СОЗДАЙТЕ МИНИМАЛЬНУЮ КОНФИГУРАЦИЮ:
+   cat > /etc/nginx/sites-available/nodeon << 'EOF'
+   server {
+       listen 443 ssl;
+       server_name sistemypro.ru www.sistemypro.ru;
+       
+       ssl_certificate /etc/letsencrypt/live/sistemypro.ru/fullchain.pem;
+       ssl_certificate_key /etc/letsencrypt/live/sistemypro.ru/privkey.pem;
+       include /etc/letsencrypt/options-ssl-nginx.conf;
+       ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+       
+       root /root/nodeon/public;
+       index index.html;
+       
+       location / {
+           root /root/nodeon/public;
+           index index.html;
+       }
+       
+       location /api/ {
+           proxy_pass http://localhost:3000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+
+   server {
+       listen 80;
+       server_name sistemypro.ru www.sistemypro.ru;
+       return 301 https://$host$request_uri;
+   }
+   EOF
+
+3. ПРОВЕРЬТЕ И ПЕРЕЗАПУСТИТЕ:
+   nginx -t
+   systemctl restart nginx
+
+✅ РЕЗУЛЬТАТ:
+Сайт https://sistemypro.ru должен работать без ошибки 500
+
+📝 ПРОВЕРКА:
+- https://sistemypro.ru - главная страница
+- https://sistemypro.ru/api/health - API health check
+

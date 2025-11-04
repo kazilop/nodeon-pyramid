@@ -1,0 +1,196 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "Juego cripto con monedas NDN",
+    "tagline": "¡Gana, invita amigos, conviértete en líder!"
+  },
+  "welcome": {
+    "title": "¡Bienvenido a NodeOn Crypto!",
+    "subtitle": "Juego cripto con monedas NDN",
+    "description": "¡Gana monedas NDN, compra estado Pro, invita amigos y obtén recompensas!"
+  },
+  "user": {
+    "balance_ndn": "Saldo NDN",
+    "balance_stars": "Saldo Stars",
+    "pro_status": "Estado Pro",
+    "referral_link": "Enlace de Referido",
+    "total_earned": "Total Ganado",
+    "total_spent": "Total Gastado"
+  },
+  "buttons": {
+    "buy_pro": "Comprar Estado Pro",
+    "buy_ndn": "Comprar NDN",
+    "withdraw_ndn": "Retirar NDN",
+    "referrals": "Mis Referidos",
+    "leaderboard": "Tabla de Líderes",
+    "rules": "Reglas del Juego",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
+  },
+  "pro": {
+    "title": "Estado Pro",
+    "price": "1000 NDN",
+    "benefits": [
+      "Acceso al programa de referidos",
+      "Gana recompensas de referidos",
+      "Soporte prioritario",
+      "Características exclusivas"
+    ],
+    "buy_success": "¡Estado Pro activado exitosamente!",
+    "buy_error": "NDN insuficiente para comprar estado Pro"
+  },
+  "referrals": {
+    "title": "Sistema de Referidos",
+    "description": "Invita amigos y gana recompensas hasta 7 niveles de profundidad",
+    "levels": {
+      "1": "Nivel 1: 200 NDN",
+      "2": "Nivel 2: 150 NDN",
+      "3": "Nivel 3: 150 NDN",
+      "4": "Nivel 4: 150 NDN",
+      "5": "Nivel 5: 150 NDN",
+      "6": "Nivel 6: 150 NDN",
+      "7": "Nivel 7: 150 NDN"
+    },
+    "total_referrals": "Total Referidos",
+    "total_earnings": "Ganancias Totales",
+    "copy_link": "Copiar Enlace"
+  },
+  "leaderboard": {
+    "title": "Tabla de Líderes",
+    "rank": "Posición",
+    "name": "Nombre",
+    "balance": "Saldo NDN",
+    "stars": "Stars",
+    "pro": "Pro"
+  },
+  "rules": {
+    "title": "Reglas del Juego",
+    "sections": {
+      "gameplay": {
+        "title": "Cómo Jugar",
+        "content": "NodeOn Crypto es un juego cripto donde puedes ganar monedas NDN, comprar estado Pro e invitar amigos para obtener recompensas."
+      },
+      "pro_status": {
+        "title": "Estado Pro",
+        "content": "El estado Pro cuesta 1000 NDN y da acceso al programa de referidos. Con estado Pro puedes invitar amigos y ganar recompensas."
+      },
+      "referrals": {
+        "title": "Sistema de Referidos",
+        "content": "Invita amigos y gana recompensas hasta 7 niveles de profundidad. Por cada referido que compre estado Pro, recibirás una recompensa."
+      },
+      "ndn": {
+        "title": "Monedas NDN",
+        "content": "NDN es una moneda de juego que se puede comprar con Telegram Stars y retirar de vuelta a Stars. ¡NDN pronto estará listada en exchanges!"
+      }
+    }
+  },
+  "errors": {
+    "auth_required": "Se requiere autorización de Telegram. Abre la aplicación en Telegram Mini App.",
+    "insufficient_balance": "Fondos insuficientes",
+    "user_not_found": "Usuario no encontrado",
+    "payment_failed": "Error de pago",
+    "network_error": "Error de red",
+    "unknown_error": "Error desconocido"
+  },
+  "success": {
+    "payment_completed": "Pago completado exitosamente",
+    "pro_activated": "Estado Pro activado",
+    "ndn_purchased": "NDN compradas exitosamente",
+    "ndn_withdrawn": "NDN retiradas exitosamente",
+    "link_copied": "Enlace copiado"
+  },
+  "bot": {
+    "start": "🚀 Lanzar NodeOn Crypto",
+    "help": "❓ Ayuda e instrucciones",
+    "balance": "💰 Verificar saldo NDN",
+    "referrals": "👥 Mis referidos",
+    "leaderboard": "🏆 Tabla de líderes",
+    "buy_pro": "⭐ Comprar estado Pro",
+    "buy_ndn": "💎 Comprar NDN con Stars",
+    "withdraw": "💸 Retirar NDN a Stars",
+    "terms": "📋 Términos de uso",
+    "support": "🆘 Soporte",
+    "paysupport": "💳 Soporte de pagos"
+  },
+  "miner": {
+    "title": "NDN Miner",
+    "stats": {
+      "ndn_gas": "NDN Gas",
+      "energy": "Energía",
+      "gas_per_second": "Gas/seg"
+    },
+    "farms": {
+      "title": "Granjas de minería",
+      "cpu_miner": "CPU Miner",
+      "cpu_miner_desc": "Granja básica de procesador",
+      "gpu_farm": "GPU Farm",
+      "gpu_farm_desc": "Granja potente de tarjetas gráficas",
+      "asic_rig": "ASIC Rig",
+      "asic_rig_desc": "Granja profesional ASIC",
+      "data_center": "Data Center",
+      "data_center_desc": "Mega-granja en centro de datos",
+      "gas_per_sec": "Gas/seg",
+      "energy_cost": "Energía",
+      "quantity": "Cantidad",
+      "cost": "Costo",
+      "buy": "Comprar",
+      "locked": "Bloqueado",
+      "not_enough_gas": "Gas insuficiente"
+    },
+    "upgrades": {
+      "title": "Mejoras",
+      "speed": "Velocidad",
+      "efficiency": "Eficiencia",
+      "automation": "Automatización",
+      "premium": "Premium",
+      "speed_upgrades": {
+        "fast_processor": "Procesador rápido",
+        "fast_processor_desc": "+10% velocidad",
+        "code_optimization": "Optimización de código",
+        "code_optimization_desc": "+25% velocidad",
+        "parallel_computing": "Computación paralela",
+        "parallel_computing_desc": "+50% velocidad"
+      },
+      "efficiency_upgrades": {
+        "energy_saving": "Ahorro de energía",
+        "energy_saving_desc": "-20% energía",
+        "smart_cooling": "Enfriamiento inteligente",
+        "smart_cooling_desc": "-40% energía",
+        "quantum_optimization": "Optimización cuántica",
+        "quantum_optimization_desc": "-60% energía"
+      },
+      "automation_upgrades": {
+        "auto_collect": "Auto-recogida",
+        "auto_collect_desc": "Recolección automática de Gas",
+        "smart_algorithms": "Algoritmos inteligentes",
+        "smart_algorithms_desc": "Optimización de minería",
+        "ai_management": "Gestión IA",
+        "ai_management_desc": "Automatización completa"
+      },
+      "cost": "Costo",
+      "bought": "Comprado",
+      "max_level": "Nivel máx.",
+      "not_enough_gas": "Gas insuficiente"
+    },
+    "shop": {
+      "title": "Tienda",
+      "energy_drink": "Bebida energética",
+      "energy_drink_desc": "Restaura 50 energía",
+      "premium_booster": "Booster premium",
+      "premium_booster_desc": "2x velocidad por 1 hora",
+      "golden_farm": "Granja dorada",
+      "golden_farm_desc": "Granja exclusiva",
+      "buy": "Comprar"
+    },
+    "leaderboard": {
+      "title": "Ranking de mineros",
+      "rank": "Posición",
+      "player": "Jugador",
+      "gas_earned": "Gas ganado",
+      "farms_count": "Granjas",
+      "level": "Nivel",
+      "you": "Tú"
+    }
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "Krypto-Spiel mit NDN-Münzen",
+    "tagline": "Verdiene, spiele, lade Freunde ein!"
+  },
+  "welcome": {
+    "title": "Willkommen bei NodeOn Crypto!",
+    "subtitle": "Kryptowährungs-Spiel mit echten Belohnungen",
+    "description": "Kaufe NDN mit Telegram Stars, lade Freunde ein und verdiene bis zu 7 Ebenen tief!"
+  },
+  "user": {
+    "balance_ndn": "NDN Guthaben",
+    "balance_stars": "Stars Guthaben",
+    "pro_status": "Pro Status",
+    "user_id": "Deine Spiel-ID",
+    "user_id_hint": "Verwende diese ID für Überweisungen von anderen Spielern"
+  },
+  "buttons": {
+    "buy_pro": "Pro Status kaufen",
+    "buy_ndn": "NDN kaufen",
+    "withdraw_ndn": "NDN abheben",
+    "transfer_ndn": "NDN übertragen",
+    "referrals": "Meine Empfehlungen",
+    "leaderboard": "Bestenliste",
+    "rules": "Spielregeln",
+    "achievements": "Erfolge",
+    "shops": "Shops",
+    "invite_friends": "Freunde einladen",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "copy": "Kopieren",
+    "share": "Teilen",
+    "back": "Zurück",
+    "search": "Suchen",
+    "find_player": "Spieler finden",
+    "send": "Senden",
+    "buy": "Kaufen",
+    "sell": "Verkaufen",
+    "exchange": "Tauschen"
+  },
+  "pro": {
+    "buy_success": "Pro Status erfolgreich aktiviert!",
+    "buy_error": "Unzureichende NDN zum Kauf des Pro Status",
+    "status": "Pro Status",
+    "benefits": "Pro Vorteile",
+    "referral_link": "Empfehlungslink",
+    "total_referrals": "Gesamte Empfehlungen",
+    "total_earned": "Gesamt verdiente NDN",
+    "regular_referrals": "Reguläre Empfehlungen",
+    "pro_referrals": "Pro Empfehlungen"
+  },
+  "referrals": {
+    "title": "Meine Empfehlungen",
+    "total": "Gesamte Empfehlungen",
+    "regular": "Regulär",
+    "pro": "Pro",
+    "earnings": "Verdiente NDN",
+    "level": "Ebene",
+    "rewards": "Belohnungen",
+    "description": "Einnahmen nur von Pro Empfehlungen"
+  },
+  "transfer": {
+    "title": "NDN übertragen",
+    "recipient": "Empfänger",
+    "amount": "Betrag",
+    "balance": "Dein Guthaben",
+    "confirm": "Übertragung bestätigen",
+    "success": "Übertragung erfolgreich abgeschlossen!",
+    "error": "Übertragungsfehler",
+    "insufficient_balance": "Unzureichende NDN",
+    "user_not_found": "Benutzer nicht gefunden"
+  },
+  "achievements": {
+    "title": "Erfolge",
+    "unlocked": "Freigeschaltet",
+    "locked": "Gesperrt",
+    "claim_reward": "Belohnung einfordern",
+    "claimed": "Eingefordert"
+  },
+  "shops": {
+    "title": "Shops",
+    "open_shop": "Shop eröffnen",
+    "cost": "Kosten: 10.000 NDN",
+    "my_shop": "Mein Shop",
+    "add_item": "Artikel hinzufügen",
+    "shop_name": "Shop Name",
+    "shop_description": "Shop Beschreibung"
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "status": "Status",
+    "wallet_stats": "Wallet Statistiken",
+    "system_stats": "System Statistiken",
+    "exchange_requests": "Tausch Anfragen",
+    "user_management": "Benutzerverwaltung",
+    "analytics": "Analytik"
+  },
+  "errors": {
+    "auth_required": "Telegram-Autorisierung erforderlich. Öffne die App in Telegram Mini App.",
+    "user_not_found": "Benutzer nicht gefunden",
+    "insufficient_balance": "Unzureichende Mittel",
+    "invalid_amount": "Ungültiger Betrag",
+    "server_error": "Serverfehler",
+    "network_error": "Netzwerkfehler"
+  },
+  "notifications": {
+    "success": "Erfolgreich!",
+    "error": "Fehler!",
+    "info": "Info",
+    "warning": "Warnung!",
+    "copied": "Kopiert!",
+    "saved": "Gespeichert!",
+    "sent": "Gesendet!"
+  },
+  "game_rules": {
+    "title": "Spielregeln",
+    "how_to_play": "Wie man spielt",
+    "step1": "1. Kaufe NDN mit Telegram Stars",
+    "step2": "2. Lade Freunde über Empfehlungslink ein",
+    "step3": "3. Erhalte Belohnungen für Pro Empfehlungen",
+    "step4": "4. Schalte Erfolge und Shops frei",
+    "rewards": "Belohnungen",
+    "level1": "Ebene 1: 200 NDN",
+    "level2_7": "Ebenen 2-7: je 150 NDN",
+    "developer_fee": "Entwicklergebühr: 200 NDN"
+  },
+  "leaderboard": {
+    "title": "Bestenliste",
+    "rank": "Rang",
+    "player": "Spieler",
+    "balance": "NDN Guthaben",
+    "referrals": "Empfehlungen",
+    "pro_status": "Pro Status"
+  },
+  "language": {
+    "select": "Sprache wählen",
+    "russian": "Русский",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "french": "Français",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "portuguese": "Português",
+    "italian": "Italiano",
+    "hindi": "हिन्दी"
+  },
+  "miner": {
+    "title": "NDN Miner",
+    "stats": {
+      "ndn_gas": "NDN Gas",
+      "energy": "Energie",
+      "gas_per_second": "Gas/sek"
+    },
+    "farms": {
+      "title": "Mining-Farmen",
+      "cpu_miner": "CPU Miner",
+      "cpu_miner_desc": "Grundlegende Prozessor-Farm",
+      "gpu_farm": "GPU Farm",
+      "gpu_farm_desc": "Leistungsstarke Grafikkarten-Farm",
+      "asic_rig": "ASIC Rig",
+      "asic_rig_desc": "Professionelle ASIC-Farm",
+      "data_center": "Data Center",
+      "data_center_desc": "Mega-Farm im Rechenzentrum",
+      "gas_per_sec": "Gas/sek",
+      "energy_cost": "Energie",
+      "quantity": "Anzahl",
+      "cost": "Kosten",
+      "buy": "Kaufen",
+      "locked": "Gesperrt",
+      "not_enough_gas": "Nicht genug Gas"
+    },
+    "upgrades": {
+      "title": "Upgrades",
+      "speed": "Geschwindigkeit",
+      "efficiency": "Effizienz",
+      "automation": "Automatisierung",
+      "premium": "Premium",
+      "speed_upgrades": {
+        "fast_processor": "Schneller Prozessor",
+        "fast_processor_desc": "+10% Geschwindigkeit",
+        "code_optimization": "Code-Optimierung",
+        "code_optimization_desc": "+25% Geschwindigkeit",
+        "parallel_computing": "Parallele Berechnung",
+        "parallel_computing_desc": "+50% Geschwindigkeit"
+      },
+      "efficiency_upgrades": {
+        "energy_saving": "Energiesparen",
+        "energy_saving_desc": "-20% Energie",
+        "smart_cooling": "Intelligente Kühlung",
+        "smart_cooling_desc": "-40% Energie",
+        "quantum_optimization": "Quantenoptimierung",
+        "quantum_optimization_desc": "-60% Energie"
+      },
+      "automation_upgrades": {
+        "auto_collect": "Auto-Sammlung",
+        "auto_collect_desc": "Automatische Gas-Sammlung",
+        "smart_algorithms": "Intelligente Algorithmen",
+        "smart_algorithms_desc": "Mining-Optimierung",
+        "ai_management": "KI-Management",
+        "ai_management_desc": "Vollständige Automatisierung"
+      },
+      "cost": "Kosten",
+      "bought": "Gekauft",
+      "max_level": "Max. Level",
+      "not_enough_gas": "Nicht genug Gas"
+    },
+    "shop": {
+      "title": "Shop",
+      "energy_drink": "Energiedrink",
+      "energy_drink_desc": "Stellt 50 Energie wieder her",
+      "premium_booster": "Premium-Booster",
+      "premium_booster_desc": "2x Geschwindigkeit für 1 Stunde",
+      "golden_farm": "Goldene Farm",
+      "golden_farm_desc": "Exklusive Farm",
+      "buy": "Kaufen"
+    },
+    "leaderboard": {
+      "title": "Miner-Rangliste",
+      "rank": "Rang",
+      "player": "Spieler",
+      "gas_earned": "Gas verdient",
+      "farms_count": "Farmen",
+      "level": "Level",
+      "you": "Du"
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "لعبة التشفير بعملات NDN",
+    "tagline": "اكسب، العب، ادع الأصدقاء!"
+  },
+  "welcome": {
+    "title": "مرحباً بك في NodeOn Crypto!",
+    "subtitle": "لعبة العملات المشفرة بمكافآت حقيقية",
+    "description": "اشتر NDN بـ Telegram Stars، ادع الأصدقاء واكسب حتى 7 مستويات عمق!"
+  },
+  "user": {
+    "balance_ndn": "رصيد NDN",
+    "balance_stars": "رصيد Stars",
+    "pro_status": "حالة Pro",
+    "user_id": "معرف اللعبة الخاص بك",
+    "user_id_hint": "استخدم هذا المعرف للتحويلات من اللاعبين الآخرين"
+  },
+  "buttons": {
+    "buy_pro": "شراء حالة Pro",
+    "buy_ndn": "شراء NDN",
+    "withdraw_ndn": "سحب NDN",
+    "transfer_ndn": "تحويل NDN",
+    "referrals": "إحالاتي",
+    "leaderboard": "لوحة المتصدرين",
+    "rules": "قواعد اللعبة",
+    "achievements": "الإنجازات",
+    "shops": "المتاجر",
+    "invite_friends": "دعوة الأصدقاء",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "copy": "نسخ",
+    "share": "مشاركة",
+    "back": "رجوع",
+    "search": "بحث",
+    "find_player": "البحث عن لاعب",
+    "send": "إرسال",
+    "buy": "شراء",
+    "sell": "بيع",
+    "exchange": "تبديل"
+  },
+  "pro": {
+    "buy_success": "تم تفعيل حالة Pro بنجاح!",
+    "buy_error": "رصيد NDN غير كافي لشراء حالة Pro",
+    "status": "حالة Pro",
+    "benefits": "مزايا Pro",
+    "referral_link": "رابط الإحالة",
+    "total_referrals": "إجمالي الإحالات",
+    "total_earned": "إجمالي NDN المكتسب",
+    "regular_referrals": "إحالات عادية",
+    "pro_referrals": "إحالات Pro"
+  },
+  "referrals": {
+    "title": "إحالاتي",
+    "total": "إجمالي الإحالات",
+    "regular": "عادية",
+    "pro": "Pro",
+    "earnings": "NDN المكتسب",
+    "level": "المستوى",
+    "rewards": "المكافآت",
+    "description": "الأرباح من إحالات Pro فقط"
+  },
+  "transfer": {
+    "title": "تحويل NDN",
+    "recipient": "المستلم",
+    "amount": "المبلغ",
+    "balance": "رصيدك",
+    "confirm": "تأكيد التحويل",
+    "success": "تم التحويل بنجاح!",
+    "error": "خطأ في التحويل",
+    "insufficient_balance": "رصيد NDN غير كافي",
+    "user_not_found": "لم يتم العثور على المستخدم"
+  },
+  "achievements": {
+    "title": "الإنجازات",
+    "unlocked": "مفتوح",
+    "locked": "مقفل",
+    "claim_reward": "المطالبة بالمكافأة",
+    "claimed": "تم المطالبة"
+  },
+  "shops": {
+    "title": "المتاجر",
+    "open_shop": "فتح متجر",
+    "cost": "التكلفة: 10,000 NDN",
+    "my_shop": "متجري",
+    "add_item": "إضافة عنصر",
+    "shop_name": "اسم المتجر",
+    "shop_description": "وصف المتجر"
+  },
+  "admin": {
+    "panel": "لوحة الإدارة",
+    "status": "الحالة",
+    "wallet_stats": "إحصائيات المحفظة",
+    "system_stats": "إحصائيات النظام",
+    "exchange_requests": "طلبات التبديل",
+    "user_management": "إدارة المستخدمين",
+    "analytics": "التحليلات"
+  },
+  "errors": {
+    "auth_required": "مطلوب تفويض Telegram. افتح التطبيق في Telegram Mini App.",
+    "user_not_found": "لم يتم العثور على المستخدم",
+    "insufficient_balance": "رصيد غير كافي",
+    "invalid_amount": "مبلغ غير صحيح",
+    "server_error": "خطأ في الخادم",
+    "network_error": "خطأ في الشبكة"
+  },
+  "notifications": {
+    "success": "نجح!",
+    "error": "خطأ!",
+    "info": "معلومات",
+    "warning": "تحذير!",
+    "copied": "تم النسخ!",
+    "saved": "تم الحفظ!",
+    "sent": "تم الإرسال!"
+  },
+  "game_rules": {
+    "title": "قواعد اللعبة",
+    "how_to_play": "كيفية اللعب",
+    "step1": "1. اشتر NDN بـ Telegram Stars",
+    "step2": "2. ادع الأصدقاء عبر رابط الإحالة",
+    "step3": "3. احصل على مكافآت للإحالات Pro",
+    "step4": "4. افتح الإنجازات والمتاجر",
+    "rewards": "المكافآت",
+    "level1": "المستوى 1: 200 NDN",
+    "level2_7": "المستويات 2-7: 150 NDN لكل منها",
+    "developer_fee": "رسوم المطور: 200 NDN"
+  },
+  "leaderboard": {
+    "title": "لوحة المتصدرين",
+    "rank": "الترتيب",
+    "player": "اللاعب",
+    "balance": "رصيد NDN",
+    "referrals": "الإحالات",
+    "pro_status": "حالة Pro"
+  },
+  "language": {
+    "select": "اختر اللغة",
+    "russian": "Русский",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "french": "Français",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "portuguese": "Português",
+    "italian": "Italiano",
+    "hindi": "हिन्दी"
+  }
+}
+
+
+

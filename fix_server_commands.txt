@@ -1,0 +1,122 @@
+# Команды для исправления сервера NodeOn Pyramid
+# Выполняйте по одной команде через SSH
+
+# 1. Подключение к серверу
+ssh root@147.45.110.220
+
+# 2. Переход в папку приложения
+cd /root/nodeon
+
+# 3. Проверка файлов
+ls -la
+
+# 4. Создание .env файла
+echo "NODE_ENV=production" > .env
+echo "PORT=3000" >> .env
+echo "SUPABASE_URL=https://ahxwpzgltlzlvrtrbanm.supabase.co" >> .env
+echo "SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoeHdwemdsdGx6bHZydHJiYW1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk1MDMxNDksImV4cCI6MjA3NTA3OTE0OX0.h4sMVhVwvRUiHgbevDgv9W1G2S__uDWPUSCiXdrEy4E" >> .env
+echo "TELEGRAM_BOT_TOKEN=7670372637:AAG7XWbNkhvNx_M4MI4118AYXvIsn3bRMDQ" >> .env
+echo "TELEGRAM_BOT_USERNAME=pro_stars_bot" >> .env
+echo "SECRET_KEY=your_secret_key_here" >> .env
+echo "DEVELOPER_TELEGRAM_ID=207940967" >> .env
+
+# 5. Создание ecosystem.config.js
+cat > ecosystem.config.js << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'nodeon-pyramid',
+    script: 'server.js',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 3000
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
+};
+EOF
+
+# 6. Создание папки public
+mkdir -p public
+
+# 7. Копирование index.html в public
+cp index.html public/
+
+# 8. Установка зависимостей
+npm install
+
+# 9. Остановка всех процессов PM2
+pm2 stop all
+
+# 10. Удаление всех процессов PM2
+pm2 delete all
+
+# 11. Запуск приложения
+pm2 start ecosystem.config.js
+
+# 12. Сохранение конфигурации PM2
+pm2 save
+
+# 13. Создание конфигурации Nginx
+cat > /etc/nginx/sites-available/nodeon << 'EOF'
+server {
+    listen 80;
+    server_name sistemypro.ru www.sistemypro.ru;
+    
+    root /root/nodeon/public;
+    index index.html;
+    
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+    
+    location /api/ {
+        proxy_pass http://localhost:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    location /health {
+        proxy_pass http://localhost:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+EOF
+
+# 14. Активация конфигурации Nginx
+ln -sf /etc/nginx/sites-available/nodeon /etc/nginx/sites-enabled/
+
+# 15. Удаление default конфигурации
+rm -f /etc/nginx/sites-enabled/default
+
+# 16. Проверка конфигурации Nginx
+nginx -t
+
+# 17. Перезапуск Nginx
+systemctl restart nginx
+
+# 18. Проверка статуса сервисов
+pm2 status
+
+# 19. Проверка порта 3000
+netstat -tlnp | grep 3000
+
+# 20. Проверка health endpoint
+curl -s http://localhost:3000/health
+
+# 21. Проверка сайта
+curl -s -I http://sistemypro.ru | head -1
+
+# 22. Получение SSL сертификата (после проверки работы)
+certbot --nginx -d sistemypro.ru -d www.sistemypro.ru

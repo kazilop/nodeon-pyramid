@@ -1,0 +1,232 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "Jeu crypto avec des pièces NDN",
+    "tagline": "Gagnez, jouez, invitez des amis !"
+  },
+  "welcome": {
+    "title": "Bienvenue sur NodeOn Crypto !",
+    "subtitle": "Jeu de cryptomonnaie avec de vraies récompenses",
+    "description": "Achetez des NDN avec Telegram Stars, invitez des amis et gagnez jusqu'à 7 niveaux de profondeur !"
+  },
+  "user": {
+    "balance_ndn": "Solde NDN",
+    "balance_stars": "Solde Stars",
+    "pro_status": "Statut Pro",
+    "user_id": "Votre ID de Jeu",
+    "user_id_hint": "Utilisez cet ID pour les transferts d'autres joueurs"
+  },
+  "buttons": {
+    "buy_pro": "Acheter Statut Pro",
+    "buy_ndn": "Acheter NDN",
+    "withdraw_ndn": "Retirer NDN",
+    "transfer_ndn": "Transférer NDN",
+    "referrals": "Mes Parrainages",
+    "leaderboard": "Classement",
+    "rules": "Règles du Jeu",
+    "achievements": "Succès",
+    "shops": "Boutiques",
+    "invite_friends": "Inviter des Amis",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "copy": "Copier",
+    "share": "Partager",
+    "back": "Retour",
+    "search": "Rechercher",
+    "find_player": "Trouver un Joueur",
+    "send": "Envoyer",
+    "buy": "Acheter",
+    "sell": "Vendre",
+    "exchange": "Échanger"
+  },
+  "pro": {
+    "buy_success": "Statut Pro activé avec succès !",
+    "buy_error": "NDN insuffisant pour acheter le statut Pro",
+    "status": "Statut Pro",
+    "benefits": "Avantages Pro",
+    "referral_link": "Lien de Parrainage",
+    "total_referrals": "Total Parrainages",
+    "total_earned": "NDN Total Gagné",
+    "regular_referrals": "Parrainages Réguliers",
+    "pro_referrals": "Parrainages Pro"
+  },
+  "referrals": {
+    "title": "Mes Parrainages",
+    "total": "Total Parrainages",
+    "regular": "Réguliers",
+    "pro": "Pro",
+    "earnings": "NDN Gagné",
+    "level": "Niveau",
+    "rewards": "Récompenses",
+    "description": "Gains uniquement des parrainages Pro"
+  },
+  "transfer": {
+    "title": "Transférer NDN",
+    "recipient": "Destinataire",
+    "amount": "Montant",
+    "balance": "Votre Solde",
+    "confirm": "Confirmer le Transfert",
+    "success": "Transfert effectué avec succès !",
+    "error": "Erreur de transfert",
+    "insufficient_balance": "NDN insuffisant",
+    "user_not_found": "Utilisateur non trouvé"
+  },
+  "achievements": {
+    "title": "Succès",
+    "unlocked": "Débloqué",
+    "locked": "Verrouillé",
+    "claim_reward": "Réclamer Récompense",
+    "claimed": "Réclamé"
+  },
+  "shops": {
+    "title": "Boutiques",
+    "open_shop": "Ouvrir Boutique",
+    "cost": "Coût : 10 000 NDN",
+    "my_shop": "Ma Boutique",
+    "add_item": "Ajouter Article",
+    "shop_name": "Nom de la Boutique",
+    "shop_description": "Description de la Boutique"
+  },
+  "admin": {
+    "panel": "Panneau Admin",
+    "status": "Statut",
+    "wallet_stats": "Statistiques Portefeuille",
+    "system_stats": "Statistiques Système",
+    "exchange_requests": "Demandes d'Échange",
+    "user_management": "Gestion Utilisateurs",
+    "analytics": "Analytiques"
+  },
+  "errors": {
+    "auth_required": "Autorisation Telegram requise. Ouvrez l'app dans Telegram Mini App.",
+    "user_not_found": "Utilisateur non trouvé",
+    "insufficient_balance": "Fonds insuffisants",
+    "invalid_amount": "Montant invalide",
+    "server_error": "Erreur serveur",
+    "network_error": "Erreur réseau"
+  },
+  "notifications": {
+    "success": "Succès !",
+    "error": "Erreur !",
+    "info": "Info",
+    "warning": "Attention !",
+    "copied": "Copié !",
+    "saved": "Sauvegardé !",
+    "sent": "Envoyé !"
+  },
+  "game_rules": {
+    "title": "Règles du Jeu",
+    "how_to_play": "Comment Jouer",
+    "step1": "1. Achetez des NDN avec Telegram Stars",
+    "step2": "2. Invitez des amis via lien de parrainage",
+    "step3": "3. Obtenez des récompenses pour parrainages Pro",
+    "step4": "4. Débloquez succès et boutiques",
+    "rewards": "Récompenses",
+    "level1": "Niveau 1 : 200 NDN",
+    "level2_7": "Niveaux 2-7 : 150 NDN chacun",
+    "developer_fee": "Commission développeur : 200 NDN"
+  },
+  "leaderboard": {
+    "title": "Classement",
+    "rank": "Rang",
+    "player": "Joueur",
+    "balance": "Solde NDN",
+    "referrals": "Parrainages",
+    "pro_status": "Statut Pro"
+  },
+  "language": {
+    "select": "Sélectionner Langue",
+    "russian": "Русский",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "french": "Français",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "portuguese": "Português",
+    "italian": "Italiano",
+    "hindi": "हिन्दी"
+  },
+  "miner": {
+    "title": "NDN Miner",
+    "stats": {
+      "ndn_gas": "NDN Gas",
+      "energy": "Énergie",
+      "gas_per_second": "Gas/sec"
+    },
+    "farms": {
+      "title": "Fermes de minage",
+      "cpu_miner": "CPU Miner",
+      "cpu_miner_desc": "Ferme de base sur processeur",
+      "gpu_farm": "GPU Farm",
+      "gpu_farm_desc": "Ferme puissante sur cartes graphiques",
+      "asic_rig": "ASIC Rig",
+      "asic_rig_desc": "Ferme professionnelle ASIC",
+      "data_center": "Data Center",
+      "data_center_desc": "Méga-ferme en centre de données",
+      "gas_per_sec": "Gas/sec",
+      "energy_cost": "Énergie",
+      "quantity": "Quantité",
+      "cost": "Coût",
+      "buy": "Acheter",
+      "locked": "Verrouillé",
+      "not_enough_gas": "Pas assez de Gas"
+    },
+    "upgrades": {
+      "title": "Améliorations",
+      "speed": "Vitesse",
+      "efficiency": "Efficacité",
+      "automation": "Automatisation",
+      "premium": "Premium",
+      "speed_upgrades": {
+        "fast_processor": "Processeur rapide",
+        "fast_processor_desc": "+10% vitesse",
+        "code_optimization": "Optimisation du code",
+        "code_optimization_desc": "+25% vitesse",
+        "parallel_computing": "Calcul parallèle",
+        "parallel_computing_desc": "+50% vitesse"
+      },
+      "efficiency_upgrades": {
+        "energy_saving": "Économie d'énergie",
+        "energy_saving_desc": "-20% énergie",
+        "smart_cooling": "Refroidissement intelligent",
+        "smart_cooling_desc": "-40% énergie",
+        "quantum_optimization": "Optimisation quantique",
+        "quantum_optimization_desc": "-60% énergie"
+      },
+      "automation_upgrades": {
+        "auto_collect": "Auto-collecte",
+        "auto_collect_desc": "Collecte automatique de Gas",
+        "smart_algorithms": "Algorithmes intelligents",
+        "smart_algorithms_desc": "Optimisation du minage",
+        "ai_management": "Gestion IA",
+        "ai_management_desc": "Automatisation complète"
+      },
+      "cost": "Coût",
+      "bought": "Acheté",
+      "max_level": "Niveau max",
+      "not_enough_gas": "Pas assez de Gas"
+    },
+    "shop": {
+      "title": "Boutique",
+      "energy_drink": "Boisson énergétique",
+      "energy_drink_desc": "Restaure 50 énergie",
+      "premium_booster": "Booster premium",
+      "premium_booster_desc": "2x vitesse pendant 1 heure",
+      "golden_farm": "Ferme dorée",
+      "golden_farm_desc": "Ferme exclusive",
+      "buy": "Acheter"
+    },
+    "leaderboard": {
+      "title": "Classement des mineurs",
+      "rank": "Rang",
+      "player": "Joueur",
+      "gas_earned": "Gas gagné",
+      "farms_count": "Fermes",
+      "level": "Niveau",
+      "you": "Vous"
+    }
+  }
+}

@@ -1,0 +1,164 @@
+🔧 ИСПРАВЛЕНИЕ NGINX КОНФИГУРАЦИИ ЧЕРЕЗ NANO
+============================================
+
+❌ ПРОБЛЕМА:
+Ошибка 500 Internal Server Error из-за зацикливания редиректа в Nginx
+
+✅ РЕШЕНИЕ ЧЕРЕЗ NANO:
+
+1. ПОДКЛЮЧЕНИЕ К СЕРВЕРУ:
+   ssh root@147.45.110.220
+
+2. ОТКРЫТИЕ КОНФИГУРАЦИИ В NANO:
+   nano /etc/nginx/sites-available/nodeon
+
+3. ЗАМЕНА СОДЕРЖИМОГО ФАЙЛА:
+   
+   УДАЛИТЕ ВСЕ СОДЕРЖИМОЕ (Ctrl+K для удаления строк)
+   
+   ВСТАВЬТЕ НОВУЮ КОНФИГУРАЦИЮ:
+   
+   server {
+       listen 443 ssl;
+       server_name sistemypro.ru www.sistemypro.ru;
+       
+       ssl_certificate /etc/letsencrypt/live/sistemypro.ru/fullchain.pem;
+       ssl_certificate_key /etc/letsencrypt/live/sistemypro.ru/privkey.pem;
+       include /etc/letsencrypt/options-ssl-nginx.conf;
+       ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+       
+       root /root/nodeon/public;
+       index index.html;
+       
+       # Serve static files directly
+       location / {
+           try_files $uri $uri/ @fallback;
+       }
+       
+       # Fallback to index.html for SPA routing
+       location @fallback {
+           try_files /index.html =404;
+       }
+       
+       # API routes - proxy to Node.js
+       location /api/ {
+           proxy_pass http://localhost:3000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+           proxy_set_header X-Forwarded-Host $host;
+           proxy_set_header X-Forwarded-Port $server_port;
+       }
+       
+       # Health check - proxy to Node.js
+       location /health {
+           proxy_pass http://localhost:3000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+
+   server {
+       listen 80;
+       server_name sistemypro.ru www.sistemypro.ru;
+       return 301 https://$host$request_uri;
+   }
+
+4. СОХРАНЕНИЕ ФАЙЛА:
+   Ctrl+O (Write Out)
+   Нажмите Enter для подтверждения
+
+5. ВЫХОД ИЗ NANO:
+   Ctrl+X
+
+6. ПРОВЕРКА КОНФИГУРАЦИИ:
+   nginx -t
+
+7. ПЕРЕЗАПУСК NGINX:
+   systemctl restart nginx
+
+8. ПРОВЕРКА СТАТУСА:
+   systemctl status nginx
+
+9. ТЕСТИРОВАНИЕ:
+   curl -I https://sistemypro.ru/
+   curl -I https://sistemypro.ru/api/health
+
+🔧 КОМАНДЫ NANO:
+- Ctrl+O - Сохранить файл
+- Ctrl+X - Выйти из nano
+- Ctrl+K - Удалить строку
+- Ctrl+U - Вставить строку
+- Ctrl+W - Поиск
+- Ctrl+\ - Заменить текст
+
+🚨 АЛЬТЕРНАТИВНЫЙ СПОСОБ (если nano не работает):
+
+1. СОЗДАНИЕ РЕЗЕРВНОЙ КОПИИ:
+   cp /etc/nginx/sites-available/nodeon /etc/nginx/sites-available/nodeon.backup
+
+2. СОЗДАНИЕ НОВОГО ФАЙЛА:
+   cat > /etc/nginx/sites-available/nodeon << 'EOF'
+   server {
+       listen 443 ssl;
+       server_name sistemypro.ru www.sistemypro.ru;
+       
+       ssl_certificate /etc/letsencrypt/live/sistemypro.ru/fullchain.pem;
+       ssl_certificate_key /etc/letsencrypt/live/sistemypro.ru/privkey.pem;
+       include /etc/letsencrypt/options-ssl-nginx.conf;
+       ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+       
+       root /root/nodeon/public;
+       index index.html;
+       
+       location / {
+           try_files $uri $uri/ @fallback;
+       }
+       
+       location @fallback {
+           try_files /index.html =404;
+       }
+       
+       location /api/ {
+           proxy_pass http://localhost:3000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+       
+       location /health {
+           proxy_pass http://localhost:3000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+
+   server {
+       listen 80;
+       server_name sistemypro.ru www.sistemypro.ru;
+       return 301 https://$host$request_uri;
+   }
+   EOF
+
+3. ПРОВЕРКА И ПЕРЕЗАПУСК:
+   nginx -t
+   systemctl restart nginx
+
+✅ РЕЗУЛЬТАТ:
+После исправления сайт https://sistemypro.ru должен работать без ошибки 500
+
+📝 ПРОВЕРКА:
+- https://sistemypro.ru - главная страница
+- https://sistemypro.ru/api/health - API health check
+
+🔍 ОТЛАДКА:
+Если что-то не работает, проверьте логи:
+- tail -f /var/log/nginx/error.log
+- pm2 logs nodeon-pyramid
+

@@ -90,9 +90,9 @@ def get_or_create_user(telegram_user: dict):
         # Создаем нового пользователя
         user_data = {
             "telegram_id": telegram_id,
-            "username": telegram_user.get('username'),
-            "first_name": telegram_user.get('first_name'),
-            "last_name": telegram_user.get('last_name'),
+            "username": telegram_user.get('username') or None,
+            "first_name": telegram_user.get('first_name') or 'Пользователь',
+            "last_name": telegram_user.get('last_name') or '',
             "balance_ndn": 0.0,
             "is_pro": False,
             "referral_link": "",

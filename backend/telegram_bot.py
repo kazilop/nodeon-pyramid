@@ -1,7 +1,7 @@
 import asyncio
 import logging
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
-from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo, LabeledPrice
+from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters, PreCheckoutQueryHandler, MessageHandler
 from config import settings
 import httpx
 
@@ -21,7 +21,11 @@ class TelegramBot:
         """Настройка обработчиков команд"""
         self.application.add_handler(CommandHandler("start", self.start_command))
         self.application.add_handler(CommandHandler("help", self.help_command))
+        self.application.add_handler(CommandHandler("buy_ndn", self.buy_ndn_command))
         self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
+        # Обработчики платежей через Stars
+        self.application.add_handler(PreCheckoutQueryHandler(self.precheckout_handler))
+        self.application.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, self.successful_payment_handler))
     
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Обработка команды /start"""
@@ -109,6 +113,89 @@ class TelegramBot:
         else:
             await update.message.reply_text(
                 "Используйте /start для запуска приложения или /help для справки."
+            )
+    
+    async def buy_ndn_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Создание invoice для покупки NDN через Stars"""
+        user = update.effective_user
+        
+        try:
+            # Получаем количество NDN из аргументов
+            amount = int(context.args[0]) if context.args else 100
+            
+            if amount < 1 or amount > 10000:
+                await update.message.reply_text(
+                    "Количество NDN должно быть от 1 до 10,000"
+                )
+                return
+            
+            # Создаем invoice для Telegram Stars
+            await update.message.reply_invoice(
+                title=f"Покупка {amount} NDN",
+                description=f"Покупка {amount} NDN за {amount} Telegram Stars",
+                payload=f"ndn_{user.id}_{amount}",
+                provider_token="",  # Пустой для Stars
+                currency="XTR",  # Telegram Stars
+                prices=[LabeledPrice(label=f"{amount} NDN", amount=amount)]
+            )
+        except ValueError:
+            await update.message.reply_text("Используйте: /buy_ndn <количество>")
+        except Exception as e:
+            logger.error(f"Error creating invoice: {e}")
+            await update.message.reply_text("Ошибка создания счета")
+    
+    async def precheckout_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка PreCheckoutQuery"""
+        query = update.pre_checkout_query
+        
+        try:
+            # Валидация платежа
+            # В реальном приложении здесь проверка баланса и т.д.
+            
+            # Подтверждаем платеж
+            await query.answer(ok=True)
+            logger.info(f"Precheckout approved for user {query.from_user.id}")
+        except Exception as e:
+            logger.error(f"Error in precheckout: {e}")
+            await query.answer(ok=False, error_message="Ошибка обработки платежа")
+    
+    async def successful_payment_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка успешного платежа"""
+        payment = update.message.successful_payment
+        user = update.effective_user
+        
+        try:
+            # Извлекаем данные из payload
+            payload = payment.invoice_payload
+            parts = payload.split('_')
+            
+            if len(parts) == 3 and parts[0] == 'ndn':
+                telegram_id = int(parts[1])
+                amount = int(parts[2])
+                
+                # Зачисляем NDN на баланс пользователя через API
+                async with httpx.AsyncClient() as client:
+                    response = await client.post(
+                        f"{settings.backend_url}/api/payments/confirm-payment",
+                        json={
+                            "telegram_id": telegram_id,
+                            "amount_ndn": amount,
+                            "payment_id": payment.telegram_payment_charge_id
+                        }
+                    )
+                    
+                    if response.status_code == 200:
+                        await update.message.reply_text(
+                            f"✅ Спасибо за покупку! {amount} NDN зачислены на ваш баланс."
+                        )
+                    else:
+                        await update.message.reply_text(
+                            "Ошибка зачисления NDN. Обратитесь в поддержку."
+                        )
+        except Exception as e:
+            logger.error(f"Error processing payment: {e}")
+            await update.message.reply_text(
+                "Ошибка обработки платежа. Обратитесь в поддержку."
             )
     
     def get_rules_text(self):

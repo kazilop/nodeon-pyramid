@@ -36,21 +36,21 @@ if (Test-Path "public") {
 
 # Создаем package.json для Netlify
 Write-Host "📦 Создание package.json для Netlify..." -ForegroundColor Yellow
-$packageJson = @"
+$packageJson = @'
 {
   "name": "nodeon-pyramid",
   "version": "1.0.0",
   "description": "NodeOn Pyramid - Telegram Mini App",
   "main": "index.html",
   "scripts": {
-    "build": "echo 'Build completed'",
+    "build": "echo Build completed",
     "dev": "python -m http.server 3000"
   },
   "keywords": ["telegram", "mini-app", "crypto", "game"],
   "author": "NodeOn Team",
   "license": "MIT"
 }
-"@
+'@
 $packageJson | Out-File -FilePath "dist/package.json" -Encoding UTF8
 
 # Копируем netlify.toml

@@ -416,9 +416,9 @@ def get_or_create_user(telegram_user: Dict[str, Any], referral_token: str = None
                     return user
         
         # Создаем нового пользователя без начального баланса
-        first_name = telegram_user.get('first_name', 'Пользователь')
-        username = telegram_user.get('username', '')
-        last_name = telegram_user.get('last_name', '')
+        first_name = telegram_user.get('first_name') or 'Пользователь'
+        username = telegram_user.get('username') or None
+        last_name = telegram_user.get('last_name') or ''
         
         # Обрабатываем реферальный токен
         inviter_id = None

@@ -61,9 +61,9 @@ async def login(auth_data: TelegramAuth, db: Session = Depends(get_db)):
         # Создаем нового пользователя
         user = User(
             telegram_id=auth_data.id,
-            username=auth_data.username,
-            first_name=auth_data.first_name,
-            last_name=auth_data.last_name
+            username=auth_data.username or None,
+            first_name=auth_data.first_name or 'Пользователь',
+            last_name=auth_data.last_name or ''
         )
         db.add(user)
         db.commit()

@@ -156,9 +156,9 @@ def get_or_create_user(telegram_user: Dict[str, Any], referral_token: str = None
         # Создаем нового пользователя
         user_data = {
             "telegram_id": telegram_id,
-            "username": telegram_user.get('username'),
-            "first_name": telegram_user.get('first_name'),
-            "last_name": telegram_user.get('last_name'),
+            "username": telegram_user.get('username') or None,
+            "first_name": telegram_user.get('first_name') or 'Пользователь',
+            "last_name": telegram_user.get('last_name') or '',
             "balance_ndn": 0.0,
             "balance_stars": 0.0,
             "total_stars_earned": 0.0,

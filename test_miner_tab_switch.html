@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест переключения на Miner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Тест переключения на Miner</h1>
+    
+    <div class="test-section">
+        <h2>🔧 Тесты</h2>
+        <button class="test-button" onclick="testMinerAPI()">Тест API майнера</button>
+        <button class="test-button" onclick="testMinerInitialization()">Тест инициализации майнера</button>
+        <button class="test-button" onclick="testMinerTabSwitch()">Тест переключения на вкладку</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>📋 Результаты тестов</h2>
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        const testResults = document.getElementById('testResults');
+        
+        // Функция для добавления результата теста
+        function addTestResult(testName, success, message, data = null) {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${success ? 'success' : 'error'}`;
+            
+            let content = `${success ? '✅' : '❌'} ${testName}\n`;
+            content += `Сообщение: ${message}\n`;
+            if (data) {
+                content += `Данные: ${JSON.stringify(data, null, 2)}\n`;
+            }
+            content += `Время: ${new Date().toLocaleTimeString()}\n`;
+            
+            resultDiv.textContent = content;
+            testResults.appendChild(resultDiv);
+            testResults.scrollTop = testResults.scrollHeight;
+        }
+        
+        // Тест API майнера
+        async function testMinerAPI() {
+            try {
+                const response = await fetch('/api/miner/data/207940967');
+                const data = await response.json();
+                
+                if (data.success) {
+                    addTestResult('API майнера', true, 'API работает корректно', {
+                        gas: data.miner.gas,
+                        energy: data.miner.energy,
+                        farms: data.miner.total_farms
+                    });
+                } else {
+                    addTestResult('API майнера', false, data.error || 'Неизвестная ошибка');
+                }
+            } catch (error) {
+                addTestResult('API майнера', false, `Ошибка: ${error.message}`);
+            }
+        }
+        
+        // Тест инициализации майнера (симуляция)
+        async function testMinerInitialization() {
+            try {
+                // Симулируем проверку подключения к БД
+                const testResponse = await fetch('/api/miner/data/207940967');
+                if (!testResponse.ok) {
+                    addTestResult('Инициализация майнера', false, `Ошибка подключения к БД: ${testResponse.status}`);
+                    return;
+                }
+                
+                const data = await testResponse.json();
+                if (data.success) {
+                    addTestResult('Инициализация майнера', true, 'Инициализация прошла успешно', {
+                        message: 'Подключение к БД работает',
+                        minerData: data.miner
+                    });
+                } else {
+                    addTestResult('Инициализация майнера', false, data.error || 'Ошибка получения данных');
+                }
+            } catch (error) {
+                addTestResult('Инициализация майнера', false, `Ошибка: ${error.message}`);
+            }
+        }
+        
+        // Тест переключения на вкладку (симуляция)
+        function testMinerTabSwitch() {
+            try {
+                // Проверяем, что основные элементы существуют
+                const minerTab = document.getElementById('minerTab');
+                if (!minerTab) {
+                    addTestResult('Переключение на вкладку', false, 'Вкладка майнера не найдена в DOM');
+                    return;
+                }
+                
+                // Симулируем переключение
+                minerTab.style.display = 'block';
+                
+                addTestResult('Переключение на вкладку', true, 'Переключение на вкладку майнера работает', {
+                    message: 'Вкладка найдена и может быть активирована',
+                    tabExists: true
+                });
+                
+                // Возвращаем скрытое состояние
+                minerTab.style.display = 'none';
+                
+            } catch (error) {
+                addTestResult('Переключение на вкладку', false, `Ошибка: ${error.message}`);
+            }
+        }
+        
+        // Автоматически запускаем тест API при загрузке
+        window.addEventListener('load', () => {
+            addTestResult('Загрузка страницы', true, 'Страница загружена успешно');
+            testMinerAPI();
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

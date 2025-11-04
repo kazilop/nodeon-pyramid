@@ -150,9 +150,9 @@ def get_or_create_user(telegram_user: dict, db: Session, referral_token: str = N
         # Создаем нового пользователя
         user = User(
             telegram_id=telegram_id,
-            username=telegram_user.get('username'),
-            first_name=telegram_user.get('first_name'),
-            last_name=telegram_user.get('last_name'),
+            username=telegram_user.get('username') or None,
+            first_name=telegram_user.get('first_name') or 'Пользователь',
+            last_name=telegram_user.get('last_name') or '',
             balance_ndn=Decimal('0'),
             is_pro=False,
             referral_link="",  # Будет создана только после покупки Pro

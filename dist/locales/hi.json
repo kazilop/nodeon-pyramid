@@ -1,0 +1,155 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "NDN सिक्कों के साथ क्रिप्टो गेम",
+    "tagline": "कमाएं, खेलें, दोस्तों को आमंत्रित करें!"
+  },
+  "welcome": {
+    "title": "NodeOn Crypto में आपका स्वागत है!",
+    "subtitle": "वास्तविक पुरस्कारों के साथ क्रिप्टोकरेंसी गेम",
+    "description": "Telegram Stars के साथ NDN खरीदें, दोस्तों को आमंत्रित करें और 7 स्तर तक कमाएं!"
+  },
+  "user": {
+    "balance_ndn": "NDN बैलेंस",
+    "balance_stars": "Stars बैलेंस",
+    "pro_status": "Pro स्थिति",
+    "user_id": "आपका गेम ID",
+    "user_id_hint": "अन्य खिलाड़ियों से ट्रांसफर के लिए इस ID का उपयोग करें"
+  },
+  "buttons": {
+    "buy_pro": "Pro स्थिति खरीदें",
+    "buy_ndn": "NDN खरीदें",
+    "withdraw_ndn": "NDN निकालें",
+    "transfer_ndn": "NDN ट्रांसफर करें",
+    "referrals": "मेरे रेफरल",
+    "leaderboard": "लीडरबोर्ड",
+    "rules": "गेम नियम",
+    "achievements": "उपलब्धियां",
+    "shops": "दुकानें",
+    "invite_friends": "दोस्तों को आमंत्रित करें",
+    "close": "बंद करें",
+    "confirm": "पुष्टि करें",
+    "cancel": "रद्द करें",
+    "copy": "कॉपी करें",
+    "share": "साझा करें",
+    "back": "वापस",
+    "search": "खोजें",
+    "find_player": "खिलाड़ी खोजें",
+    "send": "भेजें",
+    "buy": "खरीदें",
+    "sell": "बेचें",
+    "exchange": "एक्सचेंज करें"
+  },
+  "pro": {
+    "buy_success": "Pro स्थिति सफलतापूर्वक सक्रिय!",
+    "buy_error": "Pro स्थिति खरीदने के लिए अपर्याप्त NDN",
+    "status": "Pro स्थिति",
+    "benefits": "Pro लाभ",
+    "referral_link": "रेफरल लिंक",
+    "total_referrals": "कुल रेफरल",
+    "total_earned": "कुल कमाया गया NDN",
+    "regular_referrals": "नियमित रेफरल",
+    "pro_referrals": "Pro रेफरल"
+  },
+  "referrals": {
+    "title": "मेरे रेफरल",
+    "total": "कुल रेफरल",
+    "regular": "नियमित",
+    "pro": "Pro",
+    "earnings": "कमाया गया NDN",
+    "level": "स्तर",
+    "rewards": "पुरस्कार",
+    "description": "केवल Pro रेफरल से कमाई"
+  },
+  "transfer": {
+    "title": "NDN ट्रांसफर करें",
+    "recipient": "प्राप्तकर्ता",
+    "amount": "राशि",
+    "balance": "आपका बैलेंस",
+    "confirm": "ट्रांसफर की पुष्टि करें",
+    "success": "ट्रांसफर सफलतापूर्वक पूरा!",
+    "error": "ट्रांसफर त्रुटि",
+    "insufficient_balance": "अपर्याप्त NDN",
+    "user_not_found": "उपयोगकर्ता नहीं मिला"
+  },
+  "achievements": {
+    "title": "उपलब्धियां",
+    "unlocked": "अनलॉक",
+    "locked": "लॉक",
+    "claim_reward": "पुरस्कार का दावा करें",
+    "claimed": "दावा किया गया"
+  },
+  "shops": {
+    "title": "दुकानें",
+    "open_shop": "दुकान खोलें",
+    "cost": "लागत: 10,000 NDN",
+    "my_shop": "मेरी दुकान",
+    "add_item": "आइटम जोड़ें",
+    "shop_name": "दुकान का नाम",
+    "shop_description": "दुकान का विवरण"
+  },
+  "admin": {
+    "panel": "एडमिन पैनल",
+    "status": "स्थिति",
+    "wallet_stats": "वॉलेट आंकड़े",
+    "system_stats": "सिस्टम आंकड़े",
+    "exchange_requests": "एक्सचेंज अनुरोध",
+    "user_management": "उपयोगकर्ता प्रबंधन",
+    "analytics": "विश्लेषण"
+  },
+  "errors": {
+    "auth_required": "Telegram प्राधिकरण आवश्यक। Telegram Mini App में ऐप खोलें।",
+    "user_not_found": "उपयोगकर्ता नहीं मिला",
+    "insufficient_balance": "अपर्याप्त फंड",
+    "invalid_amount": "अमान्य राशि",
+    "server_error": "सर्वर त्रुटि",
+    "network_error": "नेटवर्क त्रुटि"
+  },
+  "notifications": {
+    "success": "सफलता!",
+    "error": "त्रुटि!",
+    "info": "जानकारी",
+    "warning": "चेतावनी!",
+    "copied": "कॉपी किया गया!",
+    "saved": "सहेजा गया!",
+    "sent": "भेजा गया!"
+  },
+  "game_rules": {
+    "title": "गेम नियम",
+    "how_to_play": "कैसे खेलें",
+    "step1": "1. Telegram Stars के साथ NDN खरीदें",
+    "step2": "2. रेफरल लिंक के माध्यम से दोस्तों को आमंत्रित करें",
+    "step3": "3. Pro रेफरल के लिए पुरस्कार प्राप्त करें",
+    "step4": "4. उपलब्धियां और दुकानें अनलॉक करें",
+    "rewards": "पुरस्कार",
+    "level1": "स्तर 1: 200 NDN",
+    "level2_7": "स्तर 2-7: प्रत्येक 150 NDN",
+    "developer_fee": "डेवलपर शुल्क: 200 NDN"
+  },
+  "leaderboard": {
+    "title": "लीडरबोर्ड",
+    "rank": "रैंक",
+    "player": "खिलाड़ी",
+    "balance": "NDN बैलेंस",
+    "referrals": "रेफरल",
+    "pro_status": "Pro स्थिति"
+  },
+  "language": {
+    "select": "भाषा चुनें",
+    "russian": "Русский",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "french": "Français",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "portuguese": "Português",
+    "italian": "Italiano",
+    "hindi": "हिन्दी"
+  }
+}
+
+
+

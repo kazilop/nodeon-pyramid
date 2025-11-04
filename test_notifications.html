@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест уведомлений</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        #notificationContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .notification {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: 300px;
+        }
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .notification.success {
+            border-left: 4px solid #28a745;
+        }
+        .notification.error {
+            border-left: 4px solid #dc3545;
+        }
+        .notification.warning {
+            border-left: 4px solid #ffc107;
+        }
+        .notification.info {
+            border-left: 4px solid #17a2b8;
+        }
+        .notification-content {
+            display: flex;
+            align-items: center;
+        }
+        .notification-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .notification-text {
+            flex: 1;
+        }
+        .notification-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Тест системы уведомлений</h1>
+    
+    <div>
+        <button class="test-button" onclick="testSuccess()">Тест Success (5 сек)</button>
+        <button class="test-button" onclick="testError()">Тест Error (5 сек)</button>
+        <button class="test-button" onclick="testWarning()">Тест Warning (5 сек)</button>
+        <button class="test-button" onclick="testInfo()">Тест Info (5 сек)</button>
+    </div>
+    
+    <div>
+        <button class="test-button" onclick="testCustomDuration()">Тест 10 секунд</button>
+        <button class="test-button" onclick="testCustomDuration2()">Тест 2 секунды</button>
+    </div>
+    
+    <div id="notificationContainer"></div>
+
+    <script>
+        // Система уведомлений (копия из основного приложения)
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            if (!container) return;
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <div class="notification-icon">${icons[type] || icons.info}</div>
+                    <div class="notification-text">${message}</div>
+                    <button class="notification-close" onclick="hideNotification(this)">×</button>
+                </div>
+            `;
+
+            container.appendChild(notification);
+
+            // Показываем уведомление
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            // Автоматически скрываем
+            setTimeout(() => {
+                hideNotification(notification.querySelector('.notification-close'));
+            }, duration);
+        }
+
+        function hideNotification(closeButton) {
+            const notification = closeButton.closest('.notification');
+            if (notification) {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }
+        }
+
+        // Тестовые функции
+        function testSuccess() {
+            showNotification('✅ Успешное уведомление! Должно показаться на 5 секунд.', 'success');
+        }
+
+        function testError() {
+            showNotification('❌ Ошибка! Должно показаться на 5 секунд.', 'error');
+        }
+
+        function testWarning() {
+            showNotification('⚠️ Предупреждение! Должно показаться на 5 секунд.', 'warning');
+        }
+
+        function testInfo() {
+            showNotification('ℹ️ Информация! Должно показаться на 5 секунд.', 'info');
+        }
+
+        function testCustomDuration() {
+            showNotification('🕐 Это уведомление покажется на 10 секунд!', 'info', 10000);
+        }
+
+        function testCustomDuration2() {
+            showNotification('⚡ Это уведомление покажется на 2 секунды!', 'warning', 2000);
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

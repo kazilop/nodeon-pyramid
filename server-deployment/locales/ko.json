@@ -1,0 +1,155 @@
+{
+  "app": {
+    "name": "NodeOn Crypto",
+    "description": "NDN 코인 암호화 게임",
+    "tagline": "벌고, 놀고, 친구 초대하세요!"
+  },
+  "welcome": {
+    "title": "NodeOn Crypto에 오신 것을 환영합니다!",
+    "subtitle": "실제 보상이 있는 암호화폐 게임",
+    "description": "Telegram Stars로 NDN을 구매하고, 친구를 초대하여 최대 7단계까지 벌어보세요!"
+  },
+  "user": {
+    "balance_ndn": "NDN 잔액",
+    "balance_stars": "Stars 잔액",
+    "pro_status": "Pro 상태",
+    "user_id": "당신의 게임 ID",
+    "user_id_hint": "다른 플레이어의 송금에 이 ID를 사용하세요"
+  },
+  "buttons": {
+    "buy_pro": "Pro 상태 구매",
+    "buy_ndn": "NDN 구매",
+    "withdraw_ndn": "NDN 출금",
+    "transfer_ndn": "NDN 송금",
+    "referrals": "내 추천",
+    "leaderboard": "리더보드",
+    "rules": "게임 규칙",
+    "achievements": "업적",
+    "shops": "상점",
+    "invite_friends": "친구 초대",
+    "close": "닫기",
+    "confirm": "확인",
+    "cancel": "취소",
+    "copy": "복사",
+    "share": "공유",
+    "back": "뒤로",
+    "search": "검색",
+    "find_player": "플레이어 찾기",
+    "send": "보내기",
+    "buy": "구매",
+    "sell": "판매",
+    "exchange": "교환"
+  },
+  "pro": {
+    "buy_success": "Pro 상태가 성공적으로 활성화되었습니다!",
+    "buy_error": "Pro 상태 구매에 NDN이 부족합니다",
+    "status": "Pro 상태",
+    "benefits": "Pro 혜택",
+    "referral_link": "추천 링크",
+    "total_referrals": "총 추천 수",
+    "total_earned": "총 획득 NDN",
+    "regular_referrals": "일반 추천",
+    "pro_referrals": "Pro 추천"
+  },
+  "referrals": {
+    "title": "내 추천",
+    "total": "총 추천 수",
+    "regular": "일반",
+    "pro": "Pro",
+    "earnings": "획득 NDN",
+    "level": "레벨",
+    "rewards": "보상",
+    "description": "Pro 추천에서만 수익"
+  },
+  "transfer": {
+    "title": "NDN 송금",
+    "recipient": "수신자",
+    "amount": "금액",
+    "balance": "당신의 잔액",
+    "confirm": "송금 확인",
+    "success": "송금이 성공적으로 완료되었습니다!",
+    "error": "송금 오류",
+    "insufficient_balance": "NDN 부족",
+    "user_not_found": "사용자를 찾을 수 없습니다"
+  },
+  "achievements": {
+    "title": "업적",
+    "unlocked": "잠금 해제됨",
+    "locked": "잠김",
+    "claim_reward": "보상 받기",
+    "claimed": "받음"
+  },
+  "shops": {
+    "title": "상점",
+    "open_shop": "상점 열기",
+    "cost": "비용: 10,000 NDN",
+    "my_shop": "내 상점",
+    "add_item": "아이템 추가",
+    "shop_name": "상점 이름",
+    "shop_description": "상점 설명"
+  },
+  "admin": {
+    "panel": "관리 패널",
+    "status": "상태",
+    "wallet_stats": "지갑 통계",
+    "system_stats": "시스템 통계",
+    "exchange_requests": "교환 요청",
+    "user_management": "사용자 관리",
+    "analytics": "분석"
+  },
+  "errors": {
+    "auth_required": "Telegram 인증이 필요합니다. Telegram Mini App에서 앱을 열어주세요.",
+    "user_not_found": "사용자를 찾을 수 없습니다",
+    "insufficient_balance": "잔액 부족",
+    "invalid_amount": "유효하지 않은 금액",
+    "server_error": "서버 오류",
+    "network_error": "네트워크 오류"
+  },
+  "notifications": {
+    "success": "성공!",
+    "error": "오류!",
+    "info": "정보",
+    "warning": "경고!",
+    "copied": "복사됨!",
+    "saved": "저장됨!",
+    "sent": "전송됨!"
+  },
+  "game_rules": {
+    "title": "게임 규칙",
+    "how_to_play": "게임 방법",
+    "step1": "1. Telegram Stars로 NDN 구매",
+    "step2": "2. 추천 링크로 친구 초대",
+    "step3": "3. Pro 추천으로 보상 획득",
+    "step4": "4. 업적과 상점 잠금 해제",
+    "rewards": "보상",
+    "level1": "레벨 1: 200 NDN",
+    "level2_7": "레벨 2-7: 각 150 NDN",
+    "developer_fee": "개발자 수수료: 200 NDN"
+  },
+  "leaderboard": {
+    "title": "리더보드",
+    "rank": "순위",
+    "player": "플레이어",
+    "balance": "NDN 잔액",
+    "referrals": "추천",
+    "pro_status": "Pro 상태"
+  },
+  "language": {
+    "select": "언어 선택",
+    "russian": "Русский",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "french": "Français",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "arabic": "العربية",
+    "portuguese": "Português",
+    "italian": "Italiano",
+    "hindi": "हिन्दी"
+  }
+}
+
+
+
